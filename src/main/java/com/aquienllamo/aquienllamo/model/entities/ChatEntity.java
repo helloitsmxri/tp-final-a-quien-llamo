@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @Builder
 @Table(name = "Chat")
+@ToString
 public class ChatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +25,4 @@ public class ChatEntity {
     @JoinColumn(name = "id_tecnico", nullable = true)
     private TecnicoEntity id_tecnico;
 
-    @Override
-    public String toString() {
-        return "ChatEntity{" +
-                "id_chat=" + id_chat +
-                ", id_usuario=" + id_usuario +
-                ", id_tecnico=" + id_tecnico +
-                '}';
-    }
 }
