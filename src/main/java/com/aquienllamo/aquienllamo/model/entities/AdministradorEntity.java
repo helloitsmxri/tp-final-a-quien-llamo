@@ -14,10 +14,11 @@ import lombok.*;
 public class AdministradorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_admin;
+    @Column(name = "id_admin")
+    private Integer idAdmin;
 
-    @Column(nullable = false, length = 50)
-    private String nombre_usuario;
+    @Column(nullable = false, length = 50, name = "nombre_usuario")
+    private String nombreUsuario;
 
     @Column(nullable = false, length = 20)
     private String clave;
