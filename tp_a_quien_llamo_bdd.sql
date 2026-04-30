@@ -1,4 +1,4 @@
-DROP DATABASE a_quien_llamo;
+DROP DATABASE IF EXISTS a_quien_llamo;
 CREATE DATABASE a_quien_llamo;
 USE a_quien_llamo;
 
@@ -131,6 +131,14 @@ id_especialidad INT AUTO_INCREMENT PRIMARY KEY,
 nombre_especialidad VARCHAR(50)
 );
 
+CREATE TABLE Habilidad_Especialidad (
+id_habilidad INT,
+id_especialidad INT,
+PRIMARY KEY(id_habilidad, id_especialidad),
+FOREIGN KEY (id_habilidad) REFERENCES Habilidad(id_habilidad),
+FOREIGN KEY (id_especialidad) REFERENCES Especialidad (id_especialidad)
+);
+
 CREATE TABLE Habilidad_Tecnico (
 id_tecnico INT,
 id_habilidad INT,
@@ -178,87 +186,89 @@ VALUES ('Hogar'),
 ('Educación'), 
 ('Gastronomía');
 
-INSERT INTO Especialidad (nombre_especialidad) 
-VALUES ('Clases Particulares'), 
-('Coaching y Desarrollo Personal'), 
-('Idiomas'), 
-('Instructores y Capacitadores'), 
-('Baristería'), 
-('Chef/Cocinero'), 
-('Catering'), 
-('Decoración de Eventos'), 
-('Floristería'), 
-('Fotografía y Video'), 
-('Maquillaje'), 
-('Música y Entretenimiento'), 
-('Pastelería'), 
-('Servicio de Mesa'), 
-('Souvenir y Regalería'), 
-('Panadería Artesanal'), 
-('Viandas de Comida'), 
-('Aire Acondicionado'), 
-('Albañilería'), 
-('Carpintería'), 
-('Cerrajería'), 
-('Electricidad'), 
-('Fumigación y Control de Plagas'), 
-('Gas'), 
-('Impermeabilización'), 
-('Interiorismo y Decoración'), 
-('Jardinería y Paisajismo'), 
-('Limpieza'), 
-('Persianas y Cortinas'), 
-('Pisos'), 
-('Pintura'), 
-('Plomería'), 
-('Piscinas'), 
-('Seguridad (Alarmas y Cámaras)'), 
-('Techos'), 
-('Toldos y Cerramientos'), 
-('Vidriera'), 
-('Zinguería'), 
-('Adiestramiento'), 
-('Paseos y Cuidado'), 
-('Peluquería de Mascotas'), 
-('Coaching y Bienestar'), 
-('Depilación'), 
-('Entrenamiento Personal'), 
-('Estética y Cosmetología'), 
-('Manicura y Pedicura'), 
-('Masajes'), 
-('Peluquería'), 
-('Fletes'), 
-('Mudanzas'), 
-('Reparto y Logística'), 
-('Programador'), 
-('Diseñador Web y UX/UI'), 
-('Soporte Técnico'), 
-('Analista en Sistemas'), 
-('Arquitectura'), 
-('Construcción en Seco'), 
-('Herrería y metalurgía'), 
-('Diseño Gráfico'), 
-('Ilustración y arte'), 
-('Moda e indumentaria');
+INSERT INTO Especialidad (nombre_especialidad) VALUES 
+('Apoyo Escolar'),
+('Coaching y Desarrollo Personal'),
+('Idiomas'),
+('Capacitación Profesional'),
+('Baristería'),
+('Gastronomía y Cocina'),
+('Catering'),
+('Decoración de Eventos'),
+('Floristería'),
+('Fotografía'),
+('Video'),
+('Maquillaje'),
+('Música y Entretenimiento'),
+('Pastelería'),
+('Servicio de Mesa'),
+('Souvenirs y Regalería'),
+('Panadería Artesanal'),
+('Viandas y Viandas Saludables'),
+('Climatización y Aire Acondicionado'),
+('Albañilería'),
+('Carpintería'),
+('Cerrajería'),
+('Electricidad'),
+('Fumigación y Control de Plagas'),
+('Instalaciones de Gas'),
+('Impermeabilización'),
+('Interiorismo y Decoración'),
+('Jardinería y Paisajismo'),
+('Servicios de Limpieza'),
+('Persianas y Cortinas'),
+('Instalación de Pisos'),
+('Pintura'),
+('Plomería'),
+('Mantenimiento de Piscinas'),
+('Sistemas de Seguridad'),
+('Techos'),
+('Toldos y Cerramientos'),
+('Vidriería'),
+('Zinguería'),
+('Adiestramiento Canino'),
+('Paseo y Cuidado de Mascotas'),
+('Estética y Peluquería Canina'),
+('Depilación'),
+('Entrenamiento Personal'),
+('Estética y Cosmetología'),
+('Manicura y Pedicuría'),
+('Masoterapia y Masajes'),
+('Peluquería'),
+('Fletes'),
+('Mudanzas'),
+('Logística y Reparto'),
+('Programación y Desarrollo'),
+('Diseño Web y UX/UI'),
+('Soporte Técnico'),
+('Análisis de Sistemas'),
+('Arquitectura'),
+('Construcción en Seco'),
+('Herrería y Metalurgia'),
+('Diseño Gráfico'),
+('Ilustración y Arte'),
+('Moda e Indumentaria');
+
+-- HABILIDADES
 
 INSERT INTO Habilidad (nombre_habilidad) VALUES 
 ('Muros'), ('Reparación de grietas'), ('Revoques'), ('Contrapiso'), ('Carpeta niveladora'), ('Cerámicos'), ('Porcelanato'), ('Piedra natural'), ('Asadores'), ('Tabiques'), ('Zócalos'), ('Pozos'), ('Frentes'), ('Microcemento'),
 ('Redes internas de gas'), ('Detección de fugas'), ('Gas natural'), ('Gas envasado'), ('Instalación de Calderas'), ('Estufas'), ('Habilitaciones de gas'), ('Conversión de combustible'),
 ('Pérdidas de agua'), ('Destapaciones'), ('Sanitarios'), ('Presión de agua'), ('Cloacas'), ('Conexión domiciliaria'), ('Griferías'), ('Colectores solares'),
 ('Chapa'), ('Tejas'), ('Membrana en rollo'), ('Filtraciones'), ('Techos verdes'), ('Policarbonato'), ('Zinc'), ('Cumbrera'), ('Aislación térmica'), ('Drenajes'),
-('Tableros eléctricos'), ('Baja tensión'), ('Media tensión'), ('LED'), ('Automatización'), ('Domótica'), ('Cableado estructurado'), ('Puesta a tierra'), ('Solar fotovoltaica'), ('Detección de fallas');
+('Tableros eléctricos'), ('Baja tensión'), ('Media tensión'), ('LED'), ('Automatización'), ('Domótica'), ('Cableado estructurado'), ('Puesta a tierra'), ('Solar fotovoltaica'), ('Detección de fallas'),
+('Semanal'),('Post-Obra'), ('Diaria');
 
 INSERT INTO Habilidad (nombre_habilidad) VALUES 
 ('Java'), ('Python'), ('JavaScript'), ('TypeScript'), ('C#'), ('Go'), ('Kotlin'), ('APIs REST'), ('GraphQL'), ('Microservicios'), ('Spring Boot'), ('React'), ('Angular'), ('Node.js'), ('Git'), ('CI/CD'),
 ('Machine learning'), ('Deep learning'), ('NLP'), ('Análisis de datos'), ('SQL avanzado'), ('Power BI'), ('Tableau'), ('Modelos predictivos'), ('Chatbots'),
 ('Wireframing'), ('Prototipado'), ('UX Research'), ('UI Design'), ('Figma'), ('Accesibilidad web'), ('Design System'),
-('Identidad de marca'), ('Logotipos'), ('Manual de marca'), ('Packaging'), ('Flyer y folletería'), ('Infografías'), ('Motion graphics'), ('Señalética');
+('Identidad de marca'), ('Logotipos'), ('Manual de marca'), ('Packaging'), ('Flyer y folletería'), ('Infografías'), ('Motion graphics'), ('Señalética'), ('Godot'), ('Desarrollo de videojuegos');
 
 INSERT INTO Habilidad (nombre_habilidad) VALUES 
 ('Café de especialidad'), ('Latte art'), ('Espresso'), ('Cold brew'), ('Cata de café'),
 ('Vegano'), ('Asado y parrilla'), ('Finger food'), ('Comida Sin TACC'), ('Kosher'), ('Halal'), ('Meal prep'),
-('Vegetariano'),
-('Cena de autor'), ('Comida Internacional'), ('Cocina Saludable'),
+('Vegetariano'), ('Cena de autor'), ('Comida Internacional'), ('Cocina Saludable'),
 ('Masa madre'), ('Pan de campo'), ('Focaccia'), ('Brioche'), ('Facturas'),
 ('Tortas de boda'), ('Cupcakes'), ('Macarons'), ('Cheesecake'), ('Cake design'),
 ('Mozos'), ('Maitre'), ('Sommelier'), ('Barman'), ('Coctelería'), ('Protocolo de mesa'),
@@ -272,6 +282,17 @@ INSERT INTO Habilidad (nombre_habilidad) VALUES
 ('Matemática'), ('Física'), ('Química'), ('Biología'), ('Literatura'), ('Economía'), ('Derecho'), ('Ingreso universitario'),
 ('IELTS/TOEFL'), ('Traducción técnica'), ('Interpretación'), ('Conversación de idiomas');
 
+INSERT INTO Habilidad (nombre_habilidad) VALUES
+('Bodas'), ('15 años'), ('Producto'), ('Corporativa'), ('Mascotas'), ('Video de bodas'),
+('Drone'),('Videoclip'),('Deportes'),('Edición'),('Retratos'),('Artística'),
+('Streaming'),('Coberturas'),('Aérea'),('Recitales'),('Culinaria'),('Lightroom'),
+('Premiere Pro'),('Photoshop'),('DaVinci Resolve'),('After Effects'),('Fotografía nocturna'),
+('Fotografía de eventos'),('Fotografía de moda'),('Fotografía inmobiliaria'),('Fotografía gastronómica'),
+('Fotografía documental'),('Fotoperiodismo'),('Color grading'),
+('Iluminación'),('Manejo de cámara'),('Dirección de fotografía'),
+('Edición de sonido'),('Motion graphics'),('Sesiones exteriores'),
+('Sesiones de estudio'),('Cobertura de shows'),('Video publicitario'),('Contenido para marcas');
+
 INSERT INTO Habilidad (nombre_habilidad) VALUES 
 ('Obediencia básica'), ('Corrección de conducta'), ('Socialización de cachorros'),
 ('Paseos grupales'), ('Hospedaje de mascotas'), ('Cat sitting'), ('Transporte veterinario'),
@@ -279,3 +300,134 @@ INSERT INTO Habilidad (nombre_habilidad) VALUES
 ('Embalaje de mudanza'), ('Armado de muebles'), ('Seguro de cargas'), ('Transporte de obras de arte'),
 ('Reparto Last mile'), ('Logística en frío'), ('Trazabilidad de envíos'),
 ('Apertura de cerraduras'), ('Cajas de seguridad'), ('Cerraduras digitales'), ('Llave maestra');
+
+INSERT INTO Rubro_Especialidad(id_especialidad, id_rubro)
+VALUES
+-- RUBRO 1: HOGAR
+(10, 1), (11, 1), (19, 1), (20, 1), (21, 1), (22, 1), (23, 1), (24, 1), (25, 1),
+(26, 1), (27, 1), (28, 1), (29, 1), (30, 1), (31, 1), (32, 1), (33, 1), (34, 1), (35, 1),
+(36, 1), (37, 1), (38, 1), (39, 1), (45, 1), (49, 1), (50, 1), (51, 1), (56, 1), (57, 1), (58, 1),
+
+-- RUBRO 2: CONSTRUCCIÓN
+(19, 2), (20, 2), (21, 2), (22, 2), (23, 2), (24, 2), (25, 2), (26, 2), (27, 2), 
+(28, 2), (29, 2), (30, 2), (31, 2), (32, 2), (33, 2), (34, 2), (35, 2), (36, 2), 
+(37, 2), (38, 2), (39, 2), (49, 2), (50, 2), (51, 2), (56, 2), (57, 2), (58, 2),
+
+-- RUBRO 3: MASCOTAS
+(40, 3), (41, 3), (42, 3),
+
+-- RUBRO 4: EVENTOS
+(5, 4), (6, 4), (7, 4), (8, 4), (9, 4), (10, 4), (11, 4), (12, 4), (13, 4), (15, 4),
+(16, 4), (29, 4), (45, 4), (46, 4), (48, 4), (61, 4),
+
+-- RUBRO 5: BELLEZA Y SALUD
+(2, 5), (12, 5), (43, 5), (44, 5), (45, 5), (46, 5), (47, 5), (48, 5),
+
+-- RUBRO 6: TRANSPORTE
+(49, 6), (50, 6), (51, 6),
+
+-- RUBRO 7: ARTE Y DISEÑO
+(10, 7), (11, 7), (13, 7), (16, 7), (21, 7), (26, 7), (27, 7), (53, 7), (56, 7), 
+(58, 7), (59, 7), (60, 7), (61, 7),
+
+-- RUBRO 8: TECNOLOGÍA
+(35, 8), (52, 8), (53, 8), (54, 8), (55, 8),
+
+-- RUBRO 9: EDUCACIÓN
+(1, 9), (2, 9), (3, 9), (4, 9), (13, 9), (52, 9), (60, 9),
+
+-- RUBRO 10: GASTRONOMÍA
+(5, 10), (6, 10), (7, 10), (14, 10), (17, 10), (18, 10);
+
+-- 1. TECNOLOGÍA, DISEÑO Y ARTE
+-- Programación y Desarrollo (ID 52) + Videojuegos y Análisis
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(52, 54), (52, 55), (52, 56), (52, 57), (52, 58), (52, 59), (52, 60), -- Lenguajes
+(52, 61), (52, 62), (52, 63), (52, 64), (52, 65), (52, 66), (52, 67), (52, 68), (52, 69), -- Frameworks/DevOps
+(52, 74), (52, 78), (52, 94), (52, 95); -- SQL, Chatbots, Godot, Videojuegos
+
+-- Diseño Web y UX/UI (ID 53) + Herramientas de Diseño
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(53, 56), (53, 57), -- JS/TS para Front
+(53, 79), (53, 80), (53, 81), (53, 82), (53, 83), (53, 84), (53, 85), -- UX/UI
+(53, 210), (53, 230); -- Photoshop y Contenido marcas
+
+-- Análisis de Sistemas (ID 55) + Datos e IA
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(55, 67), (55, 70), (55, 71), (55, 72), (55, 73), (55, 74), (55, 75), (55, 76), (55, 77);
+
+-- Diseño Gráfico (ID 59) + Ilustración (ID 60) + Fotografía (ID 10)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(59, 83), (59, 86), (59, 87), (59, 88), (59, 89), (59, 90), (59, 91), (59, 92), (59, 93), -- Branding
+(59, 210), (59, 212), (59, 225), -- Photoshop, After Effects, Motion
+(60, 83), (60, 94), (60, 95), (60, 202), (60, 210), -- Arte, Godot, Photoshop
+(61, 83), (61, 89), (61, 215); -- Moda + Branding + Fotos de moda
+
+-- Fotografía (ID 10) y Video (ID 11)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(10, 191), (10, 192), (10, 193), (10, 194), (10, 195), (10, 201), (10, 208), (10, 210), (10, 213), (10, 214), (10, 215), (10, 216), (10, 217), (10, 221), (10, 222), (10, 226), (10, 227),
+(11, 196), (11, 197), (11, 198), (11, 199), (11, 200), (11, 203), (11, 204), (11, 205), (11, 206), (11, 209), (11, 211), (11, 212), (11, 220), (11, 221), (11, 222), (11, 223), (11, 224), (11, 225), (11, 229);
+
+-- 2. GASTRONOMÍA Y EVENTOS
+-- Especialidades 6, 7, 14, 16, 17 comparten etiquetas de salud
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(6, 101), (6, 104), (6, 108), (6, 111), (6, 107), (6, 109), (6, 110), -- Gastronomía
+(7, 101), (7, 102), (7, 103), (7, 104), (7, 105), (7, 106), -- Catering
+(14, 112), (14, 117), (14, 118), (14, 119), (14, 120), (14, 121), -- Pastelería
+(16, 109), (16, 112), (16, 113), (16, 114), (16, 115), (16, 116), -- Panadería
+(17, 101), (17, 104), (17, 107), (17, 108), (17, 111), -- Viandas
+(15, 122), (15, 123), (15, 124), (15, 125), (15, 126), (15, 127); -- Servicio de mesa
+
+
+-- 3. HOGAR Y CONSTRUCCIÓN (Habilidades Cruzadas)
+-- Albañilería (ID 20) e Instalación de Pisos (ID 31) y Construcción Seco (ID 57)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(20, 1), (20, 2), (20, 3), (20, 4), (20, 5), (20, 9), (20, 10), (20, 12), (20, 13), (20, 14),
+(31, 6), (31, 7), (31, 8), (31, 11), (31, 14), -- Microcemento (14) compartido
+(57, 10), (57, 39), (57, 40), (57, 181); -- Tabiques y muebles
+
+-- Electricidad (ID 23) y Sistemas de Seguridad (ID 35)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(23, 41), (23, 42), (23, 43), (23, 44), (23, 45), (23, 46), (23, 48), (23, 49), (23, 50),
+(35, 45), (35, 46), (35, 47), (35, 48), (35, 50); -- Automatización y Domótica compartida
+
+-- Plomería (ID 33) y Gas (ID 25)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(33, 23), (33, 24), (33, 25), (33, 26), (33, 27), (33, 28), (33, 29), (33, 30),
+(25, 15), (25, 16), (25, 17), (25, 18), (25, 19), (25, 20), (25, 21), (25, 22);
+
+-- Limpieza (ID 29)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(29, 51), (29, 52), (29, 53);
+
+-- 4. SALUD, BELLEZA Y EDUCACIÓN
+-- Estética (ID 45) y Peluquería (ID 48)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(45, 133), (45, 134), (45, 135), (45, 136), (45, 137), (45, 138), (45, 139), (45, 140),
+(48, 151), (48, 152), (48, 153), (48, 154), (48, 155), (48, 156),
+(46, 141), (46, 142), (46, 143), (46, 144), (46, 145); -- Manicura
+
+-- Educación e Idiomas (1, 3)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(1, 157), (1, 158), (1, 159), (1, 160), (1, 161), (1, 162), (1, 163), (1, 164),
+(3, 165), (3, 166), (3, 167), (3, 168);
+
+-- Mascotas (40, 41, 42)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(40, 169), (40, 170), (40, 171),
+(41, 172), (41, 173), (41, 174), (41, 175),
+(42, 176), (42, 177), (42, 178), (42, 179);
+
+
+-- 5. LOGÍSTICA Y CERRAJERÍA
+-- Fletes y Mudanzas (49, 50)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(49, 180), (49, 182), (49, 184),
+(50, 180), (50, 181), (50, 182), (50, 183),
+(51, 184), (51, 185), (51, 186);
+
+-- Cerrajería (ID 22)
+INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
+(22, 187), (22, 188), (22, 189), (22, 190);
+
+
