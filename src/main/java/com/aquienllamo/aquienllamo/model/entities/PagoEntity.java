@@ -22,7 +22,7 @@ public class PagoEntity {
 
     @OneToOne
     @JoinColumn(name = "id_trabajo")
-    private Trabajo trabajo;
+    private TrabajoEntity trabajo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "metodo_pago",nullable = false)
