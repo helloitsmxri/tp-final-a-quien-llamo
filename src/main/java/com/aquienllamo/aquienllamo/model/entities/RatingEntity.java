@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@ToString
 @Table(name = "Rating")
 public class RatingEntity {
 
@@ -27,6 +28,6 @@ public class RatingEntity {
     @Column(name = "valoracion",nullable = false)
     private Integer valoracion;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 }
