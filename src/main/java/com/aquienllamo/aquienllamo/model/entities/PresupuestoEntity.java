@@ -19,16 +19,16 @@ public class PresupuestoEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private UsuarioEntity id_usuario;
+    private UsuarioEntity usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tecnico", nullable = false)
-    private TecnicoEntity id_tecnico;
+    private TecnicoEntity tecnico;
 
     @Column(name = "precio_estimado", precision = 10, scale = 2, nullable = false)
-    private BigDecimal precio_estimado;
+    private BigDecimal precioEstimado;
 
     @Column(name = "descripcion_presupuesto", columnDefinition = "TEXT", nullable = false)
-    private String descripcion_presupuesto;
+    private String descripcionPresupuesto;
 
 }
