@@ -55,7 +55,6 @@ public class UsuarioEntity {
 
     // Relación @OneToOne con Técnico
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private TecnicoEntity perfilTecnico;
     private TecnicoEntity tecnico;
 
     // Relación @OneToMany con Ubicación
