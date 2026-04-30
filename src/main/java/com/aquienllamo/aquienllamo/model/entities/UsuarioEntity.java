@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -16,10 +17,11 @@ import java.time.LocalDateTime;
 public class UsuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_usuario;
+    @Column(name = "id_usuario") // Esto vincula el nombre de la DB con tu variable en Java
+    private Integer idUsuario;
 
-    @Column(nullable = false, length = 50)
-    private String tipo_imagen;
+    @Column(name = "tipo_imagen", nullable = false, length = 50)
+    private String tipoImagen;
 
     @Lob
     private byte[] foto;
@@ -42,13 +44,32 @@ public class UsuarioEntity {
     @Column(nullable = false, length = 50)
     private String telefono;
 
-    @Column(nullable = false)
-    private LocalDate fecha_registro;
+    @Column(name = "fecha_registro", nullable = false)
+    private LocalDate fechaRegistro;
 
     @Column(name = "ultima_actividad")
-    private LocalDateTime ultima_actividad;
+    private LocalDateTime ultimaActividad;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String sobre_mi;
+    @Column(name = "sobre_mi", nullable = false, columnDefinition = "TEXT")
+    private String sobreMi;
+
+    // Relación @OneToOne con Técnico
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private TecnicoEntity perfilTecnico;
+
+    // Relación @OneToMany con Ubicación
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UbicacionEntity>ubicaciones;
+
+    // Relación @OneToMany con Rating, un usuario puede ENVIAR una calificación y recibirla.
+    @OneToMany(mappedBy = "usuarioRemitente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RatingEntity>calificacionesEnviadas;
+
+    @OneToMany(mappedBy = "usuarioDestinatario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RatingEntity>calificacionesRecibidas;
+
+    // Relación @OneToMany con Presupuesto
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PresupuestoEntity>presupuestosSolicitados;
     
 }
