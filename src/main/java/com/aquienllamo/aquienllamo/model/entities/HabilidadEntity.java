@@ -14,8 +14,9 @@ import lombok.*;
 public class HabilidadEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_habilidad;
+    @Column(name = "id_habilidad")
+    private Integer idHabilidad;
 
-    @Column(length = 50)
-    private String nombre_habilidad;
+    @Column(length = 50, name = "nombre_habilidad")
+    private String nombreHabilidad;
 }
