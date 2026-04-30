@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.entities;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoTrabajo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @ToString
 @Builder
 @Table(name = "Trabajo")
-public class Trabajo {
+public class TrabajoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +32,9 @@ public class Trabajo {
 
     @Column(name = "fecha_estimada_fin", nullable = false)
     private LocalDate fechaEstimadaFin;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_trabajo", nullable = false)
+    private EstadoTrabajo estadoTrabajo;
     
 }
