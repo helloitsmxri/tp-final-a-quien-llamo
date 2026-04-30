@@ -81,6 +81,7 @@ FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
 
 ALTER TABLE Presupuesto MODIFY precio_estimado DECIMAL (10,2) NOT NULL;
+ALTER TABLE Presupuesto MODIFY descripcion_presupuesto TEXT NOT NULL;
 
 CREATE TABLE Trabajo (
 id_trabajo INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,6 +94,8 @@ FOREIGN KEY (id_presupuesto) REFERENCES Presupuesto(id_presupuesto)
 );
 
 ALTER TABLE Trabajo MODIFY descripcion_trabajo TEXT NOT NULL;
+ALTER TABLE Trabajo MODIFY fecha_estimada_inicio DATE NOT NULL;
+ALTER TABLE Trabajo MODIFY fecha_estimada_fin DATE NOT NULL;
 
 CREATE TABLE Pago (
 id_pago INT PRIMARY KEY AUTO_INCREMENT,
