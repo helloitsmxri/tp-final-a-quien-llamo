@@ -17,25 +17,26 @@ public class CertificacionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_certificacion;
+    @Column(name = "id_certificacion")
+    private Integer idCertificacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tecnico", referencedColumnName = "id_tecnico")
-    private TecnicoEntity id_tecnico;
+    private TecnicoEntity tecnico;
 
-    @Column(nullable = false, length = 100)
-    private String num_matricula;
+    @Column(nullable = false, length = 100, name = "num_matricula")
+    private String numMatricula;
 
-    @Column(nullable = false, length = 100)
-    private String ente_otorgador;
+    @Column(nullable = false, length = 100, name = "ente_otorgador")
+    private String enteOtorgador;
 
-    @Column
-    private LocalDate fecha_vencimiento;
+    @Column(name = "fecha_vencimiento")
+    private LocalDate fechaVencimiento;
 
-    @Column(nullable = false, length = 50)
-    private String tipo_imagen;
+    @Column(nullable = false, length = 50, name = "tipo_imagen")
+    private String tipoImagen;
 
     @Lob
-    @Column(nullable = false)
-    private byte[] imagen_certificado;
+    @Column(nullable = false, name = "imagen_certificado")
+    private byte[] imagenCertificado;
 }
