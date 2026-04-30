@@ -15,9 +15,10 @@ public class CaracteristicaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_caracteristica;
+    @Column(name = "id_caracteristica")
+    private Integer idCaracteristica;
 
-    @Column(length = 50)
-    private String valor_adjetivo;
+    @Column(name = "valor_adjetivo", length = 50)
+    private String valorAdjetivo;
     
 }
