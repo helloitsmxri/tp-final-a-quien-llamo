@@ -241,4 +241,41 @@ VALUES ('Clases Particulares'),
 ('Ilustración y arte'), 
 ('Moda e indumentaria');
 
+INSERT INTO Habilidad (nombre_habilidad) VALUES 
+('Muros'), ('Reparación de grietas'), ('Revoques'), ('Contrapiso'), ('Carpeta niveladora'), ('Cerámicos'), ('Porcelanato'), ('Piedra natural'), ('Asadores'), ('Tabiques'), ('Zócalos'), ('Pozos'), ('Frentes'), ('Microcemento'),
+('Redes internas de gas'), ('Detección de fugas'), ('Gas natural'), ('Gas envasado'), ('Instalación de Calderas'), ('Estufas'), ('Habilitaciones de gas'), ('Conversión de combustible'),
+('Pérdidas de agua'), ('Destapaciones'), ('Sanitarios'), ('Presión de agua'), ('Cloacas'), ('Conexión domiciliaria'), ('Griferías'), ('Colectores solares'),
+('Chapa'), ('Tejas'), ('Membrana en rollo'), ('Filtraciones'), ('Techos verdes'), ('Policarbonato'), ('Zinc'), ('Cumbrera'), ('Aislación térmica'), ('Drenajes'),
+('Tableros eléctricos'), ('Baja tensión'), ('Media tensión'), ('LED'), ('Automatización'), ('Domótica'), ('Cableado estructurado'), ('Puesta a tierra'), ('Solar fotovoltaica'), ('Detección de fallas');
 
+INSERT INTO Habilidad (nombre_habilidad) VALUES 
+('Java'), ('Python'), ('JavaScript'), ('TypeScript'), ('C#'), ('Go'), ('Kotlin'), ('APIs REST'), ('GraphQL'), ('Microservicios'), ('Spring Boot'), ('React'), ('Angular'), ('Node.js'), ('Git'), ('CI/CD'),
+('Machine learning'), ('Deep learning'), ('NLP'), ('Análisis de datos'), ('SQL avanzado'), ('Power BI'), ('Tableau'), ('Modelos predictivos'), ('Chatbots'),
+('Wireframing'), ('Prototipado'), ('UX Research'), ('UI Design'), ('Figma'), ('Accesibilidad web'), ('Design System'),
+('Identidad de marca'), ('Logotipos'), ('Manual de marca'), ('Packaging'), ('Flyer y folletería'), ('Infografías'), ('Motion graphics'), ('Señalética');
+
+INSERT INTO Habilidad (nombre_habilidad) VALUES 
+('Café de especialidad'), ('Latte art'), ('Espresso'), ('Cold brew'), ('Cata de café'),
+('Vegano'), ('Asado y parrilla'), ('Finger food'), ('Comida Sin TACC'), ('Kosher'), ('Halal'), ('Meal prep'),
+('Vegetariano'),
+('Cena de autor'), ('Comida Internacional'), ('Cocina Saludable'),
+('Masa madre'), ('Pan de campo'), ('Focaccia'), ('Brioche'), ('Facturas'),
+('Tortas de boda'), ('Cupcakes'), ('Macarons'), ('Cheesecake'), ('Cake design'),
+('Mozos'), ('Maitre'), ('Sommelier'), ('Barman'), ('Coctelería'), ('Protocolo de mesa'),
+('Iluminación ambiental'), ('Globología'), ('Centros de mesa'), ('Arcos florales'), ('Photo wall');
+
+INSERT INTO Habilidad (nombre_habilidad) VALUES 
+('Limpiezas faciales'), ('Microdermoabrasión'), ('Peeling químico'), ('Radiofrecuencia'), ('Cavitación'), ('Micropigmentación'), ('Microblading'), ('Lifting de pestañas'),
+('Manicura Rusa'), ('Uñas esculpidas'), ('Nail art'), ('Polygel'), ('Pedicuria spa'),
+('Masaje Deportivo'), ('Masaje Descontracturante'), ('Reflexología'), ('Drenaje linfático'), ('Aromaterapia'),
+('Corte de cabello'), ('Coloración'), ('Mechas Balayage'), ('Alisado permanente'), ('Barbería'), ('Tratamientos capilares'),
+('Matemática'), ('Física'), ('Química'), ('Biología'), ('Literatura'), ('Economía'), ('Derecho'), ('Ingreso universitario'),
+('IELTS/TOEFL'), ('Traducción técnica'), ('Interpretación'), ('Conversación de idiomas');
+
+INSERT INTO Habilidad (nombre_habilidad) VALUES 
+('Obediencia básica'), ('Corrección de conducta'), ('Socialización de cachorros'),
+('Paseos grupales'), ('Hospedaje de mascotas'), ('Cat sitting'), ('Transporte veterinario'),
+('Baño y secado'), ('Corte de raza'), ('Deslanado'), ('Geriátricas (mascotas)'),
+('Embalaje de mudanza'), ('Armado de muebles'), ('Seguro de cargas'), ('Transporte de obras de arte'),
+('Reparto Last mile'), ('Logística en frío'), ('Trazabilidad de envíos'),
+('Apertura de cerraduras'), ('Cajas de seguridad'), ('Cerraduras digitales'), ('Llave maestra');
