@@ -68,6 +68,8 @@ mensaje TEXT,
 FOREIGN KEY (id_chat) REFERENCES Chat(id_chat)
 );
 
+ALTER TABLE Mensaje MODIFY mensaje TEXT NOT NULL;
+
 CREATE TABLE Presupuesto (
 id_presupuesto INT AUTO_INCREMENT PRIMARY KEY,
 id_usuario INT,
@@ -78,6 +80,7 @@ FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
 
+ALTER TABLE Presupuesto MODIFY precio_estimado DECIMAL (10,2) NOT NULL;
 
 CREATE TABLE Trabajo (
 id_trabajo INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,6 +91,8 @@ fecha_estimada_fin DATE,
 estado_trabajo ENUM('Pendiente', 'Finalizado', 'Cancelado', 'En proceso') NOT NULL,
 FOREIGN KEY (id_presupuesto) REFERENCES Presupuesto(id_presupuesto)
 );
+
+ALTER TABLE Trabajo MODIFY descripcion_trabajo TEXT NOT NULL;
 
 CREATE TABLE Pago (
 id_pago INT PRIMARY KEY AUTO_INCREMENT,
