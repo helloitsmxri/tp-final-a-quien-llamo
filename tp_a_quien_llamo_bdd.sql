@@ -78,6 +78,7 @@ FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
 
+
 CREATE TABLE Trabajo (
 id_trabajo INT AUTO_INCREMENT PRIMARY KEY,
 id_presupuesto INT,
