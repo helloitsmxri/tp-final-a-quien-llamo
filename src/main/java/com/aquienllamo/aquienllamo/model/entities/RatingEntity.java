@@ -15,15 +15,15 @@ public class RatingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_rating;
+    private Integer idRating;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario_remitente")
-    private UsuarioEntity id_usuario_remitente;
+    private UsuarioEntity idUsuarioRemitente;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario_destinatario")
-    private UsuarioEntity id_usuario_destinatario;
+    private UsuarioEntity idUsuarioDestinatario;
 
     @Column(name = "valoracion",nullable = false)
     private Integer valoracion;
