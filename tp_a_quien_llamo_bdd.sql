@@ -1,3 +1,4 @@
+DROP DATABASE a_quien_llamo;
 CREATE DATABASE a_quien_llamo;
 USE a_quien_llamo;
 
@@ -46,8 +47,8 @@ id_tecnico INT,
 num_matricula VARCHAR(100) NOT NULL,
 ente_otorgorador VARCHAR(100) NOT NULL,
 fecha_vencimiento DATE,
-tipo_imagen VARCHAR(50),
-imagen_certificado MEDIUMBLOB,
+tipo_imagen VARCHAR(50) NOT NULL,
+imagen_certificado MEDIUMBLOB NOT NULL,
 FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
 
@@ -64,38 +65,29 @@ CREATE UNIQUE INDEX idx_user_tech ON Chat(id_usuario, id_tecnico);
 CREATE TABLE Mensaje(
 id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
 id_chat INT,
-mensaje TEXT,
+mensaje TEXT NOT NULL,
 FOREIGN KEY (id_chat) REFERENCES Chat(id_chat)
 );
-
-ALTER TABLE Mensaje MODIFY mensaje TEXT NOT NULL;
 
 CREATE TABLE Presupuesto (
 id_presupuesto INT AUTO_INCREMENT PRIMARY KEY,
 id_usuario INT,
 id_tecnico INT,
-precio_estimado DECIMAL (10,2),
-descripcion_presupuesto TEXT,
+precio_estimado DECIMAL (10,2) NOT NULL,
+descripcion_presupuesto TEXT NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
 
-ALTER TABLE Presupuesto MODIFY precio_estimado DECIMAL (10,2) NOT NULL;
-ALTER TABLE Presupuesto MODIFY descripcion_presupuesto TEXT NOT NULL;
-
 CREATE TABLE Trabajo (
 id_trabajo INT AUTO_INCREMENT PRIMARY KEY,
 id_presupuesto INT,
-descripcion_trabajo TEXT,
-fecha_estimada_inicio DATE,
-fecha_estimada_fin DATE,
+descripcion_trabajo TEXT NOT NULL,
+fecha_estimada_inicio DATE NOT NULL,
+fecha_estimada_fin DATE NOT NULL,
 estado_trabajo ENUM('Pendiente', 'Finalizado', 'Cancelado', 'En proceso') NOT NULL,
 FOREIGN KEY (id_presupuesto) REFERENCES Presupuesto(id_presupuesto)
 );
-
-ALTER TABLE Trabajo MODIFY descripcion_trabajo TEXT NOT NULL;
-ALTER TABLE Trabajo MODIFY fecha_estimada_inicio DATE NOT NULL;
-ALTER TABLE Trabajo MODIFY fecha_estimada_fin DATE NOT NULL;
 
 CREATE TABLE Pago (
 id_pago INT PRIMARY KEY AUTO_INCREMENT,
@@ -173,4 +165,80 @@ id_admin INT AUTO_INCREMENT PRIMARY KEY,
 nombre_usuario VARCHAR(50) NOT NULL,
 clave VARCHAR(20) NOT NULL
 );
+
+INSERT INTO Rubro(nombre_rubro)
+VALUES ('Hogar'), 
+('Construcción'), 
+('Mascotas'), 
+('Eventos'), 
+('Belleza y Salud'), 
+('Transporte'), 
+('Arte y Diseño'), 
+('Tecnología'), 
+('Educación'), 
+('Gastronomía');
+
+INSERT INTO Especialidad (nombre_especialidad) 
+VALUES ('Clases Particulares'), 
+('Coaching y Desarrollo Personal'), 
+('Idiomas'), 
+('Instructores y Capacitadores'), 
+('Baristería'), 
+('Chef/Cocinero'), 
+('Catering'), 
+('Decoración de Eventos'), 
+('Floristería'), 
+('Fotografía y Video'), 
+('Maquillaje'), 
+('Música y Entretenimiento'), 
+('Pastelería'), 
+('Servicio de Mesa'), 
+('Souvenir y Regalería'), 
+('Panadería Artesanal'), 
+('Viandas de Comida'), 
+('Aire Acondicionado'), 
+('Albañilería'), 
+('Carpintería'), 
+('Cerrajería'), 
+('Electricidad'), 
+('Fumigación y Control de Plagas'), 
+('Gas'), 
+('Impermeabilización'), 
+('Interiorismo y Decoración'), 
+('Jardinería y Paisajismo'), 
+('Limpieza'), 
+('Persianas y Cortinas'), 
+('Pisos'), 
+('Pintura'), 
+('Plomería'), 
+('Piscinas'), 
+('Seguridad (Alarmas y Cámaras)'), 
+('Techos'), 
+('Toldos y Cerramientos'), 
+('Vidriera'), 
+('Zinguería'), 
+('Adiestramiento'), 
+('Paseos y Cuidado'), 
+('Peluquería de Mascotas'), 
+('Coaching y Bienestar'), 
+('Depilación'), 
+('Entrenamiento Personal'), 
+('Estética y Cosmetología'), 
+('Manicura y Pedicura'), 
+('Masajes'), 
+('Peluquería'), 
+('Fletes'), 
+('Mudanzas'), 
+('Reparto y Logística'), 
+('Programador'), 
+('Diseñador Web y UX/UI'), 
+('Soporte Técnico'), 
+('Analista en Sistemas'), 
+('Arquitectura'), 
+('Construcción en Seco'), 
+('Herrería y metalurgía'), 
+('Diseño Gráfico'), 
+('Ilustración y arte'), 
+('Moda e indumentaria');
+
 
