@@ -55,11 +55,8 @@ public class UsuarioEntity {
 
     // Relación @OneToOne con Técnico
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-<<<<<<< Updated upstream
     private TecnicoEntity perfilTecnico;
-=======
     private TecnicoEntity tecnico;
->>>>>>> Stashed changes
 
     // Relación @OneToMany con Ubicación
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
