@@ -19,11 +19,11 @@ public class RatingEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario_remitente")
-    private UsuarioEntity idUsuarioRemitente;
+    private UsuarioEntity usuarioRemitente;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario_destinatario")
-    private UsuarioEntity idUsuarioDestinatario;
+    private UsuarioEntity usuarioDestinatario;
 
     @Column(name = "valoracion",nullable = false)
     private Integer valoracion;
