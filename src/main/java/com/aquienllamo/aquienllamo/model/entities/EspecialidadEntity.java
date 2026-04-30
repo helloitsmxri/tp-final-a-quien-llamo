@@ -14,8 +14,9 @@ import lombok.*;
 public class EspecialidadEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_especialidad;
+    @Column(name = "id_especialidad")
+    private Integer idEspecialidad;
 
-    @Column(length = 50)
-    private String nombre_especialidad;
+    @Column(length = 50, name = "nombre_especialidad")
+    private String nombreEspecialidad;
 }
