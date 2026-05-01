@@ -13,15 +13,16 @@ import lombok.*;
 public class UbicacionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_ubicacion;
+    @Column (name = "id_ubicacion")
+    private Integer idUbicacion;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = true)
-    private UsuarioEntity id_usuario;//mapeo la foreign key porque una ubicacion pertenece a un usuario.
+    private UsuarioEntity idUsuario;//mapeo la foreign key porque una ubicacion pertenece a un usuario.
     //se pone como la entidad UsuarioEntity directamente.
 
-    @Column(nullable = false, length = 50)
-    private String codigo_postal;
+    @Column(nullable = false, length = 50, name = "codigo_postal")
+    private String codigoPostal;
 
     @Column(nullable = false, length = 50)
     private String provincia;
@@ -38,7 +39,7 @@ public class UbicacionEntity {
     @Column
     private Integer piso;
 
-    @Column
-    private Integer numero_piso;
+    @Column (name = "numero_pisp")
+    private Integer numeroPiso;
 
 }
