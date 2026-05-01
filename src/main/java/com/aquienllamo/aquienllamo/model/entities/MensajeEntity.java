@@ -15,11 +15,12 @@ import lombok.*;
 public class MensajeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_mensaje;
+    @Column (name = "id_mensaje")
+    private Integer idMensaje;
 
     @ManyToOne
     @JoinColumn(name= "id_chat", nullable = true)
-    private ChatEntity id_chat;
+    private ChatEntity idChat;
 
     @Lob // el mensaje es de tipo TEXT, uso Lob (Large Object) para mapearlo
     @Column(nullable = false)
