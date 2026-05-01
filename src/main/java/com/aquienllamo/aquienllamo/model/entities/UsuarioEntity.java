@@ -24,6 +24,7 @@ public class UsuarioEntity {
     private String tipoImagen;
 
     @Lob
+    @Column(name = "foto", columnDefinition = "MEDIUMBLOB")
     private byte[] foto;
 
     @Column(nullable = false, length = 8)
