@@ -15,14 +15,15 @@ import lombok.*;
 public class ChatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_chat;
+    @Column (name = "id_chat")
+    private Integer idChat;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = true)
-    private UsuarioEntity id_usuario;
+    private UsuarioEntity idUsuario;
 
     @ManyToOne
     @JoinColumn(name = "id_tecnico", nullable = true)
-    private TecnicoEntity id_tecnico;
+    private TecnicoEntity idTecnico;
 
 }
