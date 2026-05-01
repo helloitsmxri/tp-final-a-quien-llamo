@@ -12,8 +12,9 @@ apellido VARCHAR(50) NOT NULL,
 email VARCHAR(50) NOT NULL,
 clave VARCHAR(100) NOT NULL,
 telefono VARCHAR(50) NOT NULL,
-fecha_registro DATE NOT NULL,
-ultima_actividad TIMESTAMP,
+fecha_nacimiento DATE NOT NULL,
+fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+ultima_actividad TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 sobre_mi TEXT NOT NULL
 );
 
@@ -104,6 +105,8 @@ id_usuario_remitente INT,
 id_usuario_destinatario INT,
 valoracion INT NOT NULL,
 descripcion TEXT,
+tipo_foto VARCHAR(50),
+foto MEDIUMBLOB,
 FOREIGN KEY (id_usuario_remitente) REFERENCES Usuario(id_usuario),
 FOREIGN KEY (id_usuario_destinatario) REFERENCES Usuario(id_usuario)
 );
@@ -172,6 +175,23 @@ CREATE TABLE Administrador (
 id_admin INT AUTO_INCREMENT PRIMARY KEY,
 nombre_usuario VARCHAR(50) NOT NULL,
 clave VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE Denuncia (
+id_denuncia INT AUTO_INCREMENT PRIMARY KEY,
+administrador_encargado INT,
+nombre_denunciante VARCHAR(50),
+apellido_denunciante VARCHAR(50),
+dni_denunciante VARCHAR(8),
+telefono_denunciante VARCHAR(20),
+nombre_denunciado VARCHAR(50),
+apellido_denunciado VARCHAR(50),
+dni_denunciado VARCHAR(8),
+telefono_denunciado VARCHAR(20),
+estado_denuncia ENUM('Comprobado','En proceso','Pendiente'),
+motivo_denuncia TEXT,
+fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (administrador_encargado) REFERENCES Administrador (id_admin)
 );
 
 INSERT INTO Rubro(nombre_rubro)
