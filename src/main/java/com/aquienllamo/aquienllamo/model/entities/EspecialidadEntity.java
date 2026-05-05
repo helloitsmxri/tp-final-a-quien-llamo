@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.entities;
 
+import com.aquienllamo.aquienllamo.model.Enum.TipoValidacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,4 +20,8 @@ public class EspecialidadEntity {
 
     @Column(length = 50, name = "nombre_especialidad")
     private String nombreEspecialidad;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_validacion")
+    private TipoValidacion tipoValidacion;
 }
