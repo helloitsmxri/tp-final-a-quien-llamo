@@ -8,14 +8,13 @@ import java.time.LocalDateTime;
 // devuelve al front.
 @Getter
 @Setter
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
 public class UsuarioDTOResponse {
     // El ID es fundamental para el manejo en el Front
-    private Integer idUsuario;
+    private String uuid;
     private String nombre;
     private String apellido;
     private String email;

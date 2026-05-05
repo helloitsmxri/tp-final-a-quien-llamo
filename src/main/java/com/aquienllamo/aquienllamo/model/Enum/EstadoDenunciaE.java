@@ -5,13 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum EstadoDenunciaE {
+    
+    @JsonProperty("Pendiente")
+    Pendiente,
 
-    @JsonProperty("Comprobado")
-    COMPROBADO,
+    @JsonProperty("Finalizado")
+    Finalizado,
+
+    @JsonProperty("Cancelado")
+    Cancelado,
 
     @JsonProperty("En proceso")
-    EN_PROCESO,
-
-    @JsonProperty("Pendiente")
-    PENDIENTE;
+    En_proceso; // En Java no puede haber espacios, pero Jackson usará el JsonProperty
 }

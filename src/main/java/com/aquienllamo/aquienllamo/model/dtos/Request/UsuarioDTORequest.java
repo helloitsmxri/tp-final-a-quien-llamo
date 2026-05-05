@@ -10,7 +10,6 @@ import java.time.LocalDate;
 // es lo que le pido al usuario.
 @Getter
 @Setter
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

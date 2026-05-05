@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -19,6 +20,16 @@ public class UsuarioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario") // Esto vincula el nombre de la DB con la variable de java
     private Integer idUsuario;
+
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 
     @Column(name = "tipo_imagen", nullable = false, length = 50)
     private String tipoImagen;
