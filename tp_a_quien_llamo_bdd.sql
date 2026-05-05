@@ -44,13 +44,28 @@ FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario)
 
 CREATE TABLE Certificacion (
 id_certificacion INT AUTO_INCREMENT PRIMARY KEY,
-id_tecnico INT,
+id_tecnico INT NOT NULL,
 num_matricula VARCHAR(100) NOT NULL,
 ente_otorgorador VARCHAR(100) NOT NULL,
 fecha_vencimiento DATE,
 tipo_imagen VARCHAR(50) NOT NULL,
 imagen_certificado MEDIUMBLOB NOT NULL,
 FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico)
+);
+
+CREATE TABLE Portfolio (
+id_portfolio INT AUTO_INCREMENT PRIMARY KEY,
+id_tecnico INT NOT NULL,
+id_especialidad INT NOT NULL,
+notas_aspirante TEXT, -- breve explicación del técnico sobre su experiencia
+enlace_externo VARCHAR(255),
+tipo_archivo VARCHAR(100),
+archivo_adjunto MEDIUMBLOB,
+estado_verificacion ENUM ('Pendiente', 'Rechazado', 'Aprobado') DEFAULT 'Pendiente',
+notas_admin TEXT, -- lo usamos para anotar y le decimos al user xq lo rechazamos
+fecha_entrega TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico) ON DELETE CASCADE,
+FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad)
 );
 
 CREATE TABLE Chat (
@@ -131,7 +146,8 @@ nombre_habilidad VARCHAR(50)
 
 CREATE TABLE Especialidad (
 id_especialidad INT AUTO_INCREMENT PRIMARY KEY,
-nombre_especialidad VARCHAR(50)
+nombre_especialidad VARCHAR(50),
+tipo_validacion ENUM('Matricula', 'Portfolio', 'Ninguna') DEFAULT 'Ninguna'
 );
 
 CREATE TABLE Habilidad_Especialidad (
@@ -188,9 +204,11 @@ nombre_denunciado VARCHAR(50),
 apellido_denunciado VARCHAR(50),
 dni_denunciado VARCHAR(8),
 telefono_denunciado VARCHAR(20),
-estado_denuncia ENUM('Comprobado','En proceso','Pendiente'),
-motivo_denuncia TEXT,
-fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+estado_denuncia ENUM('Comprobado','En proceso','Pendiente') NOT NULL,
+motivo_denuncia TEXT NOT NULL,
+tipo_foto VARCHAR(50),
+foto MEDIUMBLOB,
+fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 FOREIGN KEY (administrador_encargado) REFERENCES Administrador (id_admin)
 );
 
