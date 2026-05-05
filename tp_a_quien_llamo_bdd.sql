@@ -30,6 +30,7 @@ calle VARCHAR(50) NOT NULL,
 numero INT,
 piso INT,
 numero_piso INT,
+uuid VARCHAR (36) NOT NULL UNIQUE,
 FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
@@ -91,9 +92,11 @@ id_usuario INT,
 id_tecnico INT,
 precio_estimado DECIMAL (10,2) NOT NULL,
 descripcion_presupuesto TEXT NOT NULL,
+uuid VARCHAR (36) NOT NULL UNIQUE,
 FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
+
 
 CREATE TABLE Trabajo (
 id_trabajo INT AUTO_INCREMENT PRIMARY KEY,

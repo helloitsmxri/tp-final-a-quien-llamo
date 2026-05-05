@@ -2,6 +2,8 @@ package com.aquienllamo.aquienllamo.model.dtos.Response;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -10,6 +12,7 @@ import lombok.*;
 
 //Response: lo que YO le devuelvo al usuario como respuesta, lo que vería.
 public class UbicacionDTOResponse {
+    private UUID uuid;
     private String codigoPostal;
     private String provincia;
     private String ciudad;

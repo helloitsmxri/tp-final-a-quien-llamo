@@ -3,6 +3,8 @@ package com.aquienllamo.aquienllamo.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,5 +43,15 @@ public class UbicacionEntity {
 
     @Column (name = "numero_pisp")
     private Integer numeroPiso;
+
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist //se ejecuta justo antes de que persista el objeto en la bdd.
+    public void generarUUID(){
+        if(this.uuid == null){
+            this.uuid = UUID.randomUUID().toString(); // genera un nro nuevo y lo guarda.
+        }
+    }
 
 }
