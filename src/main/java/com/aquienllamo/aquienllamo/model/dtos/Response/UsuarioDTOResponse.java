@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class UsuarioDTOResponse {
     // El ID es fundamental para el manejo en el Front
     private String uuid;
+
     private String nombre;
     private String apellido;
     private String email;
