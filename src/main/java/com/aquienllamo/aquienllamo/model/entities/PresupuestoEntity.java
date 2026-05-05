@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,10 +20,12 @@ public class PresupuestoEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
+    @ToString.Exclude // buscar info ¿?
     private UsuarioEntity usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tecnico", nullable = false)
+    @ToString.Exclude
     private TecnicoEntity tecnico;
 
     @Column(name = "precio_estimado", precision = 10, scale = 2, nullable = false)
