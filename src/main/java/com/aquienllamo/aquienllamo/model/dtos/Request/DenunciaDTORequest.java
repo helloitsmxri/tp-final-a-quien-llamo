@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.dtos;
+package com.aquienllamo.aquienllamo.model.dtos.Request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

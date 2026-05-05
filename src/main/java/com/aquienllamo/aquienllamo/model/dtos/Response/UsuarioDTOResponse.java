@@ -1,8 +1,7 @@
-package com.aquienllamo.aquienllamo.model.dtos;
+package com.aquienllamo.aquienllamo.model.dtos.Response;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 // lo q devuelvo al usuario o lo q el service
