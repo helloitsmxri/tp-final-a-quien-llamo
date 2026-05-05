@@ -17,7 +17,7 @@ import java.util.List;
 public class UsuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario") // Esto vincula el nombre de la DB con tu variable en Java
+    @Column(name = "id_usuario") // Esto vincula el nombre de la DB con la variable de java
     private Integer idUsuario;
 
     @Column(name = "tipo_imagen", nullable = false, length = 50)
@@ -45,10 +45,13 @@ public class UsuarioEntity {
     @Column(nullable = false, length = 50)
     private String telefono;
 
-    @Column(name = "fecha_registro", nullable = false)
-    private LocalDate fechaRegistro;
+    @Column(name = "fecha_nacimiento", nullable = false)
+    private LocalDate fechaNacimiento;
 
-    @Column(name = "ultima_actividad")
+    @Column(name = "fecha_registro", nullable = false, insertable = false, updatable = false)
+    private LocalDateTime fechaRegistro;
+
+    @Column(name = "ultima_actividad", nullable = false, updatable = true)
     private LocalDateTime ultimaActividad;
 
     @Column(name = "sobre_mi", nullable = false, columnDefinition = "TEXT")
