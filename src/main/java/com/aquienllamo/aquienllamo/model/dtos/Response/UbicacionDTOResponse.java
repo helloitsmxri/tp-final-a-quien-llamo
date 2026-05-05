@@ -1,0 +1,21 @@
+package com.aquienllamo.aquienllamo.model.dtos.Response;
+
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+
+//Response: lo que YO le devuelvo al usuario como respuesta, lo que vería.
+public class UbicacionDTOResponse {
+    private String codigoPostal;
+    private String provincia;
+    private String ciudad;
+    private String calle;
+    private Integer numero;
+    private Integer piso;
+    private Integer numeroPiso;
+
+}
