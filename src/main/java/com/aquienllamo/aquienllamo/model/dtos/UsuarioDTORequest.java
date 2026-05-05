@@ -1,19 +1,20 @@
 package com.aquienllamo.aquienllamo.model.dtos;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 
 // es lo que le pido al usuario.
+@Getter
+@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class UsuarioDTORequest {
     // Datos personales básicos
     @NotBlank(message = "El nombre es obligatorio.")
@@ -28,12 +29,12 @@ public class UsuarioDTORequest {
     @Size(min = 8, max = 8, message = "El DNI debe tener 8 caracteres.")
     private String dni;
 
-    @NotBlank
-    @Email
+    @NotBlank (message = "El correo es obligatorio.")
+    @Email (message = "El formato del correo no es correcto.")
     private String email;
 
-    @NotBlank
-    @Size(min = 8)
+    @NotBlank (message = "La clave es obligatoria.")
+    @Size(min = 8, message = "Debe contener al menos 8 caracteres.")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
             message = "La clave debe tener al menos una mayúscula, una minúscula, un número y un carácter especial")
     private String clave;
@@ -42,5 +43,13 @@ public class UsuarioDTORequest {
     @Pattern(regexp = "^\\d{10}$", message = "El teléfono debe tener 10 dígitos. Evitar guiones y espacios.")
     private String telefono;
 
+    @NotBlank(message = "Es necesario poner la fecha de nacimiento.")
+    @Past(message = "La fecha de nacimiento no puede ser posterior a la actual.")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate fechaNacimiento;
+
+    private MultipartFile foto; // es multipart NO BYTE porque multipart es de spring y sabe sacar bytes y tipos solito
+
+    @NotBlank(message = "Es necesario añadir una breve descripción. Cuéntanos algo interesante.")
     private String sobreMi;
 }
