@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @ToString
 public class PresupuestoDTOResponse {
 
-    private Integer idPresupuesto; // así el front lo puede usar
+    private String uuid; // para el front!!
 
     // Datos del emisor/receptor
     // TÉCNICO:

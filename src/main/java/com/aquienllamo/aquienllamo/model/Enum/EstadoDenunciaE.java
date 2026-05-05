@@ -9,5 +9,5 @@ public enum EstadoDenunciaE {
     Finalizado,
     Cancelado,
     @JsonProperty("En proceso")
-    En_proceso; 
+    En_proceso;
 }
