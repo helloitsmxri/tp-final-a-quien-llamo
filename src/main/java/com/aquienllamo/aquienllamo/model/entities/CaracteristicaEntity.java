@@ -18,6 +18,9 @@ public class CaracteristicaEntity {
     @Column(name = "id_caracteristica")
     private Integer idCaracteristica;
 
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
     @Column(name = "valor_adjetivo", length = 50)
     private String valorAdjetivo;
     
