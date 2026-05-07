@@ -3,6 +3,8 @@ package com.aquienllamo.aquienllamo.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +27,16 @@ public class MensajeEntity {
     @Lob // el mensaje es de tipo TEXT, uso Lob (Large Object) para mapearlo
     @Column(nullable = false)
     private String mensaje;
+
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID() {
+        if(this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
+
 
 }

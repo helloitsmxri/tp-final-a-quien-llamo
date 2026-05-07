@@ -12,7 +12,7 @@ import java.util.UUID;
 
 //Response: lo que YO le devuelvo al usuario como respuesta, lo que vería.
 public class UbicacionDTOResponse {
-    private UUID uuid;
+    private String uuid;
     private String codigoPostal;
     private String provincia;
     private String ciudad;
