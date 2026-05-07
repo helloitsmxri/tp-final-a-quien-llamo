@@ -23,7 +23,7 @@ public class MensajeEntity {
     private Integer idMensaje;
 
     @ManyToOne
-    @JoinColumn(name ="usuario", nullable = false)
+    @JoinColumn(name ="id_sender", nullable = false) // SENDER: para saber quién envió el mensaje a la hora de chattear.
     private UsuarioEntity sender;
 
     @ManyToOne
@@ -37,7 +37,5 @@ public class MensajeEntity {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime fechaMensaje;
-
-
 
 }
