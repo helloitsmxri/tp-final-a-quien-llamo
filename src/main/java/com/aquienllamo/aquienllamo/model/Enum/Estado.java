@@ -1,17 +1,14 @@
 package com.aquienllamo.aquienllamo.model.Enum;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
+
 public enum Estado {
-    CONFIRMADO("Confirmado"),
-    RECHAZADO("Rechazado"),
-    PENDIENTE("Pendiente de revisión");
+    Confirmado,
+    Rechazado,
+    @JsonProperty("Pendiente de revisión")
+    Pendiente_de_revision;
 
-    private String estado;
-
-    Estado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
 }
