@@ -1,7 +1,7 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
-import com.aquienllamo.aquienllamo.model.dtos.UsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.UsuarioDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class UsuarioMapper {
         }
 
         return UsuarioDTOResponse.builder()
-                .idUsuario(user.getIdUsuario())
+                .uuid(user.getUuid())
                 .nombre(user.getNombre())
                 .apellido(user.getApellido())
                 .email(user.getEmail())
