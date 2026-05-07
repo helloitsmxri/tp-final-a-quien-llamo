@@ -20,6 +20,7 @@ sobre_mi TEXT NOT NULL
 );
 
 CREATE UNIQUE INDEX idx_dni ON Usuario(dni);
+CREATE UNIQUE INDEX idx_email ON Usuario(email);
 
 CREATE TABLE Ubicacion (
 id_ubicacion INT AUTO_INCREMENT PRIMARY KEY,
