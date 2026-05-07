@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.dtos.Response;
 
 import com.aquienllamo.aquienllamo.model.Enum.EstadoDenunciaE;
+import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 public class DenunciaDTOResponse {
     private String uuid;
 
+    //Administrador
+    private AdministradorEntity administrador;
     // Denunciante
     private String nombreDenunciante;
     private String apellidoDenunciante;

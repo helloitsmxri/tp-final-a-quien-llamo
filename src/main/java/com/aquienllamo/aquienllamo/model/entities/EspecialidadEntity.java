@@ -4,6 +4,7 @@ import com.aquienllamo.aquienllamo.model.Enum.TipoValidacion;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -36,4 +37,17 @@ public class EspecialidadEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_validacion")
     private TipoValidacion tipoValidacion;
+
+    //Rubro_especialidad
+    @ManyToMany(mappedBy = "especialidades")
+    private List<RubroEntity> rubros;
+
+    // Habilidad_Especialidad mappedBy porque HabilidadEntity es la dueña
+    @ManyToMany(mappedBy = "especialidades")
+    private List<HabilidadEntity> habilidades;
+
+    // Especialidad_Tecnico mappedBy porque TecnicoEntity es la dueña
+    @ManyToMany(mappedBy = "especialidades")
+    private List<TecnicoEntity> tecnicos;
+
 }

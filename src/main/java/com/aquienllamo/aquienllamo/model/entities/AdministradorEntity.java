@@ -14,8 +14,8 @@ import lombok.*;
 public class AdministradorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_admin")
-    private Integer idAdmin;
+    @Column(name = "id_administrador")
+    private Integer idAdministrador;
 
     @Column(nullable = false, length = 50, name = "nombre_usuario")
     private String nombreUsuario;

@@ -79,7 +79,8 @@ uuid VARCHAR(36) NOT NULL UNIQUE,
 id_usuario INT,
 id_tecnico INT,
 FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
-FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico)
+FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico),
+fecha_chat DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE UNIQUE INDEX idx_user_tech ON Chat(id_usuario, id_tecnico);
@@ -89,7 +90,8 @@ id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
 id_chat INT,
 mensaje TEXT NOT NULL,
-FOREIGN KEY (id_chat) REFERENCES Chat(id_chat)
+FOREIGN KEY (id_chat) REFERENCES Chat(id_chat),
+fecha_mensaje DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE Presupuesto (
@@ -99,7 +101,6 @@ id_usuario INT,
 id_tecnico INT,
 precio_estimado DECIMAL (10,2) NOT NULL,
 descripcion_presupuesto TEXT NOT NULL,
-uuid VARCHAR (36) NOT NULL UNIQUE,
 FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
@@ -121,7 +122,7 @@ id_pago INT PRIMARY KEY AUTO_INCREMENT,
 uuid VARCHAR(36) NOT NULL UNIQUE,
 id_trabajo INT,
 metodo_pago ENUM('Transferencia', 'Efectivo', 'Debito', 'Credito') NOT NULL,
-fecha_pago DATE,
+fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 estado ENUM('Confirmado', 'Rechazado', 'Pendiente de revision'),
 FOREIGN KEY (id_trabajo) REFERENCES Trabajo(id_trabajo)
 );
