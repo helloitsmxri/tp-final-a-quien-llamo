@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -21,6 +22,16 @@ public class PortfolioEntity {
     @Column(name = "id_portfolio")
     private Integer idPortfolio;
 
+    @Column(name = "uuid",nullable = false,unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID(){
+        if(this.uuid == null){
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
+
     @ManyToOne
     @JoinColumn(name = "id_tecnico", nullable = false)
     private TecnicoEntity tecnico;
@@ -30,7 +41,7 @@ public class PortfolioEntity {
     private EspecialidadEntity especialidad;
 
     @Lob
-    @Column(name = "notas_especialidad")
+    @Column(name = "notas_aspirante")
     private String notasAspirante;
 
     @Column(name = "enlace_externo", length = 255)
@@ -45,7 +56,7 @@ public class PortfolioEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_verificacion")
-    private EstadoVerificacion estadoVerificacion = EstadoVerificacion.PENDIENTE;
+    private EstadoVerificacion estadoVerificacion = EstadoVerificacion.Pendiente;
 
     @Lob
     @Column(name = "notas_admin")
