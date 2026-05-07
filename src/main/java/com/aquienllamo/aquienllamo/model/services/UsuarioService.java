@@ -3,10 +3,7 @@ package com.aquienllamo.aquienllamo.model.services;
 import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
-import com.aquienllamo.aquienllamo.model.exceptions.ImageDataTypeNotFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.MinorFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.UserFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
+import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.UsuarioMapper;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.*;
@@ -16,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service // aclaración es servicio
 @RequiredArgsConstructor
@@ -44,9 +43,13 @@ public class UsuarioService {
 
         // el correo no existe, el dni tampoco y es > edad:
 
-        UsuarioEntity user = UsuarioMapper.toEntity(newUser);
+        UsuarioEntity user = usuarioMapper.toEntity(newUser);
+        // tengo q encriptar la clave... se hace dsps porq supuestamente bloquea el programa
+        user.setClave(newUser.getClave());
+
         // validar fotito
 
+        processImage(user, newUser);
 
         // guardar user
         usuarioRepository.save(user);
@@ -54,10 +57,10 @@ public class UsuarioService {
     }
 
     // eliminar
-    public String deleteUser(String dni){
+    public String deleteUser(String correo){
         UsuarioEntity user = null;
-        if (usuarioRepository.existsByDni(dni)){
-            user = usuarioRepository.findByDni(dni).get();
+        if (usuarioRepository.existsByEmail(correo)){
+            user = usuarioRepository.findByDni(correo).get();
             usuarioRepository.delete(user);
             return "Se ha eliminado con éxito";
         }else {
@@ -66,7 +69,7 @@ public class UsuarioService {
     }
 
     // procesar foto
-    private void procesarImagen(UsuarioEntity user, UsuarioDTORequest request){
+    private void processImage(UsuarioEntity user, UsuarioDTORequest request){
         if (request.getFoto() != null && !request.getFoto().isEmpty()){
             try{
                 String tipoImagen = request.getFoto().getContentType();
@@ -85,10 +88,66 @@ public class UsuarioService {
     }
 
     // actualizar
+    public UsuarioDTOResponse update(String uuid, UsuarioDTORequest request){
+        UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró dicho usuario"));
 
+        user.setNombre(request.getNombre());
+        user.setApellido(request.getApellido());
+
+        String nuevoCorreo = request.getEmail();
+        // si el nuevo correo es diferente al actual
+        if (!user.getEmail().equals(nuevoCorreo)){
+            if (usuarioRepository.existsByEmail(nuevoCorreo)){
+                throw new UserFoundEx("Ese correo ya existe");
+            }
+            // y sino, lo seteo
+            user.setEmail(nuevoCorreo);
+        }
+
+        user.setTelefono(request.getTelefono());
+        user.setSobreMi(request.getSobreMi());
+
+        // y si el user sube nueva foto:
+        if (!request.getFoto().isEmpty() && request.getFoto() != null){
+            processImage(user, request);
+        }
+
+        // guardar y mapear:
+        return usuarioMapper.toResponse(usuarioRepository.save(user));
+
+    }
 
     // mostrar todos los usuarios
-
+    public List<UsuarioDTOResponse> getAllUsers() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(usuarioMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 
     // mostrar x algo específico -> dni o por email (tamb puede ser el id)
+    public UsuarioDTOResponse getByDni(String dni){
+        return usuarioRepository.findByDni(dni)
+                .map(usuarioMapper::toResponse)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese dni"));
+    }
+
+    public UsuarioDTOResponse getByEmail (String email){
+        return usuarioRepository.findByEmail(email)
+                .map(usuarioMapper::toResponse)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese correo."));
+    }
+
+    public UsuarioDTOResponse login(String email, String passwordSinEncriptar){
+        // validar correo:
+        UsuarioEntity user = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundEx("El correo ingresado no existe en nuestro sistema."));
+
+        // validar contraseña:
+        if (!user.getClave().equals(passwordSinEncriptar)){
+            throw new InvalidPasswordEx("Clave incorrecta");
+        }
+
+    }
 }
