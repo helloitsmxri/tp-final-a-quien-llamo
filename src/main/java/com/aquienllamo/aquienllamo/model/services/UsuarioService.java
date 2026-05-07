@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -149,5 +150,9 @@ public class UsuarioService {
             throw new InvalidPasswordEx("Clave incorrecta");
         }
 
+        user.setUltimaActividad(LocalDateTime.now());
+        usuarioRepository.save(user);
+
+        return usuarioMapper.toResponse(user);
     }
 }
