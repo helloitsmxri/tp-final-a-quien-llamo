@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -32,5 +33,17 @@ public class ChatEntity {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime fechaChat;
+
+    @Column(name ="uuid", nullable = false)
+    private String uuidChat;
+
+    @PrePersist
+    public void generarUUID()
+    {
+        if(this.uuidChat == null)
+        {
+            this.uuidChat = UUID.randomUUID().toString();
+        }
+    }
 
 }
