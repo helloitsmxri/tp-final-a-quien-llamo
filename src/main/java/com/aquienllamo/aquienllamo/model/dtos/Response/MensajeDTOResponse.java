@@ -9,7 +9,6 @@ import lombok.*;
 @ToString
 public class MensajeDTOResponse {
 
-    private String uuid;
     private String mensaje;
 
 }

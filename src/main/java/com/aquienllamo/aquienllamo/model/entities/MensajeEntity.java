@@ -2,7 +2,9 @@ package com.aquienllamo.aquienllamo.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -21,22 +23,21 @@ public class MensajeEntity {
     private Integer idMensaje;
 
     @ManyToOne
-    @JoinColumn(name= "id_chat", nullable = true)
+    @JoinColumn(name ="usuario", nullable = false)
+    private UsuarioEntity sender;
+
+    @ManyToOne
+    @JoinColumn(name= "id_chat", nullable = false)
     private ChatEntity idChat;
 
     @Lob // el mensaje es de tipo TEXT, uso Lob (Large Object) para mapearlo
     @Column(nullable = false)
     private String mensaje;
 
-    @Column(name = "uuid", nullable = false, unique = true)
-    private String uuid;
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime fechaMensaje;
 
-    @PrePersist
-    public void generarUUID() {
-        if(this.uuid == null) {
-            this.uuid = UUID.randomUUID().toString();
-        }
-    }
 
 
 }
