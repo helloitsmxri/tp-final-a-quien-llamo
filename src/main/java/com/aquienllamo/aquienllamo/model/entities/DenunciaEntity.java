@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -18,6 +19,16 @@ public class DenunciaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_denuncia")
     private Integer idDenuncia;
+
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "administrador_encargado")
