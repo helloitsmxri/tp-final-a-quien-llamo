@@ -122,7 +122,7 @@ id_pago INT PRIMARY KEY AUTO_INCREMENT,
 uuid VARCHAR(36) NOT NULL UNIQUE,
 id_trabajo INT,
 metodo_pago ENUM('Transferencia', 'Efectivo', 'Debito', 'Credito') NOT NULL,
-fecha_pago DATE,
+fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 estado ENUM('Confirmado', 'Rechazado', 'Pendiente de revision'),
 FOREIGN KEY (id_trabajo) REFERENCES Trabajo(id_trabajo)
 );
