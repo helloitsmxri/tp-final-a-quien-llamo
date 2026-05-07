@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -19,6 +20,16 @@ public class CertificacionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_certificacion")
     private Integer idCertificacion;
+
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tecnico", referencedColumnName = "id_tecnico")
