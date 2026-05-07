@@ -5,6 +5,7 @@ import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -20,6 +21,16 @@ public class PagoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPago;
 
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID(){
+        if(this.uuid == null){
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
+
     @OneToOne
     @JoinColumn(name = "id_trabajo")
     private TrabajoEntity trabajo;
@@ -28,11 +39,11 @@ public class PagoEntity {
     @Column(name = "metodo_pago",nullable = false)
     private MetodoDePago metodoDePago;
 
-    @Column(name = "fecha_pago", columnDefinition = "DATE")
+    @Column(name = "fecha_pago", nullable = false, insertable = false, updatable = false)
     private LocalDateTime fechaPago;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
-    private Estado estado;
+    private Estado estadoPago;
 
 }
