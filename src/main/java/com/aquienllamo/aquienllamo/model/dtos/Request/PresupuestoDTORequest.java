@@ -16,9 +16,9 @@ public class PresupuestoDTORequest {
     @NotNull
     private Integer idTecnico;
 
-    @NotNull
+    @NotNull (message = "Es necesario ingresar un precio para el presupuesto")
     private BigDecimal precioEstimado;
 
-    @NotBlank
+    @NotBlank(message = "Es necesario describir el trabajo a realizar")
     private String descripcionPresupuesto;
 }

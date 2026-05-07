@@ -10,7 +10,6 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-@Data
 public class PortfolioUsuarioDTORequest {
 
     private Integer especialidad; //esto se supone que en un futuro nosotros vamos a mostrar el nombre

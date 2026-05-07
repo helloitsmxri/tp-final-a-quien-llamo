@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
