@@ -12,7 +12,7 @@ import java.util.Base64;
 public class UsuarioMapper {
 
     // convertir de la request a una entidad
-    public static UsuarioEntity toEntity (UsuarioDTORequest dtoRequest){
+    public UsuarioEntity toEntity (UsuarioDTORequest dtoRequest){
         if (dtoRequest == null){
             return null;
         }
@@ -30,7 +30,7 @@ public class UsuarioMapper {
                 .build();
     }
     // convertir la entidad a una response
-    public static UsuarioDTOResponse toResponse(UsuarioEntity user){
+    public UsuarioDTOResponse toResponse(UsuarioEntity user){
         if (user == null){
             return null;
         }
