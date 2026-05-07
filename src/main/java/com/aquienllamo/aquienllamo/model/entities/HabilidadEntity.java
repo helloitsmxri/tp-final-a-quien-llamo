@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,4 +32,16 @@ public class HabilidadEntity {
 
     @Column(length = 50, name = "nombre_habilidad")
     private String nombreHabilidad;
+
+    //Habilidad_Especialidad
+    @ManyToMany
+    @JoinTable(
+            name = "Habilidad_Especialidad",
+            joinColumns = @JoinColumn(name = "id_habilidad"),
+            inverseJoinColumns = @JoinColumn(name = "id_especialidad")
+    )
+    private List<EspecialidadEntity> especialidades;
+    //Habilidad_Tecnico
+    @ManyToMany(mappedBy = "habilidades")
+    private List<TecnicoEntity> tecnicos;
 }
