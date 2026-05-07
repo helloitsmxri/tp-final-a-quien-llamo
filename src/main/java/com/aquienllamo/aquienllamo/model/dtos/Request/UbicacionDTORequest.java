@@ -10,7 +10,6 @@ import lombok.*;
 
 //Request: es lo que el usuario me manda.
 public class UbicacionDTORequest {
-    private Integer idUbicacion;
     private String codigoPostal;
     private String provincia;
     private String ciudad;
