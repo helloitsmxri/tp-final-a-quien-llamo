@@ -31,18 +31,25 @@ public class RatingEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario_remitente")
+    @JoinColumn(name = "id_usuario_remitente", nullable = false)
     private UsuarioEntity usuarioRemitente;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario_destinatario")
+    @JoinColumn(name = "id_usuario_destinatario", nullable = false)
     private UsuarioEntity usuarioDestinatario;
 
-    @Column(name = "valoracion",nullable = false)
+    @Column(name = "valoracion", nullable = false)
     private Integer valoracion;
 
     @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
+
+    @Column(name = "tipo_foto", length = 50)
+    private String tipoFoto;
+
+    @Lob
+    @Column(name = "foto")
+    private byte[] foto;
 
     //tabla intermedia de RATING Y CARACTERISTICAS
     @ManyToMany
@@ -50,4 +57,6 @@ public class RatingEntity {
     joinColumns = @JoinColumn(name = "id_rating"),
     inverseJoinColumns = @JoinColumn(name = "id_caracteristica"))
     private List<CaracteristicaEntity> caracteristicas;
+    //List<CaracteristicaEntity> caracteristicas =
+    //    caracteristicaRepository.findAllById(dto.getIdCaracteristicas());
 }
