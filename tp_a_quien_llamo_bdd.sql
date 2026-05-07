@@ -147,7 +147,6 @@ valor_adjetivo VARCHAR(50)
 
 CREATE TABLE Rating_Caracteristica (
 id_rating INT, 
-uuid VARCHAR(36) NOT NULL UNIQUE,
 id_caracteristica INT,
 PRIMARY KEY(id_rating, id_caracteristica),
 FOREIGN KEY(id_rating) REFERENCES Rating(id_rating),
