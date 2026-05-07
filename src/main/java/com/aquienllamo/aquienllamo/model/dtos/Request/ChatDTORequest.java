@@ -3,14 +3,17 @@ package com.aquienllamo.aquienllamo.model.dtos.Request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CaracteristicaRequestDTO {
+public class ChatDTORequest {
+    @NotBlank
+    private Integer idUsuario;
+    @NotBlank
+    private Integer idTecnico;
 
-    @NotBlank(message = "Se debe seleccionar al menos un adjetivo!")
-    private String valorAdjetivo;
-    
 }
