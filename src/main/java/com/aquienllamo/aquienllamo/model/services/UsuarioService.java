@@ -7,6 +7,7 @@ import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.UsuarioMapper;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
     // Registrar un nuevo usuario en el sistema.
     public UsuarioDTOResponse createUser(UsuarioDTORequest newUser){
@@ -45,8 +47,8 @@ public class UsuarioService {
         // el correo no existe, el dni tampoco y es > edad:
 
         UsuarioEntity user = usuarioMapper.toEntity(newUser);
-        // tengo q encriptar la clave... se hace dsps porq supuestamente bloquea el programa
-        user.setClave(newUser.getClave());
+        // tengo q encriptar la clave...
+        user.setClave(passwordEncoder.encode(newUser.getClave()));
 
         // validar fotito
 
@@ -58,15 +60,17 @@ public class UsuarioService {
     }
 
     // eliminar
-    public String deleteUser(String correo){
-        UsuarioEntity user = null;
-        if (usuarioRepository.existsByEmail(correo)){
-            user = usuarioRepository.findByDni(correo).get();
+    public String deleteUser(String uuid, String password){
+        UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(()->new UserNotFoundEx("No se encontró el usuario"));
+
+            if (!passwordEncoder.matches(password, user.getClave())){
+                throw new InvalidPasswordEx("¡Clave incorrecta!");
+            }
+
             usuarioRepository.delete(user);
             return "Se ha eliminado con éxito";
-        }else {
-            throw new UserNotFoundEx("No se pudo eliminar el usuario ya que no se encontró el dni del mismo.");
-        }
+
     }
 
     // procesar foto
@@ -110,7 +114,7 @@ public class UsuarioService {
         user.setSobreMi(request.getSobreMi());
 
         // y si el user sube nueva foto:
-        if (!request.getFoto().isEmpty() && request.getFoto() != null){
+        if (request.getFoto() != null && !request.getFoto().isEmpty()){
             processImage(user, request);
         }
 
@@ -128,6 +132,7 @@ public class UsuarioService {
     }
 
     // mostrar x algo específico -> dni o por email (tamb puede ser el id)
+    // estas son más p/los admins je
     public UsuarioDTOResponse getByDni(String dni){
         return usuarioRepository.findByDni(dni)
                 .map(usuarioMapper::toResponse)
@@ -140,17 +145,24 @@ public class UsuarioService {
                 .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese correo."));
     }
 
+    // para el usuario común:
+    public UsuarioDTOResponse getByUuid(String uuid){
+        return usuarioRepository.findByUuid(uuid)
+                .map(usuarioMapper::toResponse)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese ID"));
+    }
     public UsuarioDTOResponse login(String email, String passwordSinEncriptar){
         // validar correo:
         UsuarioEntity user = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundEx("El correo ingresado no existe en nuestro sistema."));
 
         // validar contraseña:
-        if (!user.getClave().equals(passwordSinEncriptar)){
-            throw new InvalidPasswordEx("Clave incorrecta");
+        if (!passwordEncoder.matches(passwordSinEncriptar, user.getClave())){
+            throw new InvalidPasswordEx("La clave ingresada no es correcta.");
         }
 
         user.setUltimaActividad(LocalDateTime.now());
+
         usuarioRepository.save(user);
 
         return usuarioMapper.toResponse(user);
