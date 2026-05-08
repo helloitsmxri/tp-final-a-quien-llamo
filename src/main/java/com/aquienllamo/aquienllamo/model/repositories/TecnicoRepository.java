@@ -17,4 +17,7 @@ public interface TecnicoRepository extends JpaRepository<TecnicoEntity,Integer> 
     List<TecnicoEntity> findByEspecialidades_IdEspecialidad(Integer idEspecialidad);
     List<TecnicoEntity> findAllByOrderByUsuario_FechaRegistroDesc();
     List<TecnicoEntity> findAllByOrderByUsuario_FechaRegistroAsc();
+    List<TecnicoEntity> findByUsuario_NombreContainingIgnoreCase(String nombre);
+    List<TecnicoEntity> findByUsuario_ApellidoContainingIgnoreCase(String apellido);
+    List<TecnicoEntity> findByUsuario_NombreContainingIgnoreCaseAndUsuario_ApellidoContainingIgnoreCase(String nombre, String apellido);
 }
