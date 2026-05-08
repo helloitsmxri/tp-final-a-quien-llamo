@@ -15,4 +15,6 @@ public interface TecnicoRepository extends JpaRepository<TecnicoEntity,Integer> 
     boolean existsByUsuario_idUsuario(Integer idUsuario);
     List<TecnicoEntity> findByHabilidades_IdHabilidad(Integer idHabilidad);
     List<TecnicoEntity> findByEspecialidades_IdEspecialidad(Integer idEspecialidad);
+    List<TecnicoEntity> findAllByOrderByUsuario_FechaRegistroDesc();
+    List<TecnicoEntity> findAllByOrderByUsuario_FechaRegistroAsc();
 }
