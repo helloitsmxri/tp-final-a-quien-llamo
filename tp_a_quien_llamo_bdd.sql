@@ -102,6 +102,8 @@ id_usuario INT,
 id_tecnico INT,
 precio_estimado DECIMAL (10,2) NOT NULL,
 descripcion_presupuesto TEXT NOT NULL,
+fecha_realizado DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+estado ENUM('Pendiente','Aceptado','Rechazado', 'Cancelado') NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );

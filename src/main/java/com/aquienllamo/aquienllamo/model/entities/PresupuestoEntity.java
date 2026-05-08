@@ -1,9 +1,12 @@
 package com.aquienllamo.aquienllamo.model.entities;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -45,4 +48,10 @@ public class PresupuestoEntity {
     @Column(name = "descripcion_presupuesto", columnDefinition = "TEXT", nullable = false)
     private String descripcionPresupuesto;
 
+    @Column(name = "fecha_realizado", nullable = false, updatable = false)
+    private LocalDate fechaRealizado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private EstadoPresupuestoE estado;
 }
