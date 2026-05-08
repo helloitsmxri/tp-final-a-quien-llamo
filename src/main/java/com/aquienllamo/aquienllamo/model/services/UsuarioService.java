@@ -54,9 +54,8 @@ public class UsuarioService {
 
         processImage(user, newUser);
 
-        // guardar user
-        usuarioRepository.save(user);
-        return usuarioMapper.toResponse(user);
+        // guardar user y devolverlo
+        return usuarioMapper.toResponse(usuarioRepository.save(user));
     }
 
     // eliminar
