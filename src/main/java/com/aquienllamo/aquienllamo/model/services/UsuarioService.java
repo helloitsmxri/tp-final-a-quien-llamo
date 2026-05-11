@@ -3,19 +3,20 @@ package com.aquienllamo.aquienllamo.model.services;
 import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
-import com.aquienllamo.aquienllamo.model.exceptions.ImageDataTypeNotFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.MinorFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.UserFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
+import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.UsuarioMapper;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service // aclaración es servicio
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
     // Registrar un nuevo usuario en el sistema.
     public UsuarioDTOResponse createUser(UsuarioDTORequest newUser){
@@ -44,29 +46,34 @@ public class UsuarioService {
 
         // el correo no existe, el dni tampoco y es > edad:
 
-        UsuarioEntity user = UsuarioMapper.toEntity(newUser);
+        UsuarioEntity user = usuarioMapper.toEntity(newUser);
+        // tengo q encriptar la clave...
+        user.setClave(passwordEncoder.encode(newUser.getClave()));
+
         // validar fotito
 
+        processImage(user, newUser);
 
-        // guardar user
-        usuarioRepository.save(user);
-        return usuarioMapper.toResponse(user);
+        // guardar user y devolverlo
+        return usuarioMapper.toResponse(usuarioRepository.save(user));
     }
 
     // eliminar
-    public String deleteUser(String dni){
-        UsuarioEntity user = null;
-        if (usuarioRepository.existsByDni(dni)){
-            user = usuarioRepository.findByDni(dni).get();
+    public String deleteUser(String uuid, String password){
+        UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(()->new UserNotFoundEx("No se encontró el usuario"));
+
+            if (!passwordEncoder.matches(password, user.getClave())){
+                throw new InvalidPasswordEx("¡Clave incorrecta!");
+            }
+
             usuarioRepository.delete(user);
             return "Se ha eliminado con éxito";
-        }else {
-            throw new UserNotFoundEx("No se pudo eliminar el usuario ya que no se encontró el dni del mismo.");
-        }
+
     }
 
     // procesar foto
-    private void procesarImagen(UsuarioEntity user, UsuarioDTORequest request){
+    private void processImage(UsuarioEntity user, UsuarioDTORequest request){
         if (request.getFoto() != null && !request.getFoto().isEmpty()){
             try{
                 String tipoImagen = request.getFoto().getContentType();
@@ -85,10 +92,78 @@ public class UsuarioService {
     }
 
     // actualizar
+    public UsuarioDTOResponse update(String uuid, UsuarioDTORequest request){
+        UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró dicho usuario"));
 
+        user.setNombre(request.getNombre());
+        user.setApellido(request.getApellido());
+
+        String nuevoCorreo = request.getEmail();
+        // si el nuevo correo es diferente al actual
+        if (!user.getEmail().equals(nuevoCorreo)){
+            if (usuarioRepository.existsByEmail(nuevoCorreo)){
+                throw new UserFoundEx("Ese correo ya existe");
+            }
+            // y sino, lo seteo
+            user.setEmail(nuevoCorreo);
+        }
+
+        user.setTelefono(request.getTelefono());
+        user.setSobreMi(request.getSobreMi());
+
+        // y si el user sube nueva foto:
+        if (request.getFoto() != null && !request.getFoto().isEmpty()){
+            processImage(user, request);
+        }
+
+        // guardar y mapear:
+        return usuarioMapper.toResponse(usuarioRepository.save(user));
+
+    }
 
     // mostrar todos los usuarios
-
+    public List<UsuarioDTOResponse> getAllUsers() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(usuarioMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 
     // mostrar x algo específico -> dni o por email (tamb puede ser el id)
+    // estas son más p/los admins je
+    public UsuarioDTOResponse getByDni(String dni){
+        return usuarioRepository.findByDni(dni)
+                .map(usuarioMapper::toResponse)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese dni"));
+    }
+
+    public UsuarioDTOResponse getByEmail (String email){
+        return usuarioRepository.findByEmail(email)
+                .map(usuarioMapper::toResponse)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese correo."));
+    }
+
+    // para el usuario común:
+    public UsuarioDTOResponse getByUuid(String uuid){
+        return usuarioRepository.findByUuid(uuid)
+                .map(usuarioMapper::toResponse)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese ID"));
+    }
+    public UsuarioDTOResponse login(String email, String passwordSinEncriptar){
+        // validar correo:
+        UsuarioEntity user = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundEx("El correo ingresado no existe en nuestro sistema."));
+
+        // validar contraseña:
+        if (!passwordEncoder.matches(passwordSinEncriptar, user.getClave())){
+            throw new InvalidPasswordEx("La clave ingresada no es correcta.");
+        }
+
+        user.setUltimaActividad(LocalDateTime.now());
+
+        usuarioRepository.save(user);
+
+        return usuarioMapper.toResponse(user);
+    }
 }

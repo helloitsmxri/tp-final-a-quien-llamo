@@ -11,7 +11,7 @@ dni VARCHAR(8) NOT NULL,
 nombre VARCHAR(50) NOT NULL,
 apellido VARCHAR(50) NOT NULL,
 email VARCHAR(50) NOT NULL,
-clave VARCHAR(100) NOT NULL,
+clave VARCHAR(255) NOT NULL,
 telefono VARCHAR(50) NOT NULL,
 fecha_nacimiento DATE NOT NULL,
 fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -20,6 +20,7 @@ sobre_mi TEXT NOT NULL
 );
 
 CREATE UNIQUE INDEX idx_dni ON Usuario(dni);
+CREATE UNIQUE INDEX idx_email ON Usuario(email);
 
 CREATE TABLE Ubicacion (
 id_ubicacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,6 +102,8 @@ id_usuario INT,
 id_tecnico INT,
 precio_estimado DECIMAL (10,2) NOT NULL,
 descripcion_presupuesto TEXT NOT NULL,
+fecha_realizado DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+estado ENUM('Pendiente','Aceptado','Rechazado', 'Cancelado') NOT NULL,
 FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
