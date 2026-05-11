@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UbicacionRepository extends JpaRepository<UbicacionRepository, Integer> {
+public interface UbicacionRepository extends JpaRepository<UbicacionEntity, Integer> {
 
     Optional<UbicacionRepository> findById(String uuid);
 
-    List<UbicacionEntity> findByIdUsuario_IdUsuario(Integer idUsuario);
+    List<UbicacionEntity> findByUsuario_IdUsuario(Integer idUsuario);
+
+    Optional<UbicacionEntity>findByUuid(String uuid);
 
     boolean existsByUuid(String uuid);
 
