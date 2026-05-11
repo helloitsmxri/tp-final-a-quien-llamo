@@ -20,7 +20,7 @@ public class UbicacionEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
-    private UsuarioEntity idUsuario;//mapeo la foreign key porque una ubicacion pertenece a un usuario.
+    private UsuarioEntity usuario;//mapeo la foreign key porque una ubicacion pertenece a un usuario.
     //se pone como la entidad UsuarioEntity directamente.
 
     @Column(nullable = false, length = 50, name = "codigo_postal")
