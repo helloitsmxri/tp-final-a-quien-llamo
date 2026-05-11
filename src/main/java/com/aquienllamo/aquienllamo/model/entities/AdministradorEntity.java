@@ -3,6 +3,8 @@ package com.aquienllamo.aquienllamo.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +24,17 @@ public class AdministradorEntity {
 
     @Column(nullable = false, length = 20)
     private String clave;
+
+    @Column(name ="uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID()
+    {
+        if(this.uuid == null)
+        {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 
 }
