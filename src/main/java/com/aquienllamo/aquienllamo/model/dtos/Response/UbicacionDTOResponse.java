@@ -9,6 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 
 //Response: lo que YO le devuelvo al usuario como respuesta, lo que vería.
 public class UbicacionDTOResponse {

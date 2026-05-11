@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor // constructor completo
 @NoArgsConstructor // constructor vacío
 @ToString
+@Builder
 
 //Request: es lo que el usuario me manda.
 public class UbicacionDTORequest {
