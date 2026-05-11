@@ -26,5 +26,4 @@ public interface RatingRepository extends JpaRepository<RatingRepository, Intege
             FROM RatingEntity r
             WHERE r.usuarioDestinatario.idUsuario = :idUsuario""")
     Double averageRating(Integer idUser);
-    
 }
