@@ -30,6 +30,6 @@ public class PresupuestoDTOResponse {
     private BigDecimal precioEstimado;
     private String descripcionPresupuesto;
 
-    private LocalDate fechaRealizado;
+    private LocalDateTime fechaRealizado;
     private EstadoPresupuestoE estado;
 }
