@@ -4,11 +4,14 @@ import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PresupuestoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PresupuestoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.PresupuestoEntity;
+import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.PresupuestoNotFoundEx;
+import com.aquienllamo.aquienllamo.model.exceptions.TecnicoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.PresupuestoMapper;
 import com.aquienllamo.aquienllamo.model.repositories.PresupuestoRepository;
+import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import com.aquienllamo.aquienllamo.model.specifications.PresupuestoSpecifications;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,24 +32,45 @@ public class PresupuestoService {
     private final PresupuestoMapper presupuestoMapper;
     private final PresupuestoRepository presupuestoRepository;
     private final UsuarioRepository usuarioRepository;
-    // acá iría un private final de TÉCNICO REPOSITORY!!!! todavía está en desarrollo
+    private final TecnicoRepository tecnicoRepository;
+    // acá iría un private final de CHAT REPOSITORY Y MENSAJE REPOSITORY!!!! todavía está en desarrollo
 
     // no llamo a especificación xq tiene metodos static
 
     // Registrar un nuevo presupuesto en el sistema
     public PresupuestoDTOResponse createPresupuesto (PresupuestoDTORequest dto, String uuidTecnico){
-        PresupuestoEntity presupuesto = presupuestoMapper.toEntity(dto);
-        // acá iría el técnico (su token viene del parámetro) faltaaaaaaaaa
+
+        // acá el token del técnicop
+        TecnicoEntity technician = tecnicoRepository.findByUuid(uuidTecnico)
+                .orElseThrow(() -> new TecnicoNotFoundEx("No se encontró al técnico"));
 
         // acá va el usuario:
         UsuarioEntity user = usuarioRepository.findByUuid(dto.getUuidUsuario())
                 .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario."));
 
-        // se setea
-        presupuesto.setUsuario(user);
-        // setear tecnico tamb ------ FALTAAAAAAAAAA
+        // verificamos q tecnico no sea el mismo uuid de user (puede pasar)
+        if (technician.getUsuario().getUuid().equals(user.getUuid())) {
+            throw new RuntimeException("No puedes enviarte un presupuesto a ti mismo.");
+        }
 
-        presupuesto.setFechaRealizado(LocalDate.now());
+        // se setea
+        PresupuestoEntity presupuesto = presupuestoMapper.toEntity(dto);
+        presupuesto.setUsuario(user);
+        presupuesto.setTecnico(technician);
+
+        presupuesto.setFechaRealizado(LocalDateTime.now());
+
+//        cuando las chicas hagan chat y mensaje hago esto:
+//        ChatEntity chat = chatRepository.findByUuid(uuidChat)
+//                .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
+//
+//        MensajeEntity mensajeSistema = new MensajeEntity();
+//        mensajeSistema.setUuid(UUID.randomUUID().toString());
+//        mensajeSistema.setChat(chat);
+//        mensajeSistema.setFechaMensaje(LocalDateTime.now());
+//        mensajeSistema.setMensaje("Hola! Ya diseñé un presupuesto. Veríficalo, y acéptalo si estás de acuerdo: $" + presupuesto.getPrecioEstimado());
+//
+//        mensajeRepository.save(mensajeSistema);
 
         // podríamos setear un estado a pendiente...
         presupuesto.setEstado(EstadoPresupuestoE.Pendiente);
@@ -127,4 +152,10 @@ public class PresupuestoService {
                 .toList();
     }
 
+    // ver presupuesto detallado:
+    public PresupuestoDTOResponse obtenerPorUuid(String uuidPresupuesto){
+        return presupuestoRepository.findByUuid(uuidPresupuesto)
+                .map(presupuestoMapper::toResponse)
+                .orElseThrow(() -> new PresupuestoNotFoundEx("No se encontró el presupuesto"));
+    }
 }
