@@ -61,10 +61,11 @@ public class UsuarioService {
 
         processImage(user, newUser);
 
+        // guardar user y devolverlo
         usuarioRepository.save(user);
         UsuarioDTOResponse response = usuarioMapper.toResponse(user);
         response.setTipoUsuario(determinarTipoUsuario(user.getUuid()));
-        // guardar user y devolverlo
+
         return response;
     }
 
