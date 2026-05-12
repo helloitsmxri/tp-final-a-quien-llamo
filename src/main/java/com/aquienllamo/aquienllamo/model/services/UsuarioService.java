@@ -5,6 +5,7 @@ import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.UsuarioMapper;
+import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,12 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final PasswordEncoder passwordEncoder;
+    private final TecnicoRepository tecnicoRepository;
+
+    @Transactional(readOnly = true)
+    public String determinarTipoUsuario(String uuid) {
+        return tecnicoRepository.existsByUsuarioUuid(uuid) ? "TECNICO" : "CLIENTE";
+    }
 
     // Registrar un nuevo usuario en el sistema.
     public UsuarioDTOResponse createUser(UsuarioDTORequest newUser){
@@ -54,8 +61,11 @@ public class UsuarioService {
 
         processImage(user, newUser);
 
+        usuarioRepository.save(user);
+        UsuarioDTOResponse response = usuarioMapper.toResponse(user);
+        response.setTipoUsuario(determinarTipoUsuario(user.getUuid()));
         // guardar user y devolverlo
-        return usuarioMapper.toResponse(usuarioRepository.save(user));
+        return response;
     }
 
     // eliminar
@@ -146,10 +156,15 @@ public class UsuarioService {
 
     // para el usuario común:
     public UsuarioDTOResponse getByUuid(String uuid){
-        return usuarioRepository.findByUuid(uuid)
-                .map(usuarioMapper::toResponse)
-                .orElseThrow(() -> new UserNotFoundEx("No se encontró un usuario asociado a ese ID"));
+        UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+        UsuarioDTOResponse response = usuarioMapper.toResponse(user);
+        response.setTipoUsuario(determinarTipoUsuario(uuid));
+
+        return response;
     }
+
     public UsuarioDTOResponse login(String email, String passwordSinEncriptar){
         // validar correo:
         UsuarioEntity user = usuarioRepository.findByEmail(email)
