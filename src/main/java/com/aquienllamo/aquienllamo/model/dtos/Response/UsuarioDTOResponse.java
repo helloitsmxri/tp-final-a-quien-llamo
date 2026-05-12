@@ -26,6 +26,9 @@ public class UsuarioDTOResponse {
     private String fotoBase64;
     private String tipoImagen;
 
+    //nuevo cambio:
+    private String tipoUsuario;
+
     private LocalDateTime fechaRegistro;
     private LocalDateTime ultimaActividad;
 }
