@@ -10,7 +10,7 @@ foto MEDIUMBLOB,
 dni VARCHAR(8) NOT NULL,
 nombre VARCHAR(50) NOT NULL,
 apellido VARCHAR(50) NOT NULL,
-email VARCHAR(50) NOT NULL,
+email VARCHAR(255) NOT NULL,
 clave VARCHAR(255) NOT NULL,
 telefono VARCHAR(50) NOT NULL,
 fecha_nacimiento DATE NOT NULL,
@@ -28,7 +28,7 @@ id_usuario INT,
 codigo_postal VARCHAR(10) NOT NULL,
 provincia VARCHAR(50) NOT NULL,
 ciudad VARCHAR(50) NOT NULL,
-calle VARCHAR(50) NOT NULL,
+calle VARCHAR(255) NOT NULL,
 numero INT,
 piso INT,
 numero_piso INT,
@@ -51,27 +51,11 @@ id_certificacion INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
 id_tecnico INT NOT NULL,
 num_matricula VARCHAR(100) NOT NULL,
-ente_otorgorador VARCHAR(100) NOT NULL,
+ente_otorgorador VARCHAR(255) NOT NULL,
 fecha_vencimiento DATE,
 tipo_imagen VARCHAR(50) NOT NULL,
 imagen_certificado MEDIUMBLOB NOT NULL,
 FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico)
-);
-
-CREATE TABLE Portfolio (
-id_portfolio INT AUTO_INCREMENT PRIMARY KEY,
-uuid VARCHAR(36) NOT NULL UNIQUE,
-id_tecnico INT NOT NULL,
-id_especialidad INT NOT NULL,
-notas_aspirante TEXT, -- breve explicación del técnico sobre su experiencia
-enlace_externo VARCHAR(255),
-tipo_archivo VARCHAR(100),
-archivo_adjunto MEDIUMBLOB,
-estado_verificacion ENUM ('Pendiente', 'Rechazado', 'Aprobado') DEFAULT 'Pendiente',
-notas_admin TEXT, -- lo usamos para anotar y le decimos al user xq lo rechazamos
-fecha_entrega TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico) ON DELETE CASCADE,
-FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad)
 );
 
 CREATE TABLE Chat (
@@ -96,18 +80,17 @@ fecha_mensaje DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE Presupuesto (
-id_presupuesto INT AUTO_INCREMENT PRIMARY KEY,
-uuid VARCHAR(36) NOT NULL UNIQUE,
-id_usuario INT,
-id_tecnico INT,
-precio_estimado DECIMAL (10,2) NOT NULL,
-descripcion_presupuesto TEXT NOT NULL,
-fecha_realizado DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-estado ENUM('Pendiente','Aceptado','Rechazado', 'Cancelado') NOT NULL,
-FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
-FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
+    id_presupuesto INT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE,
+    id_usuario INT,
+    id_tecnico INT,
+    precio_estimado DECIMAL (10,2) NOT NULL,
+    descripcion_presupuesto TEXT NOT NULL,
+    fecha_realizado DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, -- Cambiado a DATETIME
+    estado ENUM('Pendiente','Aceptado','Rechazado', 'Cancelado') NOT NULL,
+    FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
+    FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
-
 
 CREATE TABLE Trabajo (
 id_trabajo INT AUTO_INCREMENT PRIMARY KEY,
@@ -157,17 +140,17 @@ FOREIGN KEY(id_rating) REFERENCES Rating(id_rating),
 FOREIGN KEY(id_caracteristica) REFERENCES Caracteristica(id_caracteristica)
 );
 
-CREATE TABLE Habilidad (
-id_habilidad INT AUTO_INCREMENT PRIMARY KEY,
-uuid VARCHAR(36) NOT NULL UNIQUE,
-nombre_habilidad VARCHAR(50)
+CREATE TABLE Especialidad (
+    id_especialidad INT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE DEFAULT (UUID()), -- se genera solo
+    nombre_especialidad VARCHAR(50),
+    tipo_validacion ENUM('Certificado', 'Portfolio', 'Ninguna') DEFAULT 'Ninguna'
 );
 
-CREATE TABLE Especialidad (
-id_especialidad INT AUTO_INCREMENT PRIMARY KEY,
-uuid VARCHAR(36) NOT NULL UNIQUE,
-nombre_especialidad VARCHAR(50),
-tipo_validacion ENUM('Certificado', 'Portfolio', 'Ninguna') DEFAULT 'Ninguna'
+CREATE TABLE Habilidad (
+    id_habilidad INT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE DEFAULT (UUID()), -- se genera solo
+    nombre_habilidad VARCHAR(50)
 );
 
 CREATE TABLE Habilidad_Especialidad (
@@ -195,9 +178,9 @@ FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad)
 );
 
 CREATE TABLE Rubro (
-id_rubro INT AUTO_INCREMENT PRIMARY KEY,
-uuid VARCHAR(36) NOT NULL UNIQUE,
-nombre_rubro VARCHAR(50)
+    id_rubro INT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE DEFAULT (UUID()), --
+    nombre_rubro VARCHAR(50)
 );
 
 CREATE TABLE Rubro_Especialidad (
@@ -208,11 +191,27 @@ FOREIGN KEY (id_especialidad) REFERENCES Especialidad (id_especialidad),
 FOREIGN KEY(id_rubro) REFERENCES Rubro (id_rubro)
 );
 
-CREATE TABLE Administrador (
-id_admin INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE Portfolio (
+id_portfolio INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
-nombre_usuario VARCHAR(50) NOT NULL,
-clave VARCHAR(20) NOT NULL
+id_tecnico INT NOT NULL,
+id_especialidad INT NOT NULL,
+notas_aspirante TEXT, -- breve explicación del técnico sobre su experiencia
+enlace_externo VARCHAR(255),
+tipo_archivo VARCHAR(100),
+archivo_adjunto MEDIUMBLOB,
+estado_verificacion ENUM ('Pendiente', 'Rechazado', 'Aprobado') DEFAULT 'Pendiente',
+notas_admin TEXT, -- lo usamos para anotar y le decimos al user xq lo rechazamos
+fecha_entrega TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico) ON DELETE CASCADE,
+FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad)
+);
+
+CREATE TABLE Administrador (
+    id_admin INT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(50) NOT NULL,
+    clave VARCHAR(255) NOT NULL -- Aumentado de 20 a 255
 );
 
 CREATE TABLE Denuncia (
@@ -248,13 +247,13 @@ VALUES ('Hogar'),
 ('Gastronomía');
 
 INSERT INTO Especialidad (nombre_especialidad, tipo_validacion) VALUES 
-('Apoyo Escolar', 'Certificado'),
+('Apoyo Escolar', 'Ninguna'),
 ('Coaching y Desarrollo Personal', 'Certificado'),
 ('Idiomas', 'Certificado'),
 ('Capacitación Profesional', 'Certificado'),
 ('Baristería', 'Certificado'),
 ('Gastronomía y Cocina', 'Certificado'),
-('Catering', 'Porfolio'),
+('Catering', 'Portfolio'),
 ('Decoración de Eventos', 'Portfolio'),
 ('Floristería', 'Ninguna'),
 ('Fotografía', 'Portfolio'),
