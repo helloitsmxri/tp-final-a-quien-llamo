@@ -48,7 +48,7 @@ public class RatingEntity {
     private String tipoFoto;
 
     @Lob
-    @Column(name = "foto")
+    @Column(name = "foto", nullable = false, columnDefinition = "MEDIUMBLOB")
     private byte[] foto;
 
     //tabla intermedia de RATING Y CARACTERISTICAS

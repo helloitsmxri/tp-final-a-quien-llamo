@@ -48,6 +48,6 @@ public class CertificacionEntity {
     private String tipoImagen;
 
     @Lob
-    @Column(nullable = false, name = "imagen_certificado")
+    @Column(nullable = false, name = "imagen_certificado", columnDefinition = "MEDIUMBLOB")
     private byte[] imagenCertificado;
 }

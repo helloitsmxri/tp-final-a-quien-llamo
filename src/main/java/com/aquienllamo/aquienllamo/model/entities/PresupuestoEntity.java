@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class PresupuestoEntity {
     private String descripcionPresupuesto;
 
     @Column(name = "fecha_realizado", nullable = false, updatable = false)
-    private LocalDate fechaRealizado;
+    private LocalDateTime fechaRealizado;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
