@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface RubroRepository extends JpaRepository<RubroEntity, Integer> {
 
     //buscar un rubro segun su uuid
-    Optional<RubroEntity> findByUUIDField(String uuidRubro);
+    Optional<RubroEntity> findByUUIDField(String uuid);
 
     //buscar rubro por nombre
     Optional<RubroEntity> findByFieldName(String nombreRubro);
