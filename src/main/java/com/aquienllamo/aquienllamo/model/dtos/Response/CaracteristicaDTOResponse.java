@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@Builder
 public class CaracteristicaDTOResponse {
 
     private String uuid; // p/el front

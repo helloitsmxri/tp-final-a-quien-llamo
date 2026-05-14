@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class CaracteristicaDTORequest {
 
     @NotBlank(message = "Se debe seleccionar al menos un adjetivo!")
