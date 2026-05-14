@@ -10,7 +10,6 @@ import java.util.Optional;
 public interface CaracteristicaRepository extends JpaRepository<CaracteristicaEntity, Integer>, JpaSpecificationExecutor<CaracteristicaEntity> {
 
     // uso optionals porque pueden devolver nullpointer exception...
-
     // no necesito ni save, ni update, ni delete, ni findbyid porque jpa repository ya los trae!!!
     Optional<CaracteristicaEntity> findByUuid(String uuid);
 
@@ -18,4 +17,5 @@ public interface CaracteristicaRepository extends JpaRepository<CaracteristicaEn
     boolean existsByUuid(String uuid);
 
     String uuid(String uuid);
+    boolean existsByValorAdjetivo(String valorAdjetivo);
 }

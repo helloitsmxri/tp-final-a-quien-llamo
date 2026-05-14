@@ -24,8 +24,11 @@ public class CaracteristicaService {
     private final CaracteristicaMapper caracteristicaMapper;
 
     // listar todas las características:
-    public List<CaracteristicaEntity> findAll(){
-        return List.copyOf(caracteristicaRepository.findAll());
+    public List<CaracteristicaDTOResponse> findAll(){
+        return List.copyOf(caracteristicaRepository.findAll())
+                .stream()
+                .map(caracteristicaMapper::toResponse)
+                .toList();
     }
 
     // encontrar una característica...
@@ -40,9 +43,16 @@ public class CaracteristicaService {
             throw new RuntimeException("No se puede enviar un campo vacío.");
         }
 
-        // comparar si todos los nombres son iguales...
+        // comparar si ya existe esa misma
+        if (caracteristicaRepository.existsByValorAdjetivo(dtoRequest.getValorAdjetivo())) {
+            throw new RuntimeException("Esta característica ya existe en el sistema.");
+        }
 
         CaracteristicaEntity caracteristica = caracteristicaMapper.toEntity(dtoRequest);
+
+        if (caracteristica.getUuid() == null) {
+            caracteristica.setUuid(UUID.randomUUID().toString());
+        }
 
         // guardo entidad y retorno de una response.
         return caracteristicaMapper.toResponse(caracteristicaRepository.save(caracteristica));
