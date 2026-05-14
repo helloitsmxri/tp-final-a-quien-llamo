@@ -4,10 +4,7 @@ import com.aquienllamo.aquienllamo.model.dtos.Request.CaracteristicaDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.CaracteristicaDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.CaracteristicaEntity;
 import com.aquienllamo.aquienllamo.model.mappers.CaracteristicaMapper;
-import com.aquienllamo.aquienllamo.model.mappers.UsuarioMapper;
 import com.aquienllamo.aquienllamo.model.repositories.CaracteristicaRepository;
-import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
-import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,9 +58,6 @@ public class CaracteristicaService {
 
     // eliminar una característica:
     public void eliminarCaracteristica(String uuid){
-//        if (!caracteristicaRepository.existsByUuid(uuid)){
-//            throw new RuntimeException("No se encontró dicha característica.");
-//        }
 
         CaracteristicaEntity c = caracteristicaRepository.findByUuid(uuid)
                         .orElseThrow(() -> new RuntimeException("No se encontró")); // esto último no debería pasar
