@@ -16,4 +16,6 @@ public interface CaracteristicaRepository extends JpaRepository<CaracteristicaEn
 
     // verificar q existe la característica:
     boolean existsByUuid(String uuid);
+
+    String uuid(String uuid);
 }
