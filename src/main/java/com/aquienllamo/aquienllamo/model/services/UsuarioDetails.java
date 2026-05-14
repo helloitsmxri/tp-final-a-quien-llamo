@@ -8,6 +8,7 @@ import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class UsuarioDetails implements UserDetails {
+public class UsuarioDetails implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
     private final TecnicoRepository tecnicoRepository;
