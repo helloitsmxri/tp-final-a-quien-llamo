@@ -1,18 +1,12 @@
 package com.aquienllamo.aquienllamo.model.Enum;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum EstadoTrabajo {
-    PENDIENTE("Pendiente"),
-    FINALIZADO("Finalizado"),
-    CANCELADO("Cancelado"),
-    ENPROCESO("En proceso");
+    Pendiente,
+    Finalizado,
+    Cancelado,
+    @JsonProperty("En proceso")
+    En_proceso;
 
-    private String estadoTrabajo;
-
-    EstadoTrabajo(String estadoTrabajo) {
-        this.estadoTrabajo = estadoTrabajo;
-    }
-
-    public String getEstadoTrabajo() {
-        return estadoTrabajo;
-    }
 }
