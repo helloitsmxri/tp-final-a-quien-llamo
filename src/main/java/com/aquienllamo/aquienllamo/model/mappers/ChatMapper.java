@@ -1,7 +1,10 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
+import com.aquienllamo.aquienllamo.model.dtos.Request.ChatDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.ChatDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.ChatEntity;
+import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,15 +22,15 @@ public class ChatMapper {
                 .build();
     }
 
-    public ChatEntity toEntity(ChatDTOResponse dto)
+    public ChatEntity toEntity(ChatDTORequest dto, UsuarioEntity usuario, TecnicoEntity tecnico)
     {
         if(dto==null)
             {
             return null;
             }
         return ChatEntity.builder()
-                .uuidChat(dto.getUuidChat())
-                .fechaChat(dto.getFechaChat())
+                .usuario(usuario)
+                .tecnico(tecnico)
                 .build();
     }
 }

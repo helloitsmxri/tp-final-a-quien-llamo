@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.dtos.Request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,9 +13,9 @@ import java.time.LocalDate;
 @ToString
 @Builder
 public class ChatDTORequest {
-    @NotBlank(message = "El id del usuario no puede estar vacio")
+    @NotNull(message = "El id del usuario no puede estar vacio")
     private Integer idUsuario;
-    @NotBlank(message = "El id del tecnico no puede estar vacio")
+    @NotNull(message = "El id del tecnico no puede estar vacio")
     private Integer idTecnico;
 
 }
