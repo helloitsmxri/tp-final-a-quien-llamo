@@ -1,12 +1,9 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
-import com.aquienllamo.aquienllamo.model.dtos.Request.RubroDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.RubroDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.RubroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +15,6 @@ import java.util.List;
 public class RubroController {
 
     private final RubroService rubroService; //el controller usa el servicio para hacer la logica
-
-    //crea un endpoint de rubro
-    @PostMapping                              //convierte el JSON que manda el frontend en un DTO java
-    public ResponseEntity<RubroDTOResponse> crearRubro(@Valid @RequestBody RubroDTORequest dtoRequest){
-        return ResponseEntity.status(HttpStatus.CREATED).body(rubroService.crearRurbo(dtoRequest));
-    }
 
     //obtener todos los rubros
     @GetMapping
@@ -49,17 +40,7 @@ public class RubroController {
         return ResponseEntity.ok().body(rubroService.findRubroContaining(nombre));
     }
 
-    //actualizar rubro
-    @PutMapping("/{uuid}")
-    public ResponseEntity<RubroDTOResponse> updateRubro(@PathVariable String uuid, @RequestBody RubroDTORequest dto){
-        return ResponseEntity.ok().body(rubroService.updateRubroUuid(uuid,dto));
-    }
 
-    //eliminar rubro por uuid
-    @DeleteMapping("/eliminar/{uuid}")
-    public ResponseEntity<Void> deleteRubroByUuid(@PathVariable String uuid){
-        return ResponseEntity.ok().body(rubroService.deleteRubroByUuid(uuid));
-    }
 
 
 }
