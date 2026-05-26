@@ -13,6 +13,5 @@ public interface TrabajoRepository extends JpaRepository<TrabajoEntity, Integer>
 
     List<TrabajoEntity> findAllByEstadoTrabajo(EstadoTrabajo estadoTrabajo);
     Optional<TrabajoEntity> findByUuid(String uuid);
-    
 
 }
