@@ -5,6 +5,9 @@ import com.aquienllamo.aquienllamo.model.dtos.Response.RubroDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.RubroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,44 +21,44 @@ public class RubroController {
 
     //crea un endpoint de rubro
     @PostMapping                              //convierte el JSON que manda el frontend en un DTO java
-    public RubroDTOResponse crearRubro(@Valid @RequestBody RubroDTORequest dtoRequest){
-        return rubroService.crearRurbo(dtoRequest);
+    public ResponseEntity<RubroDTOResponse> crearRubro(@Valid @RequestBody RubroDTORequest dtoRequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(rubroService.crearRurbo(dtoRequest));
     }
 
     //obtener todos los rubros
     @GetMapping
-    public List<RubroDTOResponse> getAllRubros(){
-        return rubroService.getAllRubros();
+    public ResponseEntity<List<RubroDTOResponse>> getAllRubros(){
+        return ResponseEntity.ok().body(rubroService.getAllRubros());
     }
 
     //busco rubro por uuid
     @GetMapping("/{uuid}")
-    public RubroDTOResponse getRubroByUuid(@Valid @PathVariable String uuid){
-        return rubroService.getRubroByUuid(uuid);
+    public ResponseEntity<RubroDTOResponse> getRubroByUuid(@Valid @PathVariable String uuid){
+        return ResponseEntity.ok().body(rubroService.getRubroByUuid(uuid));
     }
 
     //buscar nombre exacto de rubro
     @GetMapping("/nombre/{nombre}")
-    public RubroDTOResponse getRubroByNombre(@PathVariable String nombre){
-        return rubroService.getRubroByNombre(nombre);
+    public ResponseEntity<RubroDTOResponse> getRubroByNombre(@PathVariable String nombre){
+        return ResponseEntity.ok().body(rubroService.getRubroByNombre(nombre));
     }
 
     //buscar un rubro, puede ser por el nombre entero o por parte del nombre ej tec = tecnico
     @GetMapping("/buscar")
-    public List<RubroDTOResponse> findRubros(@RequestParam String nombre){
-        return rubroService.findRubroContaining(nombre);
+    public ResponseEntity<List<RubroDTOResponse>> findRubros(@RequestParam String nombre){
+        return ResponseEntity.ok().body(rubroService.findRubroContaining(nombre));
     }
 
     //actualizar rubro
     @PutMapping("/{uuid}")
-    public RubroDTOResponse updateRubro(@PathVariable String uuid, @RequestBody RubroDTORequest dto){
-        return rubroService.updateRubroUuid(uuid,dto);
+    public ResponseEntity<RubroDTOResponse> updateRubro(@PathVariable String uuid, @RequestBody RubroDTORequest dto){
+        return ResponseEntity.ok().body(rubroService.updateRubroUuid(uuid,dto));
     }
 
     //eliminar rubro por uuid
-    @DeleteMapping("/{uuid}")
-    public void deleteRubroByUuid(@PathVariable String uuid){
-        rubroService.deleteRubroByUuid(uuid);
+    @DeleteMapping("/eliminar/{uuid}")
+    public ResponseEntity<Void> deleteRubroByUuid(@PathVariable String uuid){
+        return ResponseEntity.ok().body(rubroService.deleteRubroByUuid(uuid));
     }
 
 

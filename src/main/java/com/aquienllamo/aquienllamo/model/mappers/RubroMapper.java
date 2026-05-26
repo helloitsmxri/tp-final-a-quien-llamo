@@ -36,9 +36,9 @@ public class RubroMapper {
     }
 
     //de entity a dto response
-    public RubroDTOResponse toResponseRubro(RubroEntity rubroEntity){
+    public static RubroDTOResponse toResponseRubro(RubroEntity rubroEntity){
 
-        //de entity a response
+        //de entity, response
         return RubroDTOResponse.builder()
                 .uuidRubro(rubroEntity.getUuid())
                 .nombreRubro(rubroEntity.getNombreRubro())
