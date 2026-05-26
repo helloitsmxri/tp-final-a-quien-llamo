@@ -76,6 +76,14 @@ public class CertificacionService {
         certificacionRepository.delete(nueva);
     }
 
+    //listar certificaciones
+    public List<CertificacionDTOResponse> listarCertificaciones(){
+        return certificacionRepository.findAll()
+                .stream()
+                .map(certificacionMapper::toResponse)
+                .toList();
+    }
+
 
 
 }
