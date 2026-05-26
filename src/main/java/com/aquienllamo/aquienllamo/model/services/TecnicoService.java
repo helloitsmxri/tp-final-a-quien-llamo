@@ -71,7 +71,7 @@ public class TecnicoService {
     public TecnicoDTOResponse getTecnicoByUuid(String uuid){
         return tecnicoMapper.toResponse(
                 tecnicoRepository.findByUuid(uuid)
-                        .orElseThrow(TecnicoNotFoundEx::new)
+                        .orElseThrow(()-> new TecnicoNotFoundEx("el técnico con ese uuid no se encuentra."))
         );
     }
 
@@ -109,7 +109,7 @@ public class TecnicoService {
     //actualizar tecnico
     public TecnicoDTOResponse updateTecnico(String uuid, TecnicoDTORequest dto){
         TecnicoEntity tecnico=tecnicoRepository.findByUuid(uuid)
-                .orElseThrow(TecnicoNotFoundEx::new);
+                .orElseThrow(()-> new TecnicoNotFoundEx("el técnico con ese uuid no existe."));
 
         // validar que las habilidades existan
         if(dto.getIdHabilidades().stream().anyMatch(id -> !habilidadRepository.existsById(id))) {
@@ -132,7 +132,7 @@ public class TecnicoService {
     //eliminar tecnico
     public void deleteTecnico(String uuid){
         TecnicoEntity tecnico=tecnicoRepository.findByUuid(uuid)
-                .orElseThrow(TecnicoNotFoundEx::new);
+                .orElseThrow(()-> new TecnicoNotFoundEx("el técnico con ese uuid no se encuentra."));
         tecnicoRepository.delete(tecnico);
     }
 
