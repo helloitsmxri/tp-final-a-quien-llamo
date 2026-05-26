@@ -57,7 +57,7 @@ public class CertificacionService {
     //actualizar
     public CertificacionDTOResponse actualizarCertificacion(String uuid, CertificacionDTORequest certificacion){
         CertificacionEntity nueva=certificacionRepository.findByUuid(uuid)
-                .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no se encuentra."));
+                .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no se encontro."));
         nueva.setNumMatricula(certificacion.getNumMatricula());
         nueva.setEnteOtorgador(certificacion.getEnteOtorgador());
         nueva.setFechaVencimiento(certificacion.getFechaVencimiento());
@@ -72,7 +72,7 @@ public class CertificacionService {
     //eliminar
     public void eliminarCertificacion(String uuid){
         CertificacionEntity nueva=certificacionRepository.findByUuid(uuid)
-                .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no existe."));
+                .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no se encontro."));
         certificacionRepository.delete(nueva);
     }
 
@@ -82,6 +82,13 @@ public class CertificacionService {
                 .stream()
                 .map(certificacionMapper::toResponse)
                 .toList();
+    }
+
+    //buscar por uuid
+    public CertificacionDTOResponse buscarPorUuid(String uuid){
+        return certificacionRepository.findByUuid(uuid)
+                .map(certificacionMapper::toResponse)
+                .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no se encontro."));
     }
 
 
