@@ -7,6 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AdministradorDTOResponse {
     private String nombreUsuario;
 }
