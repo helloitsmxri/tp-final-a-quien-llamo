@@ -5,11 +5,11 @@ import com.aquienllamo.aquienllamo.model.dtos.Request.TrabajoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TrabajoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.TrabajoEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.TrabajoAlreadyExistsEx;
-import com.aquienllamo.aquienllamo.model.exceptions.TrabajoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.TrabajoMapper;
 import com.aquienllamo.aquienllamo.model.repositories.TrabajoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
