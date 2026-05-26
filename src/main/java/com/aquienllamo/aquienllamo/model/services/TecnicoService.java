@@ -32,7 +32,7 @@ public class TecnicoService {
     //registrar usuario como tecnico
     public TecnicoDTOResponse registrarTecnico(TecnicoDTORequest dto, String uuidUsuario){
         UsuarioEntity user = usuarioRepository.findByUuid(uuidUsuario)
-                .orElseThrow(UserNotFoundEx::new);
+                .orElseThrow(()-> new UserNotFoundEx("no se encontro el usuario con ese uuid."));
 
         if (tecnicoRepository.existsByUsuario_idUsuario(user.getIdUsuario())){
             throw new TecnicoAlreadyExistsEx("El usuario ya esta registrado como técnico.");
