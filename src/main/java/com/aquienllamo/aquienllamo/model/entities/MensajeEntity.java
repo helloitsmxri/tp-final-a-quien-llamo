@@ -30,7 +30,6 @@ public class MensajeEntity {
     @JoinColumn(name= "id_chat", nullable = false)
     private ChatEntity idChat;
 
-    @Lob // el mensaje es de tipo TEXT, uso Lob (Large Object) para mapearlo
     @Column(nullable = false)
     private String mensaje;
 
