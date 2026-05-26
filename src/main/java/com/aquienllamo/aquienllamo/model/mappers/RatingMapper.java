@@ -12,8 +12,6 @@ import java.util.List;
 @Component
 public class RatingMapper {
 
-
-
     public static RatingDTOResponse toResponse (RatingEntity entity){
         return RatingDTOResponse.builder()
                 .nombreRemitente(entity.getUsuarioRemitente().getNombre())
