@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class ChatDTORequest {
     @NotBlank(message = "El id del usuario no puede estar vacio")
     private Integer idUsuario;

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class ChatDTOResponse {
     private String uuidChat;
     private LocalDateTime fechaChat;
