@@ -1,6 +1,9 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.dtos.Request.AdministradorDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.AdministradorDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
+import com.aquienllamo.aquienllamo.model.mappers.AdministradorMapper;
 import com.aquienllamo.aquienllamo.model.repositories.AdministradorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,17 +16,20 @@ import org.springframework.stereotype.Service;
 public class AdministradorService {
 
         private final AdministradorRepository administradorRepository; // para hablar con la bdd
+    private final AdministradorMapper administradorMapper;
         private final PasswordEncoder passwordEncoder; // para encriptar las claves.
 
         // Registrar administrador: encripta la clave antes de guardar y después lo guarda.
-        public AdministradorEntity registrar(AdministradorEntity admin) {
+        public AdministradorDTOResponse registrar(AdministradorDTORequest admin) {
             String claveEncriptada = passwordEncoder.encode(admin.getClave());
             admin.setClave(claveEncriptada);
-            return administradorRepository.save(admin);
+
+            AdministradorEntity administrador=administradorMapper.toEntity(admin);
+            return administradorMapper.toResponse(administradorRepository.save(administrador));
         }
 
         // Login:
-        public AdministradorEntity login(String nombreUsuario, String claveIngresada) {
+        public AdministradorDTOResponse login(String nombreUsuario, String claveIngresada) {
             AdministradorEntity admin = administradorRepository
                     .findByNombreUsuario(nombreUsuario) // busca el admin y compara la clave
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -33,6 +39,6 @@ public class AdministradorService {
                 throw new RuntimeException("Clave incorrecta");
             }
 
-            return admin;
+            return administradorMapper.toResponse(admin);
         }
 }
