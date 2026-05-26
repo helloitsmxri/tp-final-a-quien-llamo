@@ -42,7 +42,7 @@ public class EspecialidadService {
     public EspecialidadDTOResponse getEspecialidadByUuid(String uuid){
         return especialidadMapper.toResponse(
                 especialidadRepository.findByUuid(uuid)
-                        .orElseThrow(EspecialidadNotFoundEx::new)
+                        .orElseThrow(()-> new EspecialidadNotFoundEx("No se encontro la especialidad con ese uuid."))
         );
     }
 
@@ -65,7 +65,7 @@ public class EspecialidadService {
     //actualizar
     public EspecialidadDTOResponse updateEspecialidad(String uuid, EspecialidadDTORequest dto){
         EspecialidadEntity especialidad = especialidadRepository.findByUuid(uuid)
-                .orElseThrow(EspecialidadNotFoundEx::new);
+                .orElseThrow(()-> new EspecialidadNotFoundEx("no se encontro la especialidad con ese uuid."));
         especialidad.setNombreEspecialidad(dto.getNombreEspecialidad());
         especialidad.setTipoValidacion(dto.getTipoValidacion());
         return especialidadMapper.toResponse(especialidadRepository.save(especialidad));
@@ -74,7 +74,7 @@ public class EspecialidadService {
     //eliminar
     public void deleteEspecialidad(String uuid){
         EspecialidadEntity especialidad=especialidadRepository.findByUuid(uuid)
-                .orElseThrow(EspecialidadNotFoundEx::new);
+                .orElseThrow(()-> new EspecialidadNotFoundEx("no se encontro la especialidad con ese uuid."));
         especialidadRepository.delete(especialidad);
     }
 }
