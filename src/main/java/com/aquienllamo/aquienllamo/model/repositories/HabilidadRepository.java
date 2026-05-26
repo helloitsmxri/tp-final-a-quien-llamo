@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface HabilidadRepository extends JpaRepository<HabilidadEntity,Integer> {
     Optional<HabilidadEntity> findByUuid(String uuid);
-    boolean existsByNombreHabilidad(String nombreHabilidad);
 }
