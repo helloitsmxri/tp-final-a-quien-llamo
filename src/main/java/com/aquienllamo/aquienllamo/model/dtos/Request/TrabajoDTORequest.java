@@ -17,6 +17,9 @@ import java.time.LocalDate;
 public class TrabajoDTORequest {
 
     @NotBlank
+    private String uuid;
+
+    @NotBlank
     private String uuidPresupuesto;
 
     @NotBlank(message = "Justifique el presupuesto elegido.")
