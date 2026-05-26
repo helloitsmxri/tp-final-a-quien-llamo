@@ -1,6 +1,5 @@
 package com.aquienllamo.aquienllamo.model.dtos.Response;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.util.List;
@@ -13,16 +12,12 @@ import java.util.List;
 @Builder
 public class RatingDTOResponse {
 
-    private String uuid; //el id del comentario
-
-    private Integer usuarioRemitente; //del usuario remitente
-
-    private Integer usuarioDestinatario;
-
+    private String nombreRemitente; //el nombre del comentario
+    private String nombreDestinatario; //el nombre del que recibe el comentario
     private Integer valoracion;
-
     private String descripcion;
-
+    private String tipoFoto;
+    private byte[] foto;
     private List<String> caracteristicas;
 
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RatingRepository extends JpaRepository<RatingRepository, Integer> {
+public interface RatingRepository extends JpaRepository<RatingEntity, Integer> {
 
     //ver todas las reseñas de un tecnico/usuario
     List<RatingEntity> findByIdRecipientUser(Integer idUser);

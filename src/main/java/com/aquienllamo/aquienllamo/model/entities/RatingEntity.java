@@ -48,7 +48,7 @@ public class RatingEntity {
     private String tipoFoto;
 
     @Lob
-    @Column(name = "foto", nullable = false, columnDefinition = "MEDIUMBLOB")
+    @Column(name = "foto", columnDefinition = "MEDIUMBLOB")
     private byte[] foto;
 
     //tabla intermedia de RATING Y CARACTERISTICAS
@@ -57,6 +57,4 @@ public class RatingEntity {
     joinColumns = @JoinColumn(name = "id_rating"),
     inverseJoinColumns = @JoinColumn(name = "id_caracteristica"))
     private List<CaracteristicaEntity> caracteristicas;
-    //List<CaracteristicaEntity> caracteristicas =
-    //    caracteristicaRepository.findAllById(dto.getIdCaracteristicas());
 }
