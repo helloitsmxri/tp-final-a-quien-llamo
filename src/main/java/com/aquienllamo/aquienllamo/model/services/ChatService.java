@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -23,5 +25,23 @@ public class ChatService {
                 .orElseThrow(()-> new ChatNotFoundEx("El chat con ese id no existe"));
 
                 return chatMapper.toResponse(chatRepository.save(chat));
+    }
+
+    //listar usuario:
+    public List<ChatDTOResponse> listarUsuarios()
+    {
+        return chatRepository.findByUsuario()
+                .stream()
+                .map(chatMapper::toResponse)
+                .toList();
+    }
+
+    //listar tecnicos:
+    public List<ChatDTOResponse> listarTecnicos()
+    {
+        return chatRepository.findByTecnico()
+                .stream()
+                .map(chatMapper::toResponse)
+                .toList();
     }
 }
