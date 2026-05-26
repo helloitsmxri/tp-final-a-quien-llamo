@@ -60,7 +60,7 @@ public class ChatService {
     }
 
     //buscar por uuid:
-    public ChatDTOResponse findByUuidChat(String uuid)
+    public ChatDTOResponse buscarPorUuid(String uuid)
     {
         ChatEntity chat = chatRepository.findByUuidChat(uuid)
                 .orElseThrow(()-> new ChatNotFoundEx("El chat con ese id no se encuentra"));
