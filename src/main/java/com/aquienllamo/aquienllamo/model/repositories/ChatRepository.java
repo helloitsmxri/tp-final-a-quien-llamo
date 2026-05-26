@@ -9,11 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
 
     Optional<ChatEntity> findById(Long idChat);
-    List<ChatEntity> findByUsuario();
-    List<ChatEntity> findByTecnico();
+    List<ChatEntity> findByUsuario(Integer idUsuario);
+    List<ChatEntity> findByTecnico(Integer idTecnico);
+    Optional<ChatEntity> findByUuidChat(String uuidChat);
 }
