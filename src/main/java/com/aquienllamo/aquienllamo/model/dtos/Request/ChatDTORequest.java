@@ -11,9 +11,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class ChatDTORequest {
-    @NotBlank
+    @NotBlank(message = "El id del usuario no puede estar vacio")
     private Integer idUsuario;
-    @NotBlank
+    @NotBlank(message = "El id del tecnico no puede estar vacio")
     private Integer idTecnico;
 
 }
