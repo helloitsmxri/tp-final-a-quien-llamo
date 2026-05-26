@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
+import com.aquienllamo.aquienllamo.model.Enum.Estado;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PagoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.PagoEntity;
@@ -23,6 +24,7 @@ public class PagoMapper {
         return PagoEntity.builder()
                 .trabajo(trabajo)
                 .metodoDePago(request.getMetodoDePago())
+                .estadoPago(Estado.Pendiente_de_revision) //ingresa el pago y queda en revision
                 .build();
     }
 
