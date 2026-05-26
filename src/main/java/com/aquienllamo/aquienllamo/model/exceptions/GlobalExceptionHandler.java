@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -166,6 +167,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ChatNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> chatNotFoundEx(ChatNotFoundEx ex)
     {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
+                .status(404)
+                .mensaje(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build());
+    }
+
+    @ExceptionHandler(CertificacionNotFoundEx.class)
+    public ResponseEntity<ErrorResponseDTO> certificacionNotFoundEx(CertificacionNotFoundEx ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
                 .status(404)
                 .mensaje(ex.getMessage())
