@@ -17,7 +17,6 @@ public class PortfolioAdminDTORequest {
     @NotNull(message = "Debe seleccionar un estado.")
     private EstadoVerificacion estadoVerificacion;
 
-    @NotBlank(message = "Este campo no debe quedar vacio.")
     @Size(max = 2000, message = "Las notas no pueden superar los 2000 caracteres.")
     private String notasAdmin;
 }

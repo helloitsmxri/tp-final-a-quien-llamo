@@ -20,6 +20,14 @@ public class PortfolioAdminService {
 
     private final PortfolioRepository repository;
 
+    //ver todos los portfolios
+    public List<PortfolioAdminDTOResponse> listarPortfolios(){
+        return repository.findAll()
+                .stream()
+                .map(PortfolioMapper::toResponseAdmin)
+                .toList();
+    }
+
     //ver listado de portafolios por estado
     public List<PortfolioAdminDTOResponse> listarPorEstado(EstadoVerificacion estadoVerificacion){
         return repository.findAllByEstadoVerificacion(estadoVerificacion)
