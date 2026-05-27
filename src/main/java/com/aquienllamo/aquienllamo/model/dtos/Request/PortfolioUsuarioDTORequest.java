@@ -1,6 +1,5 @@
 package com.aquienllamo.aquienllamo.model.dtos.Request;
 
-import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;

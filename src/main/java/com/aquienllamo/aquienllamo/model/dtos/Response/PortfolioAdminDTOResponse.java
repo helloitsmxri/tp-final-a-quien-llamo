@@ -1,6 +1,5 @@
 package com.aquienllamo.aquienllamo.model.dtos.Response;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,10 +14,13 @@ import java.time.LocalDateTime;
 @ToString
 public class PortfolioAdminDTOResponse {
 
-    private String uuid;
+    private String uuid; //uuid del portfolio
 
-    private Integer tecnico;
-    private Integer especialidad;
+    private String uuidTecnico;
+    private String nombreTecnico;
+
+
+    private String nombreEspecialidad;
 
     private String notasAspirante;
     private String enlaceExterno;
