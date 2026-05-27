@@ -9,10 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class MensajeDTORequest {
-    @NotNull
-    private Integer idChat; // no se lo paso como chatEntity porque el usuario no me pasaría el objeto completo, solo el id del chat.
+    @NotNull(message = "El id del chat no puede estar vacio")
+    private String uuidChat;
 
-    @NotBlank
+    @NotBlank(message = "El mensaje no puede estar vacio")
     private String mensaje;
 }

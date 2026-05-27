@@ -37,4 +37,16 @@ public class MensajeEntity {
     @Column(nullable = false)
     private LocalDateTime fechaMensaje;
 
+    @Column(name ="uuid", nullable = false)
+    private String uuidMensaje;
+
+    @PrePersist
+    public void generarUUID()
+    {
+        if(this.uuidMensaje == null)
+        {
+            this.uuidMensaje = UUID.randomUUID().toString();
+        }
+    }
+
 }
