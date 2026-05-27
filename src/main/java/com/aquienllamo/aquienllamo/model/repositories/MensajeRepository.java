@@ -1,0 +1,14 @@
+package com.aquienllamo.aquienllamo.model.repositories;
+
+import com.aquienllamo.aquienllamo.model.entities.MensajeEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface MensajeRepository extends JpaRepository<MensajeEntity, Integer> {
+
+    Optional<MensajeEntity> findByMensajeAfter(String mensaje);
+    Optional<MensajeEntity> findByUuidChat(String uuidChat);
+}
