@@ -5,13 +5,15 @@ import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioAdminDTOResponse
 import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioUsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.model.entities.PortfolioEntity;
+import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PortfolioMapper {
 
-    public static PortfolioEntity toEntity (PortfolioUsuarioDTORequest usuarioDTORequest, EspecialidadEntity especialidad){
+    public static PortfolioEntity toEntity (PortfolioUsuarioDTORequest usuarioDTORequest, TecnicoEntity tecnico, EspecialidadEntity especialidad){
         return PortfolioEntity.builder()
+                .tecnico(tecnico)
                 .especialidad(especialidad)
                 .notasAspirante(usuarioDTORequest.getNotasAspirante())
                 .enlaceExterno(usuarioDTORequest.getEnlaceExterno())
@@ -25,8 +27,9 @@ public class PortfolioMapper {
     public static PortfolioAdminDTOResponse toResponseAdmin (PortfolioEntity entity){
         return PortfolioAdminDTOResponse.builder()
                 .uuid(entity.getUuid())
-                .tecnico(entity.getTecnico().getIdTecnico())
-                .especialidad(entity.getEspecialidad().getIdEspecialidad())
+                .uuidTecnico(entity.getTecnico().getUuid())
+                .nombreTecnico(entity.getTecnico().getUsuario().getNombre())
+                .nombreEspecialidad(entity.getEspecialidad().getNombreEspecialidad())
                 .notasAspirante(entity.getNotasAspirante())
                 .enlaceExterno(entity.getEnlaceExterno())
                 .tipoArchivo(entity.getTipoArchivo())

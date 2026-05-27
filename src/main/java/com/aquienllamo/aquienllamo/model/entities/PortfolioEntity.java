@@ -56,6 +56,7 @@ public class PortfolioEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_verificacion")
+    @Builder.Default //es para que ni bien se cree este en estado pendiente
     private EstadoVerificacion estadoVerificacion = EstadoVerificacion.Pendiente;
 
     @Lob
