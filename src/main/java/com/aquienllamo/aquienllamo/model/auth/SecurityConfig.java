@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.security;
+package com.aquienllamo.aquienllamo.model.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
