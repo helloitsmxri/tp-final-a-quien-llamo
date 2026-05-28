@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class DenunciaDTORequest {
 
     @NotBlank(message = "Debe incluir el motivo por el cual está denunciando.")
