@@ -75,6 +75,8 @@ id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
 id_chat INT,
 mensaje TEXT NOT NULL,
+id_sender INT,
+FOREIGN KEY(id_sender) REFERENCES Usuario(id_usuario),
 FOREIGN KEY (id_chat) REFERENCES Chat(id_chat),
 fecha_mensaje DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
