@@ -41,7 +41,7 @@ public class PortfolioEntity {
     private EspecialidadEntity especialidad;
 
     @Lob
-    @Column(name = "notas_aspirante")
+    @Column(name = "notas_aspirante",columnDefinition = "TEXT")
     private String notasAspirante;
 
     @Column(name = "enlace_externo", length = 255)
