@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface MensajeRepository extends JpaRepository<MensajeEntity, Integer> {
 
     List<MensajeEntity> containsMensaje(String mensaje);
-    Optional<MensajeEntity> findByUuidChat(String uuidChat);
+    Optional<MensajeEntity> findByChat_UuidChat(String uuidChat);
 }

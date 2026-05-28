@@ -23,14 +23,14 @@ public class MensajeService {
     //crear un mensaje:
     public MensajeDTOResponse crearMensaje(MensajeDTORequest dto)
     {
-        MensajeEntity mensaje= mensajeRepository.findByUuidChat(dto.getUuidChat())
+        MensajeEntity mensaje= mensajeRepository.findByChat_UuidChat(dto.getUuidChat())
                 .orElseThrow(()-> new ChatNotFoundEx("No se encontro el chat"));
         return mensajeMapper.toResponse(mensajeRepository.save(mensaje));
     }
     //modificar:
     public MensajeDTOResponse modificarMensaje(MensajeDTORequest dto)
     {
-        MensajeEntity mensaje = mensajeRepository.findByUuidChat(dto.getUuidChat())
+        MensajeEntity mensaje = mensajeRepository.findByChat_UuidChat(dto.getUuidChat())
                 .orElseThrow(()-> new ChatNotFoundEx("No se encontro el chat"));
         mensaje.setMensaje(dto.getMensaje());
         return mensajeMapper.toResponse(mensajeRepository.save(mensaje));
