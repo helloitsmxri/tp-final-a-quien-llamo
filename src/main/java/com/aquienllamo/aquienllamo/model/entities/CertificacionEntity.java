@@ -38,7 +38,7 @@ public class CertificacionEntity {
     @Column(nullable = false, length = 100, name = "num_matricula")
     private String numMatricula;
 
-    @Column(nullable = false, length = 100, name = "ente_otorgador")
+    @Column(name = "ente_otorgador", nullable = false, length = 255)
     private String enteOtorgador;
 
     @Column(name = "fecha_vencimiento")

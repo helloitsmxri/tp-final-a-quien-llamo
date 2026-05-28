@@ -19,7 +19,7 @@ import java.util.UUID;
 public class ChatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "id_chat")
+    @Column(name = "id_chat")
     private Integer idChat;
 
     @ManyToOne
