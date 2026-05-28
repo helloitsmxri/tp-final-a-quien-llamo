@@ -11,8 +11,5 @@ import java.util.Optional;
 @Repository
 public interface DenunciaRepository extends JpaRepository<DenunciaEntity, Integer> {
     Optional<DenunciaEntity> findByUuid(String uuid);
-    boolean existsByUuid(String uuid);
     List<DenunciaEntity> findByEstadoDenuncia(EstadoDenunciaE estado);
-    List<DenunciaEntity> findByDniDenunciante(String dniDenunciante);
-    List<DenunciaEntity> findByDniDenunciado(String dniDenunciado);
 }
