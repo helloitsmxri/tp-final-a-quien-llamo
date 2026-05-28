@@ -51,7 +51,7 @@ public class PortfolioEntity {
     private String tipoArchivo;
 
     @Lob
-    @Column(name = "archivo_adjunto")
+    @Column(name = "archivo_adjunto", columnDefinition = "MEDIUMBLOB")
     private byte[] archivoAdjunto;
 
     @Enumerated(EnumType.STRING)
