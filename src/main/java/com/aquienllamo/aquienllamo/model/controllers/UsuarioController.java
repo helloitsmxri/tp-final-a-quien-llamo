@@ -20,41 +20,50 @@ import java.util.List;
 public class UsuarioController {
     private final UsuarioService usuarioService;
 
+    // cambiar a RESPONSE. y añadir globalexceptionhandler
+    // revisar y retocar luego loginusuario y deleteusuario, creo q es suficiente con usuarioDTOrequest
     // creación
     @PostMapping("/sign-up")
-    public ResponseEntity<UsuarioDTOResponse> registrar(@Valid @RequestBody UsuarioDTORequest dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUser(dto));
+    @ResponseStatus(HttpStatus.CREATED)
+    public UsuarioDTOResponse registrar(@Valid @RequestBody UsuarioDTORequest dto) {
+        return usuarioService.createUser(dto);
     }
 
-    // login
+    // login, no sé si quitarlo xq capaz es necesario porq ahí pedimos ciertos datos específicos para iniciar sesión
+    // y son diferentes a la creación del usuario
     @PostMapping("/login")
-    public ResponseEntity<UsuarioDTOResponse> ingresar(@Valid @RequestBody LoginUsuarioDTORequest dto){
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse ingresar(@Valid @RequestBody LoginUsuarioDTORequest dto){
         //devuelve el tipo de usuario solo
-        return ResponseEntity.ok(usuarioService.login(dto.getEmail(), dto.getPassword()));
+        return usuarioService.login(dto.getEmail(), dto.getPassword());
     }
 
     // buscar el perfil a través del uuid
     @GetMapping("/perfil/{uuid}")
-    public ResponseEntity<UsuarioDTOResponse> buscar(@PathVariable String uuid){
-        return ResponseEntity.ok(usuarioService.getByUuid(uuid));
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse buscar(@PathVariable String uuid){
+        return usuarioService.getByUuid(uuid);
     }
 
     // actualizar el perfil
     @PutMapping("/actualizar/{uuid}")
-    public ResponseEntity<UsuarioDTOResponse> actualizar(@PathVariable String uuid, @ModelAttribute UsuarioDTORequest dto){
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse actualizar(@PathVariable String uuid, @ModelAttribute UsuarioDTORequest dto){
         // chicas, si usamos multipartfile para las fotos necesitamos usar modelattribute aparentemente
-        return ResponseEntity.ok(usuarioService.update(uuid, dto));
+        return usuarioService.update(uuid, dto);
     }
 
-    // eliminar la cuenta
+    // eliminar la cuenta x el momento dejo deleteusuariodtorequest así confirman su clave.
     @DeleteMapping("/eliminar/{uuid}")
-    public ResponseEntity<String> borrar(@PathVariable String uuid, @Valid @RequestBody DeleteUsuarioDTORequest dto){
-        return ResponseEntity.ok(usuarioService.deleteUser(uuid, dto.getPassword()));
+    @ResponseStatus(HttpStatus.OK)
+    public String borrar(@PathVariable String uuid, @Valid @RequestBody DeleteUsuarioDTORequest dto){
+        return usuarioService.deleteUser(uuid, dto.getPassword());
     }
 
     // listar todos users para admins
     @GetMapping("/todos")
-    public ResponseEntity<List<UsuarioDTOResponse>> listarTodos() {
-        return ResponseEntity.ok(usuarioService.getAllUsers());
+    @ResponseStatus(HttpStatus.OK)
+    public List<UsuarioDTOResponse> listarTodos() {
+        return usuarioService.getAllUsers();
     }
 }
