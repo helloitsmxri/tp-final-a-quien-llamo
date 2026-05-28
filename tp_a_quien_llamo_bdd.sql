@@ -71,9 +71,22 @@ fecha_chat DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 CREATE UNIQUE INDEX idx_user_tech ON Chat(id_usuario, id_tecnico);
 -- POR LAS DUDAS CREAR PERMISOS, CREDENCIALES...
 CREATE TABLE Permit(
-id_permits INT AUTO_INCREMENT PRIMARY KEY
+id_permits INT AUTO_INCREMENT PRIMARY KEY,
+permiso VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE TABLE Role(
+id_role INT AUTO_INCREMENT NOT NULL,
+role VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE role_permits (
+role_id BIGINT,
+permit_id INT,
+PRIMARY KEY (role_id, permit_id),
+FOREIGN KEY (role_id) REFERENCES Role(id),
+FOREIGN KEY (permit_id) REFERENCES Permit(id_permit)
+);
 
 CREATE TABLE Mensaje(
 id_mensaje INT AUTO_INCREMENT PRIMARY KEY,

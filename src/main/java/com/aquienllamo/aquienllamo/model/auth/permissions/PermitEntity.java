@@ -16,4 +16,8 @@ public class PermitEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_permit")
     private Integer idPermit;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    private RolePermits permits;
 }
