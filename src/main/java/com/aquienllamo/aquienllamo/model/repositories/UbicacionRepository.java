@@ -10,15 +10,10 @@ import java.util.Optional;
 @Repository
 public interface UbicacionRepository extends JpaRepository<UbicacionEntity, Integer> {
 
-    Optional<UbicacionEntity> findById(String uuid);
+
 
     List<UbicacionEntity> findByUsuario_IdUsuario(Integer idUsuario);
 
     Optional<UbicacionEntity>findByUuid(String uuid);
-
-    boolean existsByUuid(String uuid);
-
-    List <UbicacionEntity> findByCiudad(String ciudad);
-
-    List <UbicacionEntity> findByProvincia(String provincia);
+    
 }
