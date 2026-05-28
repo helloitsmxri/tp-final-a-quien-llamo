@@ -41,7 +41,7 @@ public class PortfolioEntity {
     private EspecialidadEntity especialidad;
 
     @Lob
-    @Column(name = "notas_aspirante")
+    @Column(name = "notas_aspirante",columnDefinition = "TEXT")
     private String notasAspirante;
 
     @Column(name = "enlace_externo", length = 255)
@@ -51,7 +51,7 @@ public class PortfolioEntity {
     private String tipoArchivo;
 
     @Lob
-    @Column(name = "archivo_adjunto")
+    @Column(name = "archivo_adjunto", columnDefinition = "MEDIUMBLOB")
     private byte[] archivoAdjunto;
 
     @Enumerated(EnumType.STRING)
@@ -60,7 +60,7 @@ public class PortfolioEntity {
     private EstadoVerificacion estadoVerificacion = EstadoVerificacion.Pendiente;
 
     @Lob
-    @Column(name = "notas_admin")
+    @Column(name = "notas_admin", columnDefinition = "TEXT")
     private String notasAdmin;
 
     @Column(name = "fecha_entrega", updatable = false, insertable = false)

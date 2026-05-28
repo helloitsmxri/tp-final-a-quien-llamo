@@ -31,8 +31,7 @@ public class RubroEntity {
         }
     }
 
-    @Lob
-    @Column(name = "nombre_rubro")
+    @Column(name = "nombre_rubro", length = 255)
     private String nombreRubro;
 
     //union de la tabla rubro con la tabla especialidades

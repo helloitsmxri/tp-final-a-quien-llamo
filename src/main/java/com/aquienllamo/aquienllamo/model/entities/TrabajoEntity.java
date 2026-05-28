@@ -36,8 +36,7 @@ public class TrabajoEntity {
     private PresupuestoEntity Presupuesto;
     //presupuestoRepository.findByUuid(dto.getUuidPresupuesto())
 
-    @Lob
-    @Column(name = "descripcion_trabajo", nullable = false)
+    @Column(name = "descripcion_trabajo", nullable = false, columnDefinition = "TEXT")
     private String descripcionTrabajo;
 
     @Column(name = "fecha_estimada_inicio", nullable = false)
