@@ -43,7 +43,7 @@ public class PagoService {
 
     //listar pagos segun un estado
     public List<PagoDTOResponse> listarPorEstado (Estado estado){
-        return pagoRepository.findAllByEstado(estado)
+        return pagoRepository.findAllByEstadoPago(estado)
                 .stream()
                 .map(PagoMapper::toResponse)
                 .toList();
