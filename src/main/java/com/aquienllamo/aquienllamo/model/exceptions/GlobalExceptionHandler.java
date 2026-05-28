@@ -182,4 +182,16 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build());
     }
+
+    //500 INTERNAL SERVER ERROR - catch-all de seguridad
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex)
+    {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponseDTO.builder()
+                .status(500)
+                .timestamp(LocalDateTime.now())
+                .mensaje(ex.getMessage())
+                .build());
+
+    }
 }
