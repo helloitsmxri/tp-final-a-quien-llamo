@@ -41,7 +41,7 @@ public class UbicacionEntity {
     @Column
     private Integer piso;
 
-    @Column (name = "numero_pisp")
+    @Column (name = "numero_piso")
     private Integer numeroPiso;
 
     @Column(name = "uuid", nullable = false, unique = true)
