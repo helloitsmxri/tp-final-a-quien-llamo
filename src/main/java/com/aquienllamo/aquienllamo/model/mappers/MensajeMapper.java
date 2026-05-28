@@ -29,7 +29,7 @@ public class MensajeMapper {
             return null;
         }
         return MensajeEntity.builder()
-                .idChat(chat)
+                .chat(chat)
                 .mensaje(dto.getMensaje())
                 .build();
     }
