@@ -20,7 +20,7 @@ public class ChatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "id_chat")
-    private Long idChat;
+    private Integer idChat;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
