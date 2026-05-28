@@ -60,7 +60,7 @@ public class PortfolioEntity {
     private EstadoVerificacion estadoVerificacion = EstadoVerificacion.Pendiente;
 
     @Lob
-    @Column(name = "notas_admin")
+    @Column(name = "notas_admin", columnDefinition = "TEXT")
     private String notasAdmin;
 
     @Column(name = "fecha_entrega", updatable = false, insertable = false)
