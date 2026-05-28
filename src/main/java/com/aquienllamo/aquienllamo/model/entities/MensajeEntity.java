@@ -28,7 +28,7 @@ public class MensajeEntity {
 
     @ManyToOne
     @JoinColumn(name= "id_chat", nullable = false)
-    private ChatEntity idChat;
+    private ChatEntity chat;
 
     @Column(nullable = false)
     private String mensaje;
