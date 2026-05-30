@@ -14,10 +14,10 @@ public class PermitEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_permit")
+    @Column(name = "id_permits")
     private Integer idPermit;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
+    @Column(name = "permiso", nullable = false, unique = true)
     private RolePermits permits;
 }
