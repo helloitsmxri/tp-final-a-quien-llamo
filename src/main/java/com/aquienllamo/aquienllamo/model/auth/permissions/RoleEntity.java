@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-@Table(name = "Role")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "Rol")
 public class RoleEntity {
 
     @Id
@@ -14,7 +18,7 @@ public class RoleEntity {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
+    @Column(name = "rol",nullable = false, unique = true)
     private RolesUser role;
 
 }
