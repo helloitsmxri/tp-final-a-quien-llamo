@@ -20,13 +20,13 @@ public class CredentialsEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 50)
     private String username;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(nullable = false, length = 50)
+    private String clave;
 
-    @Column(nullable = false, columnDefinition = "boolean default true")
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean enabled;
 
     @OneToOne
@@ -35,7 +35,7 @@ public class CredentialsEntity implements UserDetails {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "credentials_roles",
+            name = "Credentials_roles",
             joinColumns = @JoinColumn(name = "credential_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
@@ -50,7 +50,7 @@ public class CredentialsEntity implements UserDetails {
     }
 
     @Override
-    public String getPassword() { return this.password; }
+    public String getPassword() { return this.clave; }
 
     @Override
     public String getUsername() { return this.username; }
