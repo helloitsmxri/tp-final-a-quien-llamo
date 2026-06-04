@@ -21,6 +21,7 @@ import java.util.List;
 public class PresupuestoController {
     private final PresupuestoService presupuestoService;
 
+    // AÑADIR globalexceptionhandler y pasar todos a response.
     // crear presupuesto
     @PostMapping("/crear")
     public ResponseEntity<PresupuestoDTOResponse> crearPresupuesto(
@@ -36,12 +37,14 @@ public class PresupuestoController {
 
     // ver presupuesto en detalle
     @GetMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<PresupuestoDTOResponse> verPresupuesto(@PathVariable String uuid) {
         return ResponseEntity.ok(presupuestoService.obtenerPorUuid(uuid));
     }
 
     // aceptar presupuesto
     @PatchMapping("/{uuid}/aceptar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> aceptarPresupuesto(
             @PathVariable String uuid,
             @RequestHeader("X-Usuario-UUID") String uuidUser) {
@@ -52,6 +55,7 @@ public class PresupuestoController {
 
     // rechazar presupuesto
     @PatchMapping("/{uuid}/rechazar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> rechazarPresupuesto(
             @PathVariable String uuid,
             @RequestHeader("X-Usuario-UUID") String uuidUser) {
@@ -62,6 +66,7 @@ public class PresupuestoController {
 
     // cancelar presupuesto como técnico
     @PatchMapping("/{uuid}/cancelar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> cancelarPresupuesto(
             @PathVariable String uuid,
             @RequestHeader("X-Tecnico-UUID") String uuidTecnico) {
@@ -72,12 +77,14 @@ public class PresupuestoController {
 
     // ver todos los presupuestos -sirve p los admins, creo-
     @GetMapping("/todos")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<PresupuestoDTOResponse>> listarTodos() {
         return ResponseEntity.ok(presupuestoService.getAllPresupuestos());
     }
 
     // búsqueda con filtros -> specs!!!!!
     @GetMapping("/buscar")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<PresupuestoDTOResponse>> buscar(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String apellido,
