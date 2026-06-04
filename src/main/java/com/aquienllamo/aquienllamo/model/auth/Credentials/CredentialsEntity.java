@@ -18,6 +18,7 @@ public class CredentialsEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "credencial_id")
     private Integer id;
 
     @Column(unique = true, nullable = false, length = 50)
@@ -35,9 +36,9 @@ public class CredentialsEntity implements UserDetails {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "Credentials_roles",
-            joinColumns = @JoinColumn(name = "credential_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+            name = "Credencial_Rol",
+            joinColumns = @JoinColumn(name = "credencial_id"),
+            inverseJoinColumns = @JoinColumn(name = "id_role")
     )
     private Set<RoleEntity> roles = new HashSet<>();
 
