@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.auth;
 
 import com.aquienllamo.aquienllamo.model.auth.JWT.JwtAuthenticationFilter;
+import com.aquienllamo.aquienllamo.model.auth.exceptions.RestAuthenticateEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, RestAuthenticationEntryPoint restAuthenticationEntryPoint) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, RestAuthenticateEntryPoint restAuthenticationEntryPoint) throws Exception {
        http.authorizeHttpRequests(auth->
                auth.requestMatchers("/auth/**").permitAll()
                        .anyRequest().authenticated())
