@@ -255,7 +255,7 @@ FOREIGN KEY (administrador_encargado) REFERENCES Administrador (id_admin)
 );
 
 CREATE TABLE Credencial(
-credencial_id INT AUTO_INCREMENT NOT NULL,
+credencial_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 username VARCHAR(50) UNIQUE NOT NULL, 
 clave VARCHAR(50) NOT NULL,
 enabled TINYINT(1) NOT NULL,
