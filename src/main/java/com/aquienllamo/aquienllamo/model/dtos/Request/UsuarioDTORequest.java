@@ -21,7 +21,7 @@ public class UsuarioDTORequest {
     private String nombre;
 
     @NotBlank(message = "El apellido es obligatorio.")
-    @Size(min = 2, message = "El nombre debe tener al menos dos caracteres.")
+    @Size(min = 2, message = "El apellido debe tener al menos dos caracteres.")
     private String apellido;
 
     @NotBlank(message = "Es obligatorio ingresar el DNI.")
