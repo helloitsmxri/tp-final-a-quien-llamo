@@ -14,7 +14,7 @@ public class PermitEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_permits")
+    @Column(name = "id_permit")
     private Integer idPermit;
 
     @Enumerated(EnumType.STRING)
