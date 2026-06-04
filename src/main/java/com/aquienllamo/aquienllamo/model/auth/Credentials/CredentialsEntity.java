@@ -13,12 +13,12 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-@Table(name = "Credenciales")
+@Table(name = "Credencial")
 public class CredentialsEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(unique = true, nullable = false)
     private String username;
