@@ -254,6 +254,23 @@ fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 FOREIGN KEY (administrador_encargado) REFERENCES Administrador (id_admin)
 );
 
+CREATE TABLE Credencial(
+credencial_id INT AUTO_INCREMENT NOT NULL,
+username VARCHAR(50) UNIQUE NOT NULL, 
+clave VARCHAR(50) NOT NULL,
+enabled TINYINT(1) NOT NULL,
+id_usuario INT, 
+FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
+CREATE TABLE Credencial_Rol(
+credencial_id INT,
+id_role INT,
+PRIMARY KEY (credencial_id, id_role),
+FOREIGN KEY (credencial_id) REFERENCES Credencial(credencial_id),
+FOREIGN KEY (id_role) REFERENCES Rol(id_role)
+);
+
 INSERT INTO Rubro(nombre_rubro)
 VALUES ('Hogar'), 
 ('Construcción'), 
