@@ -30,6 +30,9 @@ public class CredentialsEntity implements UserDetails {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean enabled;
 
+    @Column(name = "refresh_token", length = 2048, unique = true, nullable = false)
+    private String refreshToken;
+
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", unique = true)
     private UsuarioEntity usuario;
