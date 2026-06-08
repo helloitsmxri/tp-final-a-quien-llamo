@@ -17,4 +17,9 @@ public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
     //listar pagos segun el estado
     List<PagoEntity> findAllByEstadoPago(Estado estado);
 
+    //listar pagos hechos por cliente
+    List<PagoEntity> findAllByCliente (String uuid);
+
+    //listar pagos recibidos por un tecnico
+    List<PagoEntity> findAllByTecnico (String uuid);
 }
