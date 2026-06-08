@@ -4,9 +4,11 @@ import com.aquienllamo.aquienllamo.model.Enum.Estado;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PagoDTOResponse;
+import com.aquienllamo.aquienllamo.model.entities.PagoEntity;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
 import com.aquienllamo.aquienllamo.model.entities.TrabajoEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
+import com.aquienllamo.aquienllamo.model.exceptions.PagoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.TecnicoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.TrabajoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
@@ -83,6 +85,13 @@ public class PagoService {
                 .stream()
                 .map(PagoMapper::toResponse)
                 .toList();
+    }
+
+    //buscar un pago por uuid
+    public PagoDTOResponse buscarPagoPorUuidParaTecnico (String uuid){
+        PagoEntity pago = pagoRepository.findByUuid(uuid)
+                .orElseThrow(()-> new PagoNotFoundEx("ERROR: El pago ingresado no existe."));
+        return PagoMapper.toResponse(pago);
     }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
@@ -22,4 +23,6 @@ public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
 
     //listar pagos recibidos por un tecnico
     List<PagoEntity> findAllByTecnico (String uuid);
+
+    Optional<PagoEntity> findByUuid(String uuid);
 }
