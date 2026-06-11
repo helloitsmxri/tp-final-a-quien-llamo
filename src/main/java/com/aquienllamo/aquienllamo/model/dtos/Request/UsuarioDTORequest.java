@@ -42,7 +42,7 @@ public class UsuarioDTORequest {
     @Pattern(regexp = "^\\d{10}$", message = "El teléfono debe tener 10 dígitos. Evitar guiones y espacios.")
     private String telefono;
 
-    @NotBlank(message = "Es necesario poner la fecha de nacimiento.")
+    @NotNull(message = "Es necesario poner la fecha de nacimiento.")
     @Past(message = "La fecha de nacimiento no puede ser posterior a la actual.")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate fechaNacimiento;
