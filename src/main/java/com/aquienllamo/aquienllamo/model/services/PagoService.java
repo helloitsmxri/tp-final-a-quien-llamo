@@ -69,7 +69,7 @@ public class PagoService {
 
     //listar todos los pagos hechos por un cliente
     public List<PagoDTOResponse> listarPagosPorClienteUuid (String uuid){
-        UsuarioEntity usuario = usuarioRepository.findByUuid(uuid)
+        usuarioRepository.findByUuid(uuid)
                 .orElseThrow(()-> new UserNotFoundEx("ERROR: El usuario ingresado no existe."));
         return pagoRepository.findAllByCliente(uuid)
                 .stream()
@@ -79,7 +79,7 @@ public class PagoService {
 
     //listar pagos recibidos de un tecnico
     public List<PagoDTOResponse> listarPagosRecibidosPorTecnico (String uuid){
-        TecnicoEntity tecnico = tecnicoRepository.findByUuid(uuid)
+        tecnicoRepository.findByUuid(uuid)
                 .orElseThrow(()-> new TecnicoNotFoundEx("ERROR: El tecnico ingresado no existe."));
         return pagoRepository.findAllByTecnico(uuid)
                 .stream()
