@@ -29,15 +29,6 @@ public class UsuarioController {
         return usuarioService.createUser(dto);
     }
 
-    // login, no sé si quitarlo xq capaz es necesario porq ahí pedimos ciertos datos específicos para iniciar sesión
-    // y son diferentes a la creación del usuario
-    @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public UsuarioDTOResponse ingresar(@Valid @RequestBody LoginUsuarioDTORequest dto){
-        //devuelve el tipo de usuario solo
-        return usuarioService.login(dto.getEmail(), dto.getPassword());
-    }
-
     // buscar el perfil a través del uuid
     @GetMapping("/perfil/{uuid}")
     @ResponseStatus(HttpStatus.OK)
