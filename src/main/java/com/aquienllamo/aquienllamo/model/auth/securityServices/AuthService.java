@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class AuthService{ //servicio para la autentificación inicial del usuario.
         private final CredentialsRepository credentialsRepository;
         private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+        private final JwtService jwtService;
 
     public UserDetails authenticate(AuthRequest input) {
         authenticationManager.authenticate(
@@ -28,33 +28,35 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
                         input.password()
                 )
         );
-        return
-                credentialsRepository.findByUsername(input.username()).orElseThrow(
-                        () -> new UsernameNotFoundException("Usuario no encontrado")
-                        );
+
+        return credentialsRepository.findByUsername(input.username())
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("Usuario no encontrado"));
     }
 
     @Transactional
-    public AuthResponse refreshAccessToken(String refreshToken){
+    public AuthResponse refreshAccessToken(String refreshToken) {
+
         String username = jwtService.extractUsername(refreshToken);
 
         CredentialsEntity user = credentialsRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró el usuario"));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("No se encontró el usuario"));
 
-        if (!user.getRefreshToken().equals(refreshToken)){
-            throw new IllegalArgumentException("El refresh token no es el mismo");
-
+        if (!user.getRefreshToken().equals(refreshToken)) {
+            throw new IllegalArgumentException("El refresh token no coincide");
         }
 
-        if (!jwtService.validateRefreshToken(refreshToken, user)){
-            throw new IllegalArgumentException("El token es inválido o caducó");
+        if (!jwtService.validateRefreshToken(refreshToken, user)) {
+            throw new IllegalArgumentException("El token es inválido o expiró");
         }
 
         String newAccessToken = jwtService.generateToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
+
         user.setRefreshToken(newRefreshToken);
         credentialsRepository.save(user);
 
         return new AuthResponse(newAccessToken, newRefreshToken);
     }
-    }
+}
