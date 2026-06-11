@@ -1,5 +1,7 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUResponseDTO;
+import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUService;
 import com.aquienllamo.aquienllamo.model.Enum.Estado;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
@@ -32,6 +34,7 @@ public class PagoService {
     private final TrabajoRepository trabajoRepository;
     private final UsuarioRepository usuarioRepository;
     private final TecnicoRepository tecnicoRepository;
+    private final PayUService payUService;
 
     //crear un pago
     public PagoDTOResponse crearPago (PagoDTORequest request){
@@ -39,7 +42,16 @@ public class PagoService {
         TrabajoEntity trabajo = trabajoRepository.findByUuid(request.getUuidTrabajo())
                 .orElseThrow(()-> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe."));
 
-        return PagoMapper.toResponse(pagoRepository.save(PagoMapper.toEntity(request,trabajo)));
+        PagoEntity pago = pagoRepository.save(PagoMapper.toEntity(request, trabajo));
+
+        PayUResponseDTO respuestaPayU = payUService.procesarPago(request, pago.getUuid());
+
+        if("APPROVED".equals(respuestaPayU.getState())){
+            pago.setEstadoPago(Estado.Confirmado);
+        } else if ("DECLINED".equals(respuestaPayU.getState())) {
+            pago.setEstadoPago(Estado.Rechazado);
+        }
+        return PagoMapper.toResponse(pagoRepository.save(pago));
 
     }
 
