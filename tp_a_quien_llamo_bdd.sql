@@ -65,7 +65,8 @@ id_usuario INT,
 id_tecnico INT,
 FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
 FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico),
-fecha_chat DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+fecha_chat DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+UNIQUE KEY uk_chat_user_tech (id_usuario, id_tecnico)
 );
 
 CREATE UNIQUE INDEX idx_user_tech ON Chat(id_usuario, id_tecnico);
@@ -102,12 +103,14 @@ FOREIGN KEY (id_chat) REFERENCES Chat(id_chat)
 CREATE TABLE Presupuesto (
     id_presupuesto INT AUTO_INCREMENT PRIMARY KEY,
     uuid VARCHAR(36) NOT NULL UNIQUE,
+    id_chat INT NOT NULL,
     id_usuario INT,
     id_tecnico INT,
     precio_estimado DECIMAL (10,2) NOT NULL,
     descripcion_presupuesto TEXT NOT NULL,
     fecha_realizado DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, -- Cambiado a DATETIME
     estado ENUM('Pendiente','Aceptado','Rechazado', 'Cancelado') NOT NULL,
+	FOREIGN KEY(id_chat) REFERENCES Chat(id_chat),
     FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario),
     FOREIGN KEY(id_tecnico) REFERENCES Tecnico(id_tecnico)
 );
@@ -255,10 +258,11 @@ FOREIGN KEY (administrador_encargado) REFERENCES Administrador (id_admin)
 );
 
 CREATE TABLE Credencial(
-credencial_id INT AUTO_INCREMENT NOT NULL,
+credencial_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 username VARCHAR(50) UNIQUE NOT NULL, 
-clave VARCHAR(50) NOT NULL,
+clave VARCHAR(255) NOT NULL,
 enabled TINYINT(1) NOT NULL,
+refresh_token VARCHAR(2048),
 id_usuario INT, 
 FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
