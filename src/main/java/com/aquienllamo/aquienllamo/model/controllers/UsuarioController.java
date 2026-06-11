@@ -8,6 +8,7 @@ import com.aquienllamo.aquienllamo.model.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,9 @@ public class UsuarioController {
     // cambiar a RESPONSE. y añadir globalexceptionhandler
     // revisar y retocar luego loginusuario y deleteusuario, creo q es suficiente con usuarioDTOrequest
     // creación
-    @PostMapping("/sign-up")
+    @PostMapping(value="/sign-up", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioDTOResponse registrar(@Valid @RequestBody UsuarioDTORequest dto) {
+    public UsuarioDTOResponse registrar(@Valid @ModelAttribute UsuarioDTORequest dto) {
         return usuarioService.createUser(dto);
     }
 
