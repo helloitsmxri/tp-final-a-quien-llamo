@@ -48,6 +48,7 @@ public class UsuarioMapper {
                 .telefono(user.getTelefono())
                 .sobreMi(user.getSobreMi())
                 .fotoBase64(fotoBase64)
+                .tipoImagen(user.getTipoImagen())
                 .fechaRegistro(user.getFechaRegistro())
                 .ultimaActividad(user.getUltimaActividad())
                 .build();
