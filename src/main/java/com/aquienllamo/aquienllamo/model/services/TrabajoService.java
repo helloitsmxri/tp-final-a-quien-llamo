@@ -5,6 +5,7 @@ import com.aquienllamo.aquienllamo.model.dtos.Request.TrabajoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TrabajoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.TrabajoEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.TrabajoAlreadyExistsEx;
+import com.aquienllamo.aquienllamo.model.exceptions.TrabajoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.TrabajoMapper;
 import com.aquienllamo.aquienllamo.model.repositories.TrabajoRepository;
 import jakarta.transaction.Transactional;
@@ -45,6 +46,14 @@ public class TrabajoService {
                 .stream()
                 .map(TrabajoMapper::toResponse)
                 .toList();
+    }
+
+    //cambiar estado de trabajo por el tecnico
+    public TrabajoDTOResponse cambiarEstadoTrabajo(String uuidTrabajo, EstadoTrabajo nuevoEstado) {
+        TrabajoEntity trabajo = trabajoRepository.findByUuid(uuidTrabajo)
+                .orElseThrow(() -> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe"));
+        trabajo.setEstadoTrabajo(nuevoEstado);
+        return TrabajoMapper.toResponse(trabajoRepository.save(trabajo));
     }
     
 
