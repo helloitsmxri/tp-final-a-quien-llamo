@@ -1,10 +1,12 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.UsuarioMapper;
+import com.aquienllamo.aquienllamo.model.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.*;
@@ -28,6 +30,7 @@ public class UsuarioService {
     private final UsuarioMapper usuarioMapper;
     private final PasswordEncoder passwordEncoder;
     private final TecnicoRepository tecnicoRepository;
+    private final CredentialsRepository credentialsRepository;
 
     @Transactional(readOnly = true)
     public String determinarTipoUsuario(String uuid) {
@@ -164,22 +167,5 @@ public class UsuarioService {
         response.setTipoUsuario(determinarTipoUsuario(uuid));
 
         return response;
-    }
-
-    public UsuarioDTOResponse login(String email, String passwordSinEncriptar){
-        // validar correo:
-        UsuarioEntity user = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundEx("El correo ingresado no existe en nuestro sistema."));
-
-        // validar contraseña:
-        if (!passwordEncoder.matches(passwordSinEncriptar, user.getClave())){
-            throw new InvalidPasswordEx("La clave ingresada no es correcta.");
-        }
-
-        user.setUltimaActividad(LocalDateTime.now());
-
-        usuarioRepository.save(user);
-
-        return usuarioMapper.toResponse(user);
     }
 }

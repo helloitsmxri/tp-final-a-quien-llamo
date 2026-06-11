@@ -63,4 +63,15 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
 
         return new AuthResponse(newAccessToken, newRefreshToken);
     }
+
+
+    // Salirse de la sesión
+    @Transactional
+    public void logout(String refreshToken){
+        CredentialsEntity user = credentialsRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new IllegalArgumentException("Token no válido"));
+
+        user.setRefreshToken(null);
+        credentialsRepository.save(user);
+    }
 }

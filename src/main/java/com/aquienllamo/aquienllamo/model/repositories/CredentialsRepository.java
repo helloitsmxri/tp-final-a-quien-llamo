@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface CredentialsRepository extends JpaRepository<CredentialsEntity, Long> {
 
     Optional<CredentialsEntity> findByUsername(String username);
+    Optional<CredentialsEntity> findByRefreshToken(String refreshToken);
+    boolean existsByRefreshToken(String refreshToken);
 
 }
