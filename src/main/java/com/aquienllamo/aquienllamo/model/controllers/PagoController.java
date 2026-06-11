@@ -40,18 +40,18 @@ public class PagoController {
 
     //listar todos los pagos
     @GetMapping
-    public ResponseEntity<List<PagoDTOResponse>> listarPagos (@RequestParam String uuid){
+    public ResponseEntity<List<PagoDTOResponse>> listarPagos (){
         return ResponseEntity.ok().body(pagoService.listarPagos());
     }
 
     //listar pagos hechos por cliente
-    @GetMapping("/{uuid}")
+    @GetMapping("/cliente/{uuid}")
     public ResponseEntity<List<PagoDTOResponse>> listarPagoCliente (@PathVariable String uuid){
         return ResponseEntity.ok().body(pagoService.listarPagosPorClienteUuid(uuid));
     }
 
     //listar pagos recibidos por tecnico
-    @GetMapping("/{uuid}")
+    @GetMapping("/tecnico/{uuid}")
     public ResponseEntity<List<PagoDTOResponse>> listarPagoTecnico (@PathVariable String uuid){
         return ResponseEntity.ok().body(pagoService.listarPagosRecibidosPorTecnico(uuid));
     }
