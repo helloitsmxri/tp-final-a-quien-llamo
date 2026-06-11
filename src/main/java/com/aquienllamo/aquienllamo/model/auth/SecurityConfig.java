@@ -31,6 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, RestAuthenticateEntryPoint restAuthenticationEntryPoint) throws Exception {
        http.authorizeHttpRequests(auth->
                auth.requestMatchers("/auth/**").permitAll()
+                       .requestMatchers("/aquienllamo/usuarios/sign-up", "/aquienllamo/usuarios/login").permitAll()
                        .anyRequest().authenticated())
                .cors(Customizer.withDefaults())
                .csrf(AbstractHttpConfigurer::disable)
