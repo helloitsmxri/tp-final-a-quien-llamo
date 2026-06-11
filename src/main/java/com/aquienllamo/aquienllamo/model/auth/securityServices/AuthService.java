@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         private final AuthenticationManager authenticationManager;
         private final JwtService jwtService;
 
-    public UserDetails authenticate(AuthRequest input) {
+    public AuthResponse authenticate(AuthRequest input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.username(),
@@ -29,9 +28,14 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
                 )
         );
 
-        return credentialsRepository.findByUsername(input.username())
+        CredentialsEntity entity=credentialsRepository.findByUsername(input.username())
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Usuario no encontrado"));
+        String accessToken=jwtService.generateToken(entity);
+        String refreshToken=jwtService.generateRefreshToken(entity);
+        entity.setRefreshToken(refreshToken);
+        credentialsRepository.save(entity);
+        return new AuthResponse(accessToken, refreshToken);
     }
 
     @Transactional
