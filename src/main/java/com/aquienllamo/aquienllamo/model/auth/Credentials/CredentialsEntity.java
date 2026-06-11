@@ -24,13 +24,13 @@ public class CredentialsEntity implements UserDetails {
     @Column(unique = true, nullable = false, length = 50)
     private String username;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 255)
     private String clave;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean enabled;
 
-    @Column(name = "refresh_token", length = 2048, unique = true, nullable = false)
+    @Column(name = "refresh_token", length = 2048)
     private String refreshToken;
 
     @OneToOne
