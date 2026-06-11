@@ -20,7 +20,7 @@ public class RatingDTORequest {
     private String uuidDestinatario; //a quien le manda la reseña
 
     @NotNull(message = "Este campo no debe quedar vacio.")
-    @Min(value = 1, message = "La valoracion minima es 0")
+    @Min(value = 1, message = "La valoracion minima es 1")
     @Max(value = 5, message = "La valoracion maxima es 5")
     private Integer valoracion;
 
