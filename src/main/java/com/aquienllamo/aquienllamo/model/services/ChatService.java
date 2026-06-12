@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.dtos.Request.ChatDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.ChatDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.ChatEntity;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
@@ -27,6 +28,31 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final UsuarioRepository usuarioRepository;
     private final TecnicoRepository tecnicoRepository;
+
+    //iniciar chat:
+    public ChatDTOResponse iniciarChat(ChatDTORequest dto) {
+        UsuarioEntity usuario = usuarioRepository.findById(dto.getIdUsuario())
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+        TecnicoEntity tecnico = tecnicoRepository.findById(dto.getIdTecnico())
+                .orElseThrow(() -> new TecnicoNotFoundEx("No se encontró el técnico"));
+
+        // evitar chats duplicados
+        if (chatRepository.existstByIdUsuarioAndIdTecnico(
+                dto.getIdUsuario(), dto.getIdTecnico())) {
+            // si ya existe, devolver el chat existente
+            return chatRepository.findByUsuario(dto.getIdUsuario())
+                    .stream()
+                    .filter(c -> c.getTecnico().getIdTecnico().equals(dto.getIdTecnico()))
+                    .findFirst()
+                    .map(chatMapper::toResponse)
+                    .orElseThrow(() -> new ChatNotFoundEx("No se encontró el chat"));
+        }
+
+        ChatEntity chat = chatMapper.toEntity(dto, usuario, tecnico);
+        return chatMapper.toResponse(chatRepository.save(chat));
+    }
+
 
     //buscar por id:
     public ChatDTOResponse buscarPorId(Long id){
