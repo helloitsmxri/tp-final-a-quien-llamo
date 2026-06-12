@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.auth.JWT.JwtService;
 import com.aquienllamo.aquienllamo.model.dtos.Request.AdministradorDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.AdministradorDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
@@ -7,6 +8,8 @@ import com.aquienllamo.aquienllamo.model.mappers.AdministradorMapper;
 import com.aquienllamo.aquienllamo.model.repositories.AdministradorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +19,9 @@ import org.springframework.stereotype.Service;
 public class AdministradorService {
 
         private final AdministradorRepository administradorRepository; // para hablar con la bdd
-    private final AdministradorMapper administradorMapper;
+        private final AdministradorMapper administradorMapper;
         private final PasswordEncoder passwordEncoder; // para encriptar las claves.
+        private final JwtService jwtService;
 
         // Registrar administrador: encripta la clave antes de guardar y después lo guarda.
         public AdministradorDTOResponse registrar(AdministradorDTORequest admin) {
@@ -38,7 +42,17 @@ public class AdministradorService {
             if (!passwordEncoder.matches(claveIngresada, admin.getClave())) {
                 throw new RuntimeException("Clave incorrecta");
             }
+            UserDetails userD = User.builder()
+                    .username(admin.getNombreUsuario())
+                    .password(admin.getClave())
+                    .authorities("ROLE_ADMIN")
+                    .build();
 
-            return administradorMapper.toResponse(admin);
+            String token = jwtService.generateToken(userD);
+
+            return AdministradorDTOResponse.builder()
+                    .nombreUsuario(admin.getNombreUsuario())
+                    .token(token)
+                    .build();
         }
 }

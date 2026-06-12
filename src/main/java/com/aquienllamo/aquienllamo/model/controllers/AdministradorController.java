@@ -24,7 +24,7 @@ public class AdministradorController {
     }
 
     //logear administrador:
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<AdministradorDTOResponse> login(@RequestBody AdministradorDTORequest dto)
     {
         return ResponseEntity.ok().body(administradorService.login(dto.getNombreUsuario(),dto.getClave()));

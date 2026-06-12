@@ -30,8 +30,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, RestAuthenticateEntryPoint restAuthenticationEntryPoint) throws Exception {
        http.authorizeHttpRequests(auth->
-               auth.requestMatchers("/auth/**").permitAll()
-                       .requestMatchers("/aquienllamo/usuarios/sign-up", "/aquienllamo/usuarios/login").permitAll()
+               auth
+                       .requestMatchers(
+                               "/auth/**",
+                               "/aquienllamo/usuarios/sign-up",
+                               "/aquienllamo/usuarios/login",
+                               "/aquienllamo/administradores/registrar",
+                               "/aquienllamo/administradores/login"
+                       ).permitAll()
+                       .requestMatchers("/aquienllamo/usuarios/todos").hasRole("ADMIN")
                        .anyRequest().authenticated())
                .cors(Customizer.withDefaults())
                .csrf(AbstractHttpConfigurer::disable)
