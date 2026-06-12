@@ -11,10 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class PresupuestoDTORequest {
-    @NotBlank
-    private String uuidUsuario;
 
     @NotNull (message = "Es necesario ingresar un precio para el presupuesto")
     private BigDecimal precioEstimado;

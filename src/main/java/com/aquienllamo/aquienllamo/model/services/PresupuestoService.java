@@ -37,18 +37,20 @@ public class PresupuestoService {
     // acá iría un private final de CHAT REPOSITORY Y MENSAJE REPOSITORY!!!! todavía está en desarrollo
 
     // Registrar un nuevo presupuesto en el sistema
-    public PresupuestoDTOResponse createPresupuesto(PresupuestoDTORequest dto, String uuidChat, String uuidTecnico) {
+    public PresupuestoDTOResponse createPresupuesto(PresupuestoDTORequest dto, String uuidChat, String emailTech) {
 
         ChatEntity chat = chatRepository.findByUuidChat(uuidChat)
                 .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
 
-        TecnicoEntity tecnico = tecnicoRepository.findByUuid(uuidTecnico)
-                .orElseThrow(() -> new TecnicoNotFoundEx("Técnico no encontrado"));
-
+        TecnicoEntity tecnico = chat.getTecnico();
         UsuarioEntity usuario = chat.getUsuario();
 
         // seguridad
-        if (!chat.getTecnico().getUuid().equals(uuidTecnico)) {
+        if (!chat.getTecnico()
+                .getUsuario()
+                .getEmail()
+                .equals(emailTech)) {
+
             throw new RuntimeException("No autorizado");
         }
 
@@ -59,15 +61,14 @@ public class PresupuestoService {
                 .precioEstimado(dto.getPrecioEstimado())
                 .descripcionPresupuesto(dto.getDescripcionPresupuesto())
                 .estado(EstadoPresupuestoE.Pendiente)
-                .fechaRealizado(LocalDateTime.now())
+                // no pongo fecha xq lo hace solo.
                 .build();
 
         PresupuestoEntity saved = presupuestoRepository.save(presupuesto);
 
         MensajeEntity mensaje = new MensajeEntity();
         mensaje.setChat(chat);
-        mensaje.setUuidMensaje(UUID.randomUUID().toString());
-        mensaje.setFechaMensaje(LocalDateTime.now());
+        // no establezco fecha ni uuid porq entity lo hace solo.
         mensaje.setSender(tecnico.getUsuario());
 
         mensaje.setMensaje(
@@ -81,57 +82,67 @@ public class PresupuestoService {
     }
 
     // rechazar presupuesto
-    public void rechazarPresupuesto(String uuid, String uuidUser){
+    public void rechazarPresupuesto(String uuid, String emailUser){
         // verificar q el presupuesto existe:
         PresupuestoEntity presupuesto = presupuestoRepository.findByUuid(uuid)
                 .orElseThrow(() -> new PresupuestoNotFoundEx("No se encontró el presupuesto"));
 
         // verificar q el usuario es el dueño d ese presupuesto
-        if (!presupuesto.getUsuario().getUuid().equals(uuidUser)){
+        if (!presupuesto.getUsuario().getEmail().equals(emailUser)){
             throw new RuntimeException("No tiene permisos para cancelar este presupuesto.");
         }
 
         presupuesto.setEstado(EstadoPresupuestoE.Rechazado);
         presupuestoRepository.save(presupuesto);
+
+        MensajeEntity mensaje = new MensajeEntity();
+        mensaje.setChat(presupuesto.getChat());
+        mensaje.setSender(presupuesto.getUsuario());
+        // no establezco fecha ni uuid porq entity lo hace solo.
+        mensaje.setMensaje("Por el momento no voy a continuar con este presupuesto." +
+                "Gracias por el tiempo que te tomaste en elaborarlo." +
+                "ATENCIÓN: Este es un mensaje automatizado.");
+
+        mensajeRepository.save(mensaje);
     }
 
     // aceptar presupuesto
-    public void aceptarPresupuesto(String uuid, String uuidUser){
+    public void aceptarPresupuesto(String uuid, String emailUser){
         // verificar q existe el presupuesto:
         PresupuestoEntity presupuesto = presupuestoRepository.findByUuid(uuid)
                 .orElseThrow(() -> new PresupuestoNotFoundEx("No se encontró el presupuesto solicitado"));
 
-        // verificar q el uuid user corresponde al presupuesto:
-        if (!presupuesto.getUsuario().getUuid().equals(uuidUser)){
+        // verificar q el user corresponde al presupuesto:
+        if (!presupuesto.getUsuario().getEmail().equals(emailUser)){
             throw new RuntimeException("No se puede aceptar un presupuesto ajeno.");
+        }
+
+        if (presupuesto.getEstado() != EstadoPresupuestoE.Pendiente) {
+            throw new RuntimeException("Solo se pueden aceptar presupuestos pendientes.");
         }
 
         presupuesto.setEstado(EstadoPresupuestoE.Aceptado);
         presupuestoRepository.save(presupuesto);
 
-        // crear automáticamente un trabajo
-        TrabajoEntity trabajo = new TrabajoEntity();
-        trabajo.setPresupuesto(presupuesto);
-        trabajo.setEstadoTrabajo(EstadoTrabajo.Pendiente);
-
-        trabajoRepository.save(trabajo);
+        // quité lo de crearlo automáticamente porque trabajo pide muchos datos y no los puedo proveer yo.
 
         // crear un mensaje en el chat para avisar q se aceptó el trabajo
         MensajeEntity mensaje = new MensajeEntity();
         mensaje.setChat(presupuesto.getChat());
         mensaje.setSender(presupuesto.getUsuario());
-        mensaje.setMensaje("¡Se ha aceptado el presupuesto!");
-        mensaje.setFechaMensaje(LocalDateTime.now());
+        mensaje.setMensaje("¡Encantad@ de trabajar con vos! Arreglemos un horario y una fecha."+
+        "ATENCIÓN: Este es un mensaje automatizado.");
+        // no establezco fecha ni uuid porq entity lo hace solo.
 
         mensajeRepository.save(mensaje);
     }
 
     // cancelar presupuesto siendo técnico
-    public void cancelarPresupuesto (String uuid, String uuidTecnico){
+    public void cancelarPresupuesto (String uuid, String emailTech){
         PresupuestoEntity presupuesto = presupuestoRepository.findByUuid(uuid)
                 .orElseThrow(() -> new PresupuestoNotFoundEx("No se encontró el presupuesto solicitado"));
 
-        if (!presupuesto.getTecnico().getUuid().equals(uuidTecnico)){
+        if (!presupuesto.getTecnico().getUsuario().getEmail().equals(emailTech)){
             throw new RuntimeException("No puede cancelar un presupuesto que no sea suyo.");
         }
 

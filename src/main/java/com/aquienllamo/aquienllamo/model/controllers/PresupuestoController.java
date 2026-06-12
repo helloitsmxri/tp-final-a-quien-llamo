@@ -19,80 +19,94 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/presupuestos")
 public class PresupuestoController {
+
     private final PresupuestoService presupuestoService;
 
-    // AÑADIR globalexceptionhandler y pasar todos a response.
-    // crear presupuesto
-    @PostMapping("/crear")
-    public ResponseEntity<PresupuestoDTOResponse> crearPresupuesto(
+    // Crear presupuesto dentro de un chat
+    @PostMapping("/chat/{uuidChat}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PresupuestoDTOResponse crearPresupuesto(
+            @PathVariable String uuidChat,
             @Valid @RequestBody PresupuestoDTORequest dto,
             Authentication authentication) {
 
-        // El 'name' del authentication sería el uuid
-        String uuidTecnico = authentication.getName();
+        String emailAutenticado = authentication.getName();
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(presupuestoService.createPresupuesto(dto, uuidTecnico));
+        return presupuestoService.createPresupuesto(
+                dto,
+                uuidChat,
+                emailAutenticado
+        );
     }
 
-    // ver presupuesto en detalle
+    // Ver presupuesto en detalle
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PresupuestoDTOResponse> verPresupuesto(@PathVariable String uuid) {
-        return ResponseEntity.ok(presupuestoService.obtenerPorUuid(uuid));
+    public PresupuestoDTOResponse verPresupuesto(
+            @PathVariable String uuid) {
+
+        return presupuestoService.obtenerPorUuid(uuid);
     }
 
-    // aceptar presupuesto
+    // Aceptar presupuesto
     @PatchMapping("/{uuid}/aceptar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> aceptarPresupuesto(
+    public void aceptarPresupuesto(
             @PathVariable String uuid,
-            @RequestHeader("X-Usuario-UUID") String uuidUser) {
+            Authentication authentication) {
 
-        presupuestoService.aceptarPresupuesto(uuid, uuidUser);
-        return ResponseEntity.noContent().build(); // no devolvemos nada
+        String emailUsuario = authentication.getName();
+
+        presupuestoService.aceptarPresupuesto(uuid, emailUsuario);
     }
 
-    // rechazar presupuesto
+    // Rechazar presupuesto
     @PatchMapping("/{uuid}/rechazar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> rechazarPresupuesto(
+    public void rechazarPresupuesto(
             @PathVariable String uuid,
-            @RequestHeader("X-Usuario-UUID") String uuidUser) {
+            Authentication authentication) {
 
-        presupuestoService.rechazarPresupuesto(uuid, uuidUser);
-        return ResponseEntity.noContent().build();
+        String emailUsuario = authentication.getName();
+
+        presupuestoService.rechazarPresupuesto(uuid, emailUsuario);
     }
 
-    // cancelar presupuesto como técnico
+    // Cancelar presupuesto como técnico
     @PatchMapping("/{uuid}/cancelar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> cancelarPresupuesto(
+    public void cancelarPresupuesto(
             @PathVariable String uuid,
-            @RequestHeader("X-Tecnico-UUID") String uuidTecnico) {
+            Authentication authentication) {
 
-        presupuestoService.cancelarPresupuesto(uuid, uuidTecnico);
-        return ResponseEntity.noContent().build();
+        String emailTech = authentication.getName();
+
+        presupuestoService.cancelarPresupuesto(uuid, emailTech);
     }
 
-    // ver todos los presupuestos -sirve p los admins, creo-
+    // Listar todos
     @GetMapping("/todos")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PresupuestoDTOResponse>> listarTodos() {
-        return ResponseEntity.ok(presupuestoService.getAllPresupuestos());
+    public List<PresupuestoDTOResponse> listarTodos() {
+        return presupuestoService.getAllPresupuestos();
     }
 
-    // búsqueda con filtros -> specs!!!!!
+    // Búsqueda por filtros
     @GetMapping("/buscar")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PresupuestoDTOResponse>> buscar(
+    public List<PresupuestoDTOResponse> buscar(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String apellido,
             @RequestParam(required = false) BigDecimal min,
             @RequestParam(required = false) BigDecimal max,
             @RequestParam(required = false) LocalDate fecha) {
 
-        return ResponseEntity.ok(presupuestoService.buscarPresupuestosCompleto(nombre, apellido, min, max, fecha));
+        return presupuestoService.buscarPresupuestosCompleto(
+                nombre,
+                apellido,
+                min,
+                max,
+                fecha
+        );
     }
-
 }

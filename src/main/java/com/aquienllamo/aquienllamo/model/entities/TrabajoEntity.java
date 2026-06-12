@@ -33,7 +33,7 @@ public class TrabajoEntity {
 
     @OneToOne
     @JoinColumn(name = "id_presupuesto")
-    private PresupuestoEntity Presupuesto;
+    private PresupuestoEntity presupuesto;
     //presupuestoRepository.findByUuid(dto.getUuidPresupuesto())
 
     @Column(name = "descripcion_trabajo", nullable = false, columnDefinition = "TEXT")
