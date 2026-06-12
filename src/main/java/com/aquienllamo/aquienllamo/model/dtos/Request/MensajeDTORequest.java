@@ -14,6 +14,9 @@ public class MensajeDTORequest {
     @NotNull(message = "El id del chat no puede estar vacio")
     private String uuidChat;
 
+    @NotNull(message = "El uuid del sender no puede estar vacío")
+    private String uuidSender;
+
     @NotBlank(message = "El mensaje no puede estar vacio")
     private String mensaje;
 }
