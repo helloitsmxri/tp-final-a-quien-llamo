@@ -12,6 +12,7 @@ public class AdministradorMapper {
     {
         return AdministradorEntity.builder()
                 .nombreUsuario(dto.getNombreUsuario())
+                .clave(dto.getClave())
                 .build();
     }
 
