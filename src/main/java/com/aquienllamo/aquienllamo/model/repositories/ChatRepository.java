@@ -18,4 +18,5 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
     List<ChatEntity> findByUsuario(Integer idUsuario);
     List<ChatEntity> findByTecnico(Integer idTecnico);
     Optional<ChatEntity> findByUuidChat(String uuidChat);
+    boolean existstByIdUsuarioAndIdTecnico(Integer idUsuario, Integer idTecnico); // para evitar que se creen chats duplicados entre el mismo usuario y tecnico
 }
