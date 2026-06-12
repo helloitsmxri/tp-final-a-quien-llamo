@@ -39,6 +39,10 @@ public class PresupuestoEntity {
     private UsuarioEntity usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_chat", nullable = false)
+    private ChatEntity chat;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tecnico", nullable = false)
     @ToString.Exclude
     private TecnicoEntity tecnico;
@@ -55,4 +59,6 @@ public class PresupuestoEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
     private EstadoPresupuestoE estado;
+
+
 }

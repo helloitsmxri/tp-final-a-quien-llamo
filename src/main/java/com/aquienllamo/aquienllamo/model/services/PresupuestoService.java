@@ -1,18 +1,15 @@
 package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoTrabajo;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PresupuestoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PresupuestoDTOResponse;
-import com.aquienllamo.aquienllamo.model.entities.PresupuestoEntity;
-import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
-import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
+import com.aquienllamo.aquienllamo.model.entities.*;
 import com.aquienllamo.aquienllamo.model.exceptions.PresupuestoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.TecnicoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.PresupuestoMapper;
-import com.aquienllamo.aquienllamo.model.repositories.PresupuestoRepository;
-import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
-import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
+import com.aquienllamo.aquienllamo.model.repositories.*;
 import com.aquienllamo.aquienllamo.model.specifications.PresupuestoSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
@@ -24,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,49 +31,53 @@ public class PresupuestoService {
     private final PresupuestoRepository presupuestoRepository;
     private final UsuarioRepository usuarioRepository;
     private final TecnicoRepository tecnicoRepository;
+    private final MensajeRepository mensajeRepository;
+    private final ChatRepository chatRepository;
+    private final TrabajoRepository trabajoRepository;
     // acá iría un private final de CHAT REPOSITORY Y MENSAJE REPOSITORY!!!! todavía está en desarrollo
 
-    // no llamo a especificación xq tiene metodos static
-
     // Registrar un nuevo presupuesto en el sistema
-    public PresupuestoDTOResponse createPresupuesto (PresupuestoDTORequest dto, String uuidTecnico){
+    public PresupuestoDTOResponse createPresupuesto(PresupuestoDTORequest dto, String uuidChat, String uuidTecnico) {
 
-        // acá el token del técnicop
-        TecnicoEntity technician = tecnicoRepository.findByUuid(uuidTecnico)
-                .orElseThrow(() -> new TecnicoNotFoundEx("No se encontró al técnico"));
+        ChatEntity chat = chatRepository.findByUuidChat(uuidChat)
+                .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
 
-        // acá va el usuario:
-        UsuarioEntity user = usuarioRepository.findByUuid(dto.getUuidUsuario())
-                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario."));
+        TecnicoEntity tecnico = tecnicoRepository.findByUuid(uuidTecnico)
+                .orElseThrow(() -> new TecnicoNotFoundEx("Técnico no encontrado"));
 
-        // verificamos q tecnico no sea el mismo uuid de user (puede pasar)
-        if (technician.getUsuario().getUuid().equals(user.getUuid())) {
-            throw new RuntimeException("No puedes enviarte un presupuesto a ti mismo.");
+        UsuarioEntity usuario = chat.getUsuario();
+
+        // seguridad
+        if (!chat.getTecnico().getUuid().equals(uuidTecnico)) {
+            throw new RuntimeException("No autorizado");
         }
 
-        // se setea
-        PresupuestoEntity presupuesto = presupuestoMapper.toEntity(dto);
-        presupuesto.setUsuario(user);
-        presupuesto.setTecnico(technician);
+        PresupuestoEntity presupuesto = PresupuestoEntity.builder()
+                .chat(chat)
+                .usuario(usuario)
+                .tecnico(tecnico)
+                .precioEstimado(dto.getPrecioEstimado())
+                .descripcionPresupuesto(dto.getDescripcionPresupuesto())
+                .estado(EstadoPresupuestoE.Pendiente)
+                .fechaRealizado(LocalDateTime.now())
+                .build();
 
-        presupuesto.setFechaRealizado(LocalDateTime.now());
+        PresupuestoEntity saved = presupuestoRepository.save(presupuesto);
 
-//        cuando las chicas hagan chat y mensaje hago esto:
-//        ChatEntity chat = chatRepository.findByUuid(uuidChat)
-//                .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
-//
-//        MensajeEntity mensajeSistema = new MensajeEntity();
-//        mensajeSistema.setUuid(UUID.randomUUID().toString());
-//        mensajeSistema.setChat(chat);
-//        mensajeSistema.setFechaMensaje(LocalDateTime.now());
-//        mensajeSistema.setMensaje("Hola! Ya diseñé un presupuesto. Veríficalo, y acéptalo si estás de acuerdo: $" + presupuesto.getPrecioEstimado());
-//
-//        mensajeRepository.save(mensajeSistema);
+        MensajeEntity mensaje = new MensajeEntity();
+        mensaje.setChat(chat);
+        mensaje.setUuidMensaje(UUID.randomUUID().toString());
+        mensaje.setFechaMensaje(LocalDateTime.now());
+        mensaje.setSender(tecnico.getUsuario());
 
-        // podríamos setear un estado a pendiente...
-        presupuesto.setEstado(EstadoPresupuestoE.Pendiente);
-        return presupuestoMapper.toResponse(presupuestoRepository.save(presupuesto));
+        mensaje.setMensaje(
+                "¡Hola! Creé un presupuesto según lo acordado: $" + presupuesto.getPrecioEstimado()
+                        + " Descripción y razones para el presupuesto: " + presupuesto.getDescripcionPresupuesto()
+        );
 
+        mensajeRepository.save(mensaje);
+
+        return presupuestoMapper.toResponse(saved);
     }
 
     // rechazar presupuesto
@@ -106,6 +108,22 @@ public class PresupuestoService {
 
         presupuesto.setEstado(EstadoPresupuestoE.Aceptado);
         presupuestoRepository.save(presupuesto);
+
+        // crear automáticamente un trabajo
+        TrabajoEntity trabajo = new TrabajoEntity();
+        trabajo.setPresupuesto(presupuesto);
+        trabajo.setEstadoTrabajo(EstadoTrabajo.Pendiente);
+
+        trabajoRepository.save(trabajo);
+
+        // crear un mensaje en el chat para avisar q se aceptó el trabajo
+        MensajeEntity mensaje = new MensajeEntity();
+        mensaje.setChat(presupuesto.getChat());
+        mensaje.setSender(presupuesto.getUsuario());
+        mensaje.setMensaje("¡Se ha aceptado el presupuesto!");
+        mensaje.setFechaMensaje(LocalDateTime.now());
+
+        mensajeRepository.save(mensaje);
     }
 
     // cancelar presupuesto siendo técnico
