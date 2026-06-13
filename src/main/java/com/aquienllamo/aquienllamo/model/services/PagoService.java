@@ -1,6 +1,5 @@
 package com.aquienllamo.aquienllamo.model.services;
 
-import com.aquienllamo.aquienllamo.model.APIs.MercadoPago.MercadoPagoService;
 import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUResponseDTO;
 import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUService;
 import com.aquienllamo.aquienllamo.model.Enum.Estado;
@@ -8,7 +7,9 @@ import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PagoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.PagoEntity;
+import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
 import com.aquienllamo.aquienllamo.model.entities.TrabajoEntity;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.PagoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.TecnicoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.TrabajoNotFoundEx;
@@ -18,7 +19,6 @@ import com.aquienllamo.aquienllamo.model.repositories.PagoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.TrabajoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
-import com.mercadopago.resources.payment.Payment;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,6 @@ public class PagoService {
     private final UsuarioRepository usuarioRepository;
     private final TecnicoRepository tecnicoRepository;
     private final PayUService payUService;
-    private final MercadoPagoService mercadoPagoService;
 
     //crear un pago
     public PagoDTOResponse crearPago (PagoDTORequest request){
@@ -43,32 +42,15 @@ public class PagoService {
         TrabajoEntity trabajo = trabajoRepository.findByUuid(request.getUuidTrabajo())
                 .orElseThrow(()-> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe."));
 
-        PagoEntity pago = PagoMapper.toEntity(request, trabajo);
+        PagoEntity pago = pagoRepository.save(PagoMapper.toEntity(request, trabajo));
 
-        switch (request.getMetodoDePago()){
-            case Credito, Debito ->{
-                PayUResponseDTO respuesta = payUService.procesarPago(request, pago.getUuid());
-                if("APPROVED".equals(respuesta.getState())){
-                    pago.setEstadoPago(Estado.Confirmado);
-                }else{
-                    pago.setEstadoPago(Estado.Rechazado);
-                }
-            }
-            case Transferencia -> {
-                Payment respuesta = mercadoPagoService.procesarTransferencia(request);
+        PayUResponseDTO respuestaPayU = payUService.procesarPago(request, pago.getUuid());
 
-                if ("approved".equals(respuesta.getStatus())){
-                    pago.setEstadoPago(Estado.Confirmado);
-                }else {
-                    pago.setEstadoPago(Estado.Pendiente_de_revision);
-                }
-            }
-
-            case Efectivo -> {
-                pago.setEstadoPago(Estado.Pendiente_de_revision);
-            }
+        if("APPROVED".equals(respuestaPayU.getState())){
+            pago.setEstadoPago(Estado.Confirmado);
+        } else if ("DECLINED".equals(respuestaPayU.getState())) {
+            pago.setEstadoPago(Estado.Rechazado);
         }
-
         return PagoMapper.toResponse(pagoRepository.save(pago));
 
     }

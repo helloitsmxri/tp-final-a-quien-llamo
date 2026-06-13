@@ -18,7 +18,8 @@ public class MensajeMapper {
         return MensajeDTOResponse.builder()
                 .mensaje(mensaje.getMensaje())
                 .fechaMensaje(mensaje.getFechaMensaje())
-                .sender(mensaje.getSender())
+                .nombreSender(mensaje.getSender().getNombre())
+
                 .build();
     }
 
