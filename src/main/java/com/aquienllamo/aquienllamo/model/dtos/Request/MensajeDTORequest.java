@@ -11,10 +11,10 @@ import lombok.*;
 @ToString
 @Builder
 public class MensajeDTORequest {
-    @NotBlank(message = "El id del chat no puede estar vacio")
+    @NotNull(message = "El id del chat no puede estar vacio")
     private String uuidChat;
 
-    @NotBlank(message = "El uuid del sender no puede estar vacío")
+    @NotNull(message = "El uuid del sender no puede estar vacío")
     private String uuidSender;
 
     @NotBlank(message = "El mensaje no puede estar vacio")
