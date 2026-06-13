@@ -23,22 +23,22 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(chatService.iniciarChat(dto));
     }
 
-    @GetMapping("/buscar por id/{id}")
+    @GetMapping("/buscar-por-id/{id}")
     public ResponseEntity<ChatDTOResponse> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(chatService.buscarPorId(id));
     }
 
-    @GetMapping("/listar chats por usuario/{id}")
+    @GetMapping("/listar-chats-por-usuario/{id}")
     public ResponseEntity<List<ChatDTOResponse>> listarPorUsuario(@PathVariable Integer id){
         return ResponseEntity.ok(chatService.listarUsuarios(id));
     }
 
-    @GetMapping("/listar chats por tecnico/{id}")
+    @GetMapping("/listar-chats-por-tecnico/{id}")
     public ResponseEntity<List<ChatDTOResponse>> listarPorTecnico(@PathVariable Integer id){
         return ResponseEntity.ok(chatService.listarTecnicos(id));
     }
 
-    @GetMapping("/buscar por uuid/{uuid}")
+    @GetMapping("/buscar-por-uuid/{uuid}")
     public ResponseEntity<ChatDTOResponse> buscarPorUuid(@PathVariable String uuid){
         return ResponseEntity.ok(chatService.buscarPorUuid(uuid));
     }
