@@ -192,6 +192,24 @@ public class GlobalExceptionHandler {
                 .build());
     }
 
+    @ExceptionHandler(AdminAsignadoDenunciaEx.class)
+    public ResponseEntity<ErrorResponseDTO> adminAsignadoDenunciaEx(AdminAsignadoDenunciaEx ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseDTO.builder()
+                .status(400)
+                .mensaje(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build());
+    }
+
+    @ExceptionHandler(DenunciaResueltaEx.class)
+    public ResponseEntity<ErrorResponseDTO> denunciaResueltaEx(DenunciaResueltaEx ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseDTO.builder()
+                        .status(400)
+                        .mensaje(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
     //500 INTERNAL SERVER ERROR - catch-all de seguridad
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex)
