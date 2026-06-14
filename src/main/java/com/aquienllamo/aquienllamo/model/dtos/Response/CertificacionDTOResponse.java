@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.dtos.Response;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -25,4 +26,9 @@ public class CertificacionDTOResponse {
     // Imagen
     private String imagenBase64;
     private String tipoImagen;
+
+    private EstadoVerificacion estadoVerificacion;
+    private String notasAdmin;
+
+
 }
