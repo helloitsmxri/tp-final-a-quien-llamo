@@ -1,12 +1,15 @@
 package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
+import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
+import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;
 import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.UsuarioMapper;
-import com.aquienllamo.aquienllamo.model.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.*;
@@ -16,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final TecnicoRepository tecnicoRepository;
     private final CredentialsRepository credentialsRepository;
+    private final RoleRepository roleRepository;
 
     @Transactional(readOnly = true)
     public String determinarTipoUsuario(String uuid) {
@@ -66,13 +69,34 @@ public class UsuarioService {
 
         // guardar user y devolverlo
         usuarioRepository.save(user);
+
+        // buscar ROLE_USUARIO
+        RoleEntity roleUsuario = roleRepository.findByRole(RolesUser.ROLE_USUARIO)
+                                .orElseThrow(() -> new RuntimeException("No existe ROLE_USUARIO"));
+
+        // crear credenciales
+        CredentialsEntity credencial =
+                CredentialsEntity.builder()
+                        .username(user.getEmail())
+                        .clave(user.getClave())
+                        .enabled(true)
+                        .usuario(user)
+                        .build();
+
+        // asignar rol
+        credencial.getRoles().add(roleUsuario);
+
+        // guardar credenciales
+        credentialsRepository.save(credencial);
+
+        // acá genero la response
         UsuarioDTOResponse response = usuarioMapper.toResponse(user);
         response.setTipoUsuario(determinarTipoUsuario(user.getUuid()));
 
         return response;
     }
 
-    // eliminar
+    // eliminar: revisar si con el email como USERNAME hay q buscar x uuid o x correo.
     public String deleteUser(String uuid, String password){
         UsuarioEntity user = usuarioRepository.findByUuid(uuid)
                 .orElseThrow(()->new UserNotFoundEx("No se encontró el usuario"));
@@ -121,6 +145,12 @@ public class UsuarioService {
             }
             // y sino, lo seteo
             user.setEmail(nuevoCorreo);
+
+            // como credencial tiene de username el correo:
+            CredentialsEntity credencial = credentialsRepository.findByUsuario(user)
+                            .orElseThrow(() -> new UserNotFoundEx("El usuario no existe."));
+
+            credencial.setUsername(nuevoCorreo);
         }
 
         user.setTelefono(request.getTelefono());

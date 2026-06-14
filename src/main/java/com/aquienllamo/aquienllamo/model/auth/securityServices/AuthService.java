@@ -4,7 +4,7 @@ import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.JWT.JwtService;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.AuthRequest;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.AuthResponse;
-import com.aquienllamo.aquienllamo.model.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
