@@ -183,6 +183,15 @@ public class GlobalExceptionHandler {
                 .build());
     }
 
+    @ExceptionHandler(AdministradorNotFoundEx.class)
+    public ResponseEntity<ErrorResponseDTO> administradorNotFoundEx(AdministradorNotFoundEx ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
+                .status(404)
+                .mensaje(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build());
+    }
+
     //500 INTERNAL SERVER ERROR - catch-all de seguridad
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex)
