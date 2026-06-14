@@ -1,12 +1,12 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PresupuestoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PresupuestoDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.PresupuestoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -101,12 +101,46 @@ public class PresupuestoController {
             @RequestParam(required = false) BigDecimal max,
             @RequestParam(required = false) LocalDate fecha) {
 
-        return presupuestoService.buscarPresupuestosCompleto(
-                nombre,
-                apellido,
-                min,
-                max,
-                fecha
+        return presupuestoService.buscarPresupuestosCompleto(nombre, apellido, min, max, fecha);
+    }
+
+    @GetMapping("/mis-presupuestos")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> misPresupuestos(
+            Authentication auth){
+
+        return presupuestoService.getPresupuestosUsuario(auth.getName());
+    }
+
+    @GetMapping("/mis-presupuestos/filtrar")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> misPresupuestosPorEstado(
+            Authentication auth,
+            @RequestParam EstadoPresupuestoE estado){
+
+        return presupuestoService.getPresupuestosUsuarioPorEstado(auth.getName(),estado);
+    }
+
+    @GetMapping("/mis-presupuestos-tecnico")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> misPresupuestosTecnico(
+            Authentication auth){
+
+        return presupuestoService.getPresupuestosTecnico(
+                auth.getName()
         );
     }
+
+    @GetMapping("/mis-presupuestos-tecnico/filtrar")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> misPresupuestosTecnicoPorEstado(
+            Authentication auth,
+            @RequestParam EstadoPresupuestoE estado){
+
+        return presupuestoService.getPresupuestosTecnicoPorEstado(
+                auth.getName(),
+                estado
+        );
+    }
+
 }

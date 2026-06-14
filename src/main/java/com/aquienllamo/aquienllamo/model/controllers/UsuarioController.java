@@ -47,6 +47,7 @@ public class UsuarioController {
 
     // listar todos users para admins
     @GetMapping("/todos")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
     public List<UsuarioDTOResponse> listarTodos() {
         return usuarioService.getAllUsers();
@@ -73,6 +74,23 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.OK)
     public String darDeBaja(@PathVariable String uuid){
         return usuarioService.darDeBajaUsuario(uuid);
+    }
+
+    //lo podría hacer con request param
+    // encontrar usuario por documento
+    @GetMapping("/usuario/dni/{dni}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse mostrarPorDocumento(String dni){
+        return usuarioService.getByDni(dni);
+    }
+
+    // encontrar usuario por email
+    @GetMapping("/usuario/email/{email}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse mostrarPorCorreo(String email){
+        return usuarioService.getByEmail(email);
     }
 
 }

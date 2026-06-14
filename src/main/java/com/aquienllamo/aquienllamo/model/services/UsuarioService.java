@@ -173,13 +173,14 @@ public class UsuarioService {
 
     }
 
-    // mostrar todos los usuarios
+    // mostrar todos los usuarios admin
     public List<UsuarioDTOResponse> getAllUsers() {
         return usuarioRepository.findAll()
                 .stream()
                 .map(usuarioMapper::toResponse)
                 .collect(Collectors.toList());
     }
+
 
     // mostrar x algo específico -> dni o por email (tamb puede ser el id)
     // estas son más p/los admins je

@@ -187,4 +187,52 @@ public class PresupuestoService {
                 .map(presupuestoMapper::toResponse)
                 .orElseThrow(() -> new PresupuestoNotFoundEx("No se encontró el presupuesto"));
     }
+
+    // los presupuestos del cliente
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> getPresupuestosUsuario(String emailUser){
+        UsuarioEntity user = usuarioRepository.findByEmail(emailUser)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+        return presupuestoRepository.findByUsuario(user)
+                .stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
+
+    // los presupuestos del técnico
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> getPresupuestosTecnico(String emailTech){
+        TecnicoEntity tech = tecnicoRepository.findByUsuarioEmail(emailTech)
+                .orElseThrow(() -> new TecnicoNotFoundEx("No se encontró el técnico"));
+
+        return presupuestoRepository.findByTecnico(tech)
+                .stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
+
+    // presupuestos según el estado
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> getPresupuestosUsuarioPorEstado(String emailUser, EstadoPresupuestoE estado){
+        UsuarioEntity user = usuarioRepository.findByEmail(emailUser)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+        return presupuestoRepository.findByUsuarioAndEstado(user, estado)
+                .stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
+
+    // presupuestos según el estado técnico
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> getPresupuestosTecnicoPorEstado(String emailTech, EstadoPresupuestoE estado){
+        TecnicoEntity tech = tecnicoRepository.findByUsuarioEmail(emailTech)
+                .orElseThrow(() -> new TecnicoNotFoundEx("No se encontró el técnico"));
+
+        return presupuestoRepository.findByTecnicoAndEstado(tech, estado)
+                .stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
 }
