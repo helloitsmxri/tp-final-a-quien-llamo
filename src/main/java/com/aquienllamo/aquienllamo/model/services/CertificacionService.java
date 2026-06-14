@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.CertificacionDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.CertificacionDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.CertificacionEntity;
@@ -32,6 +33,8 @@ public class CertificacionService {
                 .orElseThrow(()-> new TecnicoNotFoundEx("el técnico con ese uuid no existe."));
 
         CertificacionEntity nueva=certificacionMapper.toEntity(certificacion);
+        nueva.setEstadoVerificacion(EstadoVerificacion.Pendiente);
+        nueva.setNotasAdmin(null);
         nueva.setTecnico(tecnico);
         nueva.setImagenCertificado(extraerBytes(certificacion.getImagenCertificado()));
         nueva.setTipoImagen(certificacion.getImagenCertificado().getContentType());
@@ -91,6 +94,35 @@ public class CertificacionService {
                 .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no se encontro."));
     }
 
+    //aprobar certificacion
+    public CertificacionDTOResponse aprobarCertificacion(String uuid){
+        CertificacionEntity certificacion=certificacionRepository.findByUuid(uuid)
+                .orElseThrow(()-> new CertificacionNotFoundEx("La certificacion con ese uuid no se encontro"));
+        certificacion.setEstadoVerificacion(EstadoVerificacion.Aprobado);
+        certificacionRepository.save(certificacion);
+        //va lo del email aca
+        return certificacionMapper.toResponse(certificacion);
+    }
 
+    //rechazar certificacion
+    public CertificacionDTOResponse rechazarCertificacion(String uuid, String motivo){
+        CertificacionEntity certificacion=certificacionRepository.findByUuid(uuid)
+                .orElseThrow(()-> new  CertificacionNotFoundEx("Certificacion no encontrada"));
+
+        certificacion.setEstadoVerificacion(EstadoVerificacion.Rechazado);
+        certificacion.setNotasAdmin(motivo);
+        certificacionRepository.save(certificacion);
+        //aca va lo del email
+        return certificacionMapper.toResponse(certificacion);
+    }
+
+    //filtrar por estado
+    public List<CertificacionDTOResponse> filtrarPorEstado(EstadoVerificacion estado){
+        return certificacionRepository
+                .findByEstadoVerificacion(estado)
+                .stream()
+                .map(certificacionMapper::toResponse)
+                .toList();
+    }
 
 }
