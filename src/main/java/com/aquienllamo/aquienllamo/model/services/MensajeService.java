@@ -2,10 +2,15 @@ package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.MensajeDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.MensajeDTOResponse;
+import com.aquienllamo.aquienllamo.model.entities.ChatEntity;
 import com.aquienllamo.aquienllamo.model.entities.MensajeEntity;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.ChatNotFoundEx;
+import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.MensajeMapper;
+import com.aquienllamo.aquienllamo.model.repositories.ChatRepository;
 import com.aquienllamo.aquienllamo.model.repositories.MensajeRepository;
+import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,14 +24,28 @@ public class MensajeService {
 
     private final MensajeRepository mensajeRepository;
     private final MensajeMapper mensajeMapper;
+    private final ChatRepository chatRepository;
+    private final UsuarioRepository usuarioRepository;
 
     //crear un mensaje:
     public MensajeDTOResponse crearMensaje(MensajeDTORequest dto)
     {
-        MensajeEntity mensaje= mensajeRepository.findByChat_UuidChat(dto.getUuidChat())
+        ChatEntity chat = chatRepository.findByUuidChat(dto.getUuidChat())
                 .orElseThrow(()-> new ChatNotFoundEx("No se encontro el chat"));
+
+        UsuarioEntity sender = usuarioRepository.findByUuid(dto.getUuidSender())
+                .orElseThrow(()-> new UserNotFoundEx("No se encontro el usuario"));
+
+        MensajeEntity mensaje = MensajeEntity.builder()
+                .chat(chat)
+                .sender(sender)
+                .mensaje(dto.getMensaje())
+                .build();
+
         return mensajeMapper.toResponse(mensajeRepository.save(mensaje));
     }
+
+
     //modificar:
     public MensajeDTOResponse modificarMensaje(MensajeDTORequest dto)
     {
