@@ -104,14 +104,6 @@ public class DenunciaService {
                 .toList();
     }
 
-    //cambiar estado
-    public DenunciaDTOResponse cambiarEstado(String uuid, EstadoDenunciaE estado){
-        DenunciaEntity denuncia=denunciaRepository.findByUuid(uuid)
-                .orElseThrow(()-> new DenunciaNotFoundEx("no se encontro la denuncia con ese uuid"));
-        denuncia.setEstadoDenuncia(estado);
-        return denunciaMapper.toResponse(denunciaRepository.save(denuncia));
-    }
-
     //eliminar
     public void eliminarDenuncia(String uuid){
         DenunciaEntity denuncia=denunciaRepository.findByUuid(uuid)
@@ -184,7 +176,5 @@ public class DenunciaService {
         //email de notificar al denunciado
         return denunciaMapper.toResponse(denuncia);
     }
-
-
-
+    
 }
