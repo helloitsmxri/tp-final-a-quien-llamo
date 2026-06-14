@@ -51,4 +51,5 @@ public class CertificacionEntity {
     @Column(nullable = false, name = "imagen_certificado", columnDefinition = "MEDIUMBLOB")
     private byte[] imagenCertificado;
     //prueba
+    private String algo;
 }
