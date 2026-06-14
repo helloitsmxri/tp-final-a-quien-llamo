@@ -5,12 +5,21 @@ import com.aquienllamo.aquienllamo.model.auth.JWT.JwtService;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.AuthRequest;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.AuthResponse;
 import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ChangePasswordRequest;
+import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ForgotPasswordDTORequest;
+import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ResetPasswordDTORequest;
+import com.aquienllamo.aquienllamo.model.exceptions.InvalidPasswordEx;
+import io.jsonwebtoken.JwtException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.management.JMException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +28,7 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         private final CredentialsRepository credentialsRepository;
         private final AuthenticationManager authenticationManager;
         private final JwtService jwtService;
+        private final PasswordEncoder passwordEncoder;
 
     public AuthResponse authenticate(AuthRequest input) {
         authenticationManager.authenticate(
@@ -73,5 +83,68 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
 
         user.setRefreshToken(null);
         credentialsRepository.save(user);
+    }
+
+    // cambiar password si ya me la sé
+    @Transactional
+    public AuthResponse changePassword(String username, ChangePasswordRequest req){
+        // buscamos q la credencial exista
+        CredentialsEntity cred = credentialsRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        // me fijo si las claves coinciden
+        if (!passwordEncoder.matches(req.getCurrentPassword(), cred.getClave())){
+            throw new InvalidPasswordEx("La contraseña introducida no es correcta.");
+        }
+
+        // si coincidieron, acepto la nueva:
+        String nuevaClave = passwordEncoder.encode(req.getNewPassword());
+        cred.setClave(nuevaClave);
+
+        if (cred.getUsuario()!=null){
+            cred.getUsuario().setClave(nuevaClave);
+        }
+
+        // a la credencial le genero su nuevo accestoken y su refresh
+        String accesToken = jwtService.generateToken(cred);
+        String refreshToken = jwtService.generateRefreshToken(cred);
+
+        cred.setRefreshToken(refreshToken);
+        credentialsRepository.save(cred);
+
+        return new AuthResponse(accesToken, refreshToken);
+    }
+
+    public void forgotPassword(ForgotPasswordDTORequest req){
+        CredentialsEntity cred = credentialsRepository.findByUsername(req.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("No se encontró el usuario en el sistema."));
+
+        String token = jwtService.generatePasswordResetToken(cred);
+
+        // acá va lo de enviar correo pau
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordDTORequest req){
+        String usuario = jwtService.extractUsername(req.getToken());
+
+        CredentialsEntity cred = credentialsRepository.findByUsername(usuario)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        boolean val = jwtService.validatePasswordResetToken(req.getToken(), cred);
+        if (!val){
+            throw new JwtException("Token inválido o expirado");
+        }
+
+        String nuevaClave = passwordEncoder.encode(req.getNewPassword());
+        cred.setClave(nuevaClave);
+
+        if (cred.getUsuario() != null){
+            cred.getUsuario().setClave(nuevaClave);
+        }
+
+        cred.setRefreshToken(null);
+
+        credentialsRepository.save(cred);
     }
 }

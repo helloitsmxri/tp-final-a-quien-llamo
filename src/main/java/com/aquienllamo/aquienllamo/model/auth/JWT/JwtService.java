@@ -108,5 +108,25 @@ public class JwtService {
         }
     }
 
+    public String generatePasswordResetToken(UserDetails userDetails){
+        Map<String,Object> claims = new HashMap<>();
+        claims.put("type", "password-reset");
 
+        return buildToken(claims, userDetails, 1000*60*15); // esto de acá a la derecha es la expiración equivale
+                                                                    // como a quince min
+    }
+
+    // validación
+    public boolean validatePasswordResetToken(String token, UserDetails userDetails){
+        try{
+            Claims claims = extractAllClaims(token);
+            String tipo = claims.get("type", String.class);
+            if (!"password-reset".equals(tipo)){
+                return false;
+            }
+            return validateRefreshToken(token,userDetails);
+        }catch (JwtException e){ // revisar si este tipo de excepción es la idónea o la EXCEPTION COMÚN.
+            return false;
+        }
+    }
 }
