@@ -26,6 +26,8 @@ public class CertificacionMapper {
                 .fechaVencimiento(certificacion.getFechaVencimiento())
                 .imagenBase64(imagenBase64)
                 .tipoImagen(certificacion.getTipoImagen())
+                .notasAdmin(certificacion.getNotasAdmin())
+                .estadoVerificacion(certificacion.getEstadoVerificacion())
                 .build();
     }
 
