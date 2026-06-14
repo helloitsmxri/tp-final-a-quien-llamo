@@ -16,7 +16,7 @@ public class DenunciaMapper {
         }
         return DenunciaDTOResponse.builder()
                 .uuid(denuncia.getUuid())
-                .administrador(denuncia.getAdministrador())
+                .nombreAdministrador(denuncia.getAdministrador().getNombreUsuario())
                 .nombreDenunciante(denuncia.getNombreDenunciante())
                 .apellidoDenunciante(denuncia.getApellidoDenunciante())
                 .nombreDenunciado(denuncia.getNombreDenunciado())

@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface DenunciaRepository extends JpaRepository<DenunciaEntity, Integer> {
     Optional<DenunciaEntity> findByUuid(String uuid);
     List<DenunciaEntity> findByEstadoDenuncia(EstadoDenunciaE estado);
+    List<DenunciaEntity> findByAdministradorIsNull();
 }

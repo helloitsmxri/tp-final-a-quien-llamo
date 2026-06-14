@@ -14,8 +14,9 @@ import java.time.LocalDateTime;
 public class DenunciaDTOResponse {
     private String uuid;
 
-    //Administrador
-    private AdministradorEntity administrador;
+    //administrador
+    private String nombreAdministrador;
+
     // Denunciante
     private String nombreDenunciante;
     private String apellidoDenunciante;
