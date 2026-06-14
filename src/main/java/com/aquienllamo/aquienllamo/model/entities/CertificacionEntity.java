@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.entities;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,5 +51,15 @@ public class CertificacionEntity {
     @Lob
     @Column(nullable = false, name = "imagen_certificado", columnDefinition = "MEDIUMBLOB")
     private byte[] imagenCertificado;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_admin_revisor", referencedColumnName = "id_admin")
+    private AdministradorEntity adminRevisor;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_verificacion")
+    private EstadoVerificacion estadoVerificacion;
+
+    @Column(name = "notas_admin", columnDefinition = "TEXT")
+    private String notasAdmin;
 }
