@@ -46,21 +46,7 @@ proyectos TEXT,
 FOREIGN KEY(id_usuario) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Certificacion (
-id_certificacion INT AUTO_INCREMENT PRIMARY KEY,
-uuid VARCHAR(36) NOT NULL UNIQUE,
-id_tecnico INT NOT NULL,
-num_matricula VARCHAR(100) NOT NULL,
-ente_otorgador VARCHAR(255) NOT NULL,
-fecha_vencimiento DATE,
-tipo_imagen VARCHAR(50) NOT NULL,
-imagen_certificado MEDIUMBLOB NOT NULL,
-estado_verificacion ENUM ('Pendiente', 'Rechazado', 'Aprobado') DEFAULT 'Pendiente',
-notas_admin TEXT, -- lo usamos para anotar y le decimos al user xq lo rechazamos
-id_admin_revisor INT,
-FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico),
-FOREIGN KEY (id_admin_revisor) REFERENCES Administrador(id_admin)
-);
+
 
 CREATE TABLE Chat (
 id_chat INT AUTO_INCREMENT PRIMARY KEY,
@@ -218,6 +204,31 @@ FOREIGN KEY (id_especialidad) REFERENCES Especialidad (id_especialidad),
 FOREIGN KEY(id_rubro) REFERENCES Rubro (id_rubro)
 );
 
+
+
+CREATE TABLE Administrador (
+    id_admin INT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(50) NOT NULL,
+    clave VARCHAR(255) NOT NULL -- Aumentado de 20 a 255
+);
+
+CREATE TABLE Certificacion (
+id_certificacion INT AUTO_INCREMENT PRIMARY KEY,
+uuid VARCHAR(36) NOT NULL UNIQUE,
+id_tecnico INT NOT NULL,
+num_matricula VARCHAR(100) NOT NULL,
+ente_otorgador VARCHAR(255) NOT NULL,
+fecha_vencimiento DATE,
+tipo_imagen VARCHAR(50) NOT NULL,
+imagen_certificado MEDIUMBLOB NOT NULL,
+estado_verificacion ENUM ('Pendiente', 'Rechazado', 'Aprobado') DEFAULT 'Pendiente',
+notas_admin TEXT, -- lo usamos para anotar y le decimos al user xq lo rechazamos
+id_admin_revisor INT,
+FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico),
+FOREIGN KEY (id_admin_revisor) REFERENCES Administrador(id_admin)
+);
+
 CREATE TABLE Portfolio (
 id_portfolio INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
@@ -234,13 +245,6 @@ id_admin_verificador INT,
 FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico) ON DELETE CASCADE,
 FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad),
 FOREIGN KEY (id_admin_verificador) REFERENCES Administrador(id_admin)
-);
-
-CREATE TABLE Administrador (
-    id_admin INT AUTO_INCREMENT PRIMARY KEY,
-    uuid VARCHAR(36) NOT NULL UNIQUE,
-    nombre_usuario VARCHAR(50) NOT NULL,
-    clave VARCHAR(255) NOT NULL -- Aumentado de 20 a 255
 );
 
 CREATE TABLE Denuncia (
