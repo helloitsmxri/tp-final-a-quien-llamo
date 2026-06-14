@@ -37,13 +37,13 @@ public class ChatService {
         TecnicoEntity tecnico = tecnicoRepository.findById(dto.getIdTecnico())
                 .orElseThrow(() -> new TecnicoNotFoundEx("No se encontró el técnico"));
 
-        // evitar chats duplicados
-        if (chatRepository.existstByIdUsuarioAndIdTecnico(
-                dto.getIdUsuario(), dto.getIdTecnico())) {
+      //evitar chats duplicados:
+        if (chatRepository.existsByUsuario_IdUsuarioAndTecnico_IdTecnico(
+                usuario.getIdUsuario(), tecnico.getIdTecnico())) {
             // si ya existe, devolver el chat existente
-            return chatRepository.findByUsuario(dto.getIdUsuario())
+            return chatRepository.findByUsuario_Uuid(usuario.getUuid())
                     .stream()
-                    .filter(c -> c.getTecnico().getIdTecnico().equals(dto.getIdTecnico()))
+                    .filter(c -> c.getTecnico().getIdTecnico().equals(tecnico.getIdTecnico()))
                     .findFirst()
                     .map(chatMapper::toResponse)
                     .orElseThrow(() -> new ChatNotFoundEx("No se encontró el chat"));
@@ -55,42 +55,33 @@ public class ChatService {
 
 
     //buscar por id:
-    public ChatDTOResponse buscarPorId(Long id){
-        ChatEntity chat= chatRepository.findById(id)
+    public ChatDTOResponse buscarPorUuid(String uuidChat){
+        ChatEntity chat= chatRepository.findByUuidChat(uuidChat)
                 .orElseThrow(()-> new ChatNotFoundEx("El chat con ese id no existe"));
 
                 return chatMapper.toResponse(chatRepository.save(chat));
     }
 
     //listar chats por usuario:
-    public List<ChatDTOResponse> listarUsuarios(Integer idUsuario)
+    public List<ChatDTOResponse> listarUsuarios(String uuidUsuario)
     {
-        UsuarioEntity usuario= usuarioRepository.findById(idUsuario)
+        UsuarioEntity usuario= usuarioRepository.findByUuid(uuidUsuario)
                 .orElseThrow(()-> new UserNotFoundEx("El usuario con ese id no se encuentra"));
 
-        return chatRepository.findByUsuario(usuario.getIdUsuario())
+        return chatRepository.findByUsuario_Uuid(usuario.getUuid())
                 .stream()
                 .map(chatMapper::toResponse)
                 .toList();
     }
 
     //listar chats por tecnico:
-    public List<ChatDTOResponse> listarTecnicos(Integer idTecnico)
+    public List<ChatDTOResponse> listarTecnicos(String uuidTecnico)
     {
-        TecnicoEntity tecnico= tecnicoRepository.findById(idTecnico)
+        TecnicoEntity tecnico= tecnicoRepository.findByUuid(uuidTecnico)
                 .orElseThrow(()-> new TecnicoNotFoundEx("El tecnico con ese id no se encuentra"));
-        return chatRepository.findByTecnico(tecnico.getIdTecnico())
+        return chatRepository.findByTecnico_Uuid(tecnico.getUuid())
                 .stream()
                 .map(chatMapper::toResponse)
                 .toList();
-    }
-
-    //buscar por uuid:
-    public ChatDTOResponse buscarPorUuid(String uuid)
-    {
-        ChatEntity chat = chatRepository.findByUuidChat(uuid)
-                .orElseThrow(()-> new ChatNotFoundEx("El chat con ese id no se encuentra"));
-
-        return chatMapper.toResponse(chatRepository.save(chat));
     }
 }

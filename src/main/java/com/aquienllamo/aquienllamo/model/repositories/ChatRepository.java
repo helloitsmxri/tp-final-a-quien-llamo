@@ -14,9 +14,8 @@ import java.util.UUID;
 @Repository
 public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
 
-    Optional<ChatEntity> findById(Long idChat);
-    List<ChatEntity> findByUsuario(Integer idUsuario);
-    List<ChatEntity> findByTecnico(Integer idTecnico);
     Optional<ChatEntity> findByUuidChat(String uuidChat);
-    boolean existstByIdUsuarioAndIdTecnico(Integer idUsuario, Integer idTecnico); // para evitar que se creen chats duplicados entre el mismo usuario y tecnico
+    List<ChatEntity> findByUsuario_Uuid(String uuidUsuario);
+    List<ChatEntity> findByTecnico_Uuid(String uuidTecnico);
+    boolean existsByUsuario_IdUsuarioAndTecnico_IdTecnico(Integer idUsuario, Integer idTecnico); // para evitar que se creen chats duplicados entre el mismo usuario y tecnico
 }
