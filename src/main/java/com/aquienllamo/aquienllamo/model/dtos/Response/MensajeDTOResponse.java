@@ -15,5 +15,5 @@ public class MensajeDTOResponse {
 
     private String mensaje;
     private LocalDateTime fechaMensaje;
-    private UsuarioEntity sender;
+    private String nombreSender;
 }

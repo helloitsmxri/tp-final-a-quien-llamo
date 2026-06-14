@@ -55,7 +55,11 @@ ente_otorgador VARCHAR(255) NOT NULL,
 fecha_vencimiento DATE,
 tipo_imagen VARCHAR(50) NOT NULL,
 imagen_certificado MEDIUMBLOB NOT NULL,
-FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico)
+estado_verificacion ENUM ('Pendiente', 'Rechazado', 'Aprobado') DEFAULT 'Pendiente',
+notas_admin TEXT, -- lo usamos para anotar y le decimos al user xq lo rechazamos
+id_admin_revisor INT,
+FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico),
+FOREIGN KEY (id_admin_revisor) REFERENCES Administrador(id_admin)
 );
 
 CREATE TABLE Chat (
@@ -226,8 +230,10 @@ archivo_adjunto MEDIUMBLOB,
 estado_verificacion ENUM ('Pendiente', 'Rechazado', 'Aprobado') DEFAULT 'Pendiente',
 notas_admin TEXT, -- lo usamos para anotar y le decimos al user xq lo rechazamos
 fecha_entrega TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+id_admin_verificador INT,
 FOREIGN KEY (id_tecnico) REFERENCES Tecnico(id_tecnico) ON DELETE CASCADE,
-FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad)
+FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad),
+FOREIGN KEY (id_admin_verificador) REFERENCES Administrador(id_admin)
 );
 
 CREATE TABLE Administrador (

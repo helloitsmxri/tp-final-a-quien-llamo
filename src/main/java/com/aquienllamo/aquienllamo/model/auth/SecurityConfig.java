@@ -39,6 +39,9 @@ public class SecurityConfig {
                                "/aquienllamo/administradores/login"
                        ).permitAll()
                        .requestMatchers("/aquienllamo/usuarios/todos").hasRole("ADMIN")
+                       .requestMatchers("/admin/**").hasRole("ADMIN")  // protege todo lo del admin
+                       .requestMatchers("/chats/**").authenticated()   // solo usuarios autenticados
+                       .requestMatchers("/mensajes/**").authenticated() // solo usuarios autenticados
                        .anyRequest().authenticated())
                .cors(Customizer.withDefaults())
                .csrf(AbstractHttpConfigurer::disable)

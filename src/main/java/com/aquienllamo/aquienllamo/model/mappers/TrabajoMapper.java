@@ -23,7 +23,7 @@ public class TrabajoMapper {
     public static TrabajoEntity toEntity(TrabajoDTORequest request, PresupuestoEntity presupuesto){
         return TrabajoEntity.builder()
                 .uuid(request.getUuid())
-                .Presupuesto(presupuesto)
+                .presupuesto(presupuesto)
                 .descripcionTrabajo(request.getDescripcionTrabajo())
                 .fechaEstimadaInicio(request.getFechaEstimadaInicio())
                 .fechaEstimadaFin(request.getFechaEstimadaFin())
