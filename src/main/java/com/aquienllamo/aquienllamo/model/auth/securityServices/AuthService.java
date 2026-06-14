@@ -8,7 +8,10 @@ import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ChangePasswordRequest;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ForgotPasswordDTORequest;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ResetPasswordDTORequest;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
+import com.aquienllamo.aquienllamo.model.exceptions.DisabledProfileEx;
 import com.aquienllamo.aquienllamo.model.exceptions.InvalidPasswordEx;
+import com.aquienllamo.aquienllamo.model.exceptions.UserSuspendedException;
 import io.jsonwebtoken.JwtException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.management.JMException;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +35,7 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         private final PasswordEncoder passwordEncoder;
 
     public AuthResponse authenticate(AuthRequest input) {
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.username(),
@@ -41,10 +46,24 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         CredentialsEntity entity=credentialsRepository.findByUsername(input.username())
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Usuario no encontrado"));
+
+        UsuarioEntity usuario = entity.getUsuario();
+
+        // cuenta dada de baja
+        if (Boolean.FALSE.equals(usuario.getActivo())){
+            throw new DisabledProfileEx("La cuenta se encuentra dada de baja");
+        }
+
+        // suspensión temporal
+        if(usuario.getFechaFinSuspension() != null && usuario.getFechaFinSuspension().isAfter(LocalDate.now())){
+            throw new UserSuspendedException("Usuario suspendido hasta " +usuario.getFechaFinSuspension());
+        }
+
         String accessToken=jwtService.generateToken(entity);
         String refreshToken=jwtService.generateRefreshToken(entity);
         entity.setRefreshToken(refreshToken);
         credentialsRepository.save(entity);
+
         return new AuthResponse(accessToken, refreshToken);
     }
 

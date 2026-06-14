@@ -68,6 +68,13 @@ public class UsuarioEntity {
     @Column(name = "sobre_mi", nullable = false, columnDefinition = "TEXT")
     private String sobreMi;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean activo = true;
+
+    @Column(name = "fecha_fin_suspension")
+    private LocalDate fechaFinSuspension;
+
     // Relación @OneToOne con Técnico
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private TecnicoEntity tecnico;

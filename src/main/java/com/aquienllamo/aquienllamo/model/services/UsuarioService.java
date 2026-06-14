@@ -217,4 +217,25 @@ public class UsuarioService {
         res.setTipoUsuario(determinarTipoUsuario(user.getUuid()));
         return res;
     }
+
+    // se me ocurrió q para amonestar sea un mes de baja
+    public String amonestarUsuario(String uuid){
+        UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+        user.setFechaFinSuspension(LocalDate.now().plusMonths(1));
+        usuarioRepository.save(user);
+
+        return "Se ha suspendido al usuario por un mes";
+    }
+
+    public String darDeBajaUsuario(String uuid){
+        UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+        user.setActivo(false);
+        usuarioRepository.save(user);
+        return "Usuario dado de baja correctamente";
+    }
+
 }

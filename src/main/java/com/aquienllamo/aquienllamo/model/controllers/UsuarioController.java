@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,9 +51,28 @@ public class UsuarioController {
     public List<UsuarioDTOResponse> listarTodos() {
         return usuarioService.getAllUsers();
     }
+
+    // ver MI perfil
     @GetMapping("/mi-perfil")
     @ResponseStatus(HttpStatus.OK)
     public UsuarioDTOResponse miPerfil( Authentication authentication){
         return usuarioService.getMyProfile(authentication.getName());
     }
+
+    // amonestar USUARIO
+    @PatchMapping("/amonestar/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')") // para que no entre cualquiera
+    @ResponseStatus(HttpStatus.OK)
+    public String amonestar(@PathVariable String uuid){
+        return usuarioService.amonestarUsuario(uuid);
+    }
+
+    // dar de baja usuario
+    @PatchMapping("/baja/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public String darDeBaja(@PathVariable String uuid){
+        return usuarioService.darDeBajaUsuario(uuid);
+    }
+
 }
