@@ -210,6 +210,15 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(CertificacionEstadoInvalidoEx.class)
+    public ResponseEntity<ErrorResponseDTO> certificacionEstadoInvalidoEx(CertificacionEstadoInvalidoEx ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseDTO.builder()
+                        .status(400)
+                        .mensaje(ex.getMessage())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+    }
+
     //500 INTERNAL SERVER ERROR - catch-all de seguridad
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex)

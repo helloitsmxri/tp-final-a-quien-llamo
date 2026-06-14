@@ -5,9 +5,7 @@ import com.aquienllamo.aquienllamo.model.dtos.Request.CertificacionDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.CertificacionDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.CertificacionEntity;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
-import com.aquienllamo.aquienllamo.model.exceptions.CertificacionNotFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.ImageDataTypeNotFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.TecnicoNotFoundEx;
+import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.CertificacionMapper;
 import com.aquienllamo.aquienllamo.model.repositories.CertificacionRepository;
 import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
@@ -98,7 +96,13 @@ public class CertificacionService {
     public CertificacionDTOResponse aprobarCertificacion(String uuid){
         CertificacionEntity certificacion=certificacionRepository.findByUuid(uuid)
                 .orElseThrow(()-> new CertificacionNotFoundEx("La certificacion con ese uuid no se encontro"));
+
+        if (certificacion.getEstadoVerificacion()!=EstadoVerificacion.Pendiente){
+            throw new CertificacionEstadoInvalidoEx("Solo se pueden aprobar certificaciones pendientes. El estado de esta certificacion actual es: "+certificacion.getEstadoVerificacion());
+        }
         certificacion.setEstadoVerificacion(EstadoVerificacion.Aprobado);
+        certificacion.setNotasAdmin(null);
+
         certificacionRepository.save(certificacion);
         //va lo del email aca
         return certificacionMapper.toResponse(certificacion);
@@ -108,6 +112,10 @@ public class CertificacionService {
     public CertificacionDTOResponse rechazarCertificacion(String uuid, String motivo){
         CertificacionEntity certificacion=certificacionRepository.findByUuid(uuid)
                 .orElseThrow(()-> new  CertificacionNotFoundEx("Certificacion no encontrada"));
+
+        if (certificacion.getEstadoVerificacion()!=EstadoVerificacion.Pendiente){
+            throw new CertificacionEstadoInvalidoEx("Solo se pueden rechazar certificaciones pendientes. El estado de esta certificacion actual es: "+certificacion.getEstadoVerificacion());
+        }
 
         certificacion.setEstadoVerificacion(EstadoVerificacion.Rechazado);
         certificacion.setNotasAdmin(motivo);
