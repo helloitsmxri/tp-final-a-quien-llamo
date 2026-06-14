@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.CertificacionDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.CertificacionDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.CertificacionService;
@@ -8,20 +9,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/aquienllamo/certificaciones")
 public class CertificacionController {
     private final CertificacionService certificacionService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<CertificacionDTOResponse>> listarCertificaciones() {
         return ResponseEntity.ok(certificacionService.listarCertificaciones());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{uuid}")
     public ResponseEntity<CertificacionDTOResponse> buscarPorUuid(@PathVariable String uuid){
         return ResponseEntity.ok(certificacionService.buscarPorUuid(uuid));
@@ -46,6 +51,24 @@ public class CertificacionController {
     public ResponseEntity<Void> eliminarCertificacion(@PathVariable String uuid){
         certificacionService.eliminarCertificacion(uuid);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<CertificacionDTOResponse>> filtrarPorEstado(@PathVariable EstadoVerificacion estado){
+        return ResponseEntity.ok(certificacionService.filtrarPorEstado(estado));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/aprobar/{uuid}")
+    public ResponseEntity<CertificacionDTOResponse> aprobarCertificacion(@PathVariable String uuid){
+        return ResponseEntity.ok(certificacionService.aprobarCertificacion(uuid));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/rechazar/{uuid}")
+    public ResponseEntity<CertificacionDTOResponse> rechazarCertificacion(@PathVariable String uuid, @RequestParam String motivo){
+        return ResponseEntity.ok(certificacionService.rechazarCertificacion(uuid, motivo));
     }
 
 
