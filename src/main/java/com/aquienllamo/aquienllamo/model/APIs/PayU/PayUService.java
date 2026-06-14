@@ -84,9 +84,15 @@ public class PayUService {
                                 )
                         ),
                         "type", "AUTHORIZATION_AND_CAPTURE",
-                        "paymentMethod", "VISA",
+                        "paymentMethod", request.getFranquicia(),
                         "paymentCountry", "AR",
-                        "deviceSessionId", referenceCode
+                        "deviceSessionId", referenceCode,
+                        "creditCard", Map.of(
+                                "number", request.getNumeroTarjeta(),
+                                "securityCode", request.getCvv(),
+                                "expirationDate", request.getVencimientoTarjeta(),
+                                "name", request.getFranquicia()
+                        )
                 ),
                 "test", true
         );

@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.dtos.Request;
 
+import com.aquienllamo.aquienllamo.model.APIs.MercadoPago.ValidPago;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+@ValidPago
 @Getter
 @Setter
 @AllArgsConstructor
@@ -45,6 +47,9 @@ public class PagoDTORequest {
     @NotBlank(message = "Debe ingresar la moneda que se utilizara para pagar.")
     private String currency; // "ARS"
 
-
+    private String numeroTarjeta;
+    private String cvv;
+    private String vencimientoTarjeta;  // formato "YYYY/MM"
+    private String franquicia;
 
 }
