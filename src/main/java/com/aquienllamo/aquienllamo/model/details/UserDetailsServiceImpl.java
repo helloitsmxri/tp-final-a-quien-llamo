@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.model.details;
 
-import com.aquienllamo.aquienllamo.model.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
