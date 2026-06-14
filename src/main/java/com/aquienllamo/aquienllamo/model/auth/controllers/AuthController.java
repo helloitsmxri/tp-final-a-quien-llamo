@@ -13,6 +13,7 @@ import com.aquienllamo.aquienllamo.model.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +31,9 @@ public class AuthController {
         return authService.authenticate(request);
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioDTOResponse registrarse(@Valid @RequestBody UsuarioDTORequest request){
+    public UsuarioDTOResponse registrarse(@Valid @ModelAttribute UsuarioDTORequest request){ // pa q  no tire error
         return userService.createUser(request);
     }
 
@@ -51,20 +52,20 @@ public class AuthController {
 
 
     // cambiar la clave si ya se la sabe:
-    @PostMapping("/auth/change-password")
+    @PostMapping("/change-password")
     @ResponseStatus(HttpStatus.OK)
     public AuthResponse changePassword(Authentication auth, @RequestBody ChangePasswordRequest request){
         return authService.changePassword(auth.getName(), request);
     }
 
     // cambiar la clave si me la olvidé
-    @PostMapping("/auth/forgot-password")
+    @PostMapping("/forgot-password")
     @ResponseStatus(HttpStatus.OK)
     public void forgotPassword(@RequestBody ForgotPasswordDTORequest req){
         authService.forgotPassword(req);
     }
 
-    @PostMapping("/auth/reset-password")
+    @PostMapping("/reset-password")
     @ResponseStatus(HttpStatus.OK)
     public void resetPassword(@RequestBody ResetPasswordDTORequest req){
         authService.resetPassword(req);

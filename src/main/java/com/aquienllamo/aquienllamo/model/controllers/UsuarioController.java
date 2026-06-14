@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,16 +21,7 @@ import java.util.List;
 
 public class UsuarioController {
     private final UsuarioService usuarioService;
-
-    // cambiar a RESPONSE. y añadir globalexceptionhandler
-    // revisar y retocar luego loginusuario y deleteusuario, creo q es suficiente con usuarioDTOrequest
-    // creación
-    @PostMapping(value="/sign-up", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioDTOResponse registrar(@Valid @ModelAttribute UsuarioDTORequest dto) {
-        return usuarioService.createUser(dto);
-    }
-
+    // iniciar sesión lo moví a AUTH CONTROLLER!!!!!!!!!!
     // buscar el perfil a través del uuid
     @GetMapping("/perfil/{uuid}")
     @ResponseStatus(HttpStatus.OK)
@@ -57,5 +49,10 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.OK)
     public List<UsuarioDTOResponse> listarTodos() {
         return usuarioService.getAllUsers();
+    }
+    @GetMapping("/mi-perfil")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse miPerfil( Authentication authentication){
+        return usuarioService.getMyProfile(authentication.getName());
     }
 }

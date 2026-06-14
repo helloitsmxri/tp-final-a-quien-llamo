@@ -13,6 +13,7 @@ import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository
 import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import lombok.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,10 +102,14 @@ public class UsuarioService {
         UsuarioEntity user = usuarioRepository.findByUuid(uuid)
                 .orElseThrow(()->new UserNotFoundEx("No se encontró el usuario"));
 
-            if (!passwordEncoder.matches(password, user.getClave())){
+        CredentialsEntity cred = credentialsRepository.findByUsuario(user)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+            if (!passwordEncoder.matches(password, cred.getPassword())){ // acá tamb puede ser get clave están los 2 métodos
                 throw new InvalidPasswordEx("¡Clave incorrecta!");
             }
 
+            credentialsRepository.delete(cred);
             usuarioRepository.delete(user);
             return "Se ha eliminado con éxito";
 
@@ -151,6 +156,7 @@ public class UsuarioService {
                             .orElseThrow(() -> new UserNotFoundEx("El usuario no existe."));
 
             credencial.setUsername(nuevoCorreo);
+            credentialsRepository.save(credencial);
         }
 
         user.setTelefono(request.getTelefono());
@@ -162,6 +168,7 @@ public class UsuarioService {
         }
 
         // guardar y mapear:
+
         return usuarioMapper.toResponse(usuarioRepository.save(user));
 
     }
@@ -197,5 +204,17 @@ public class UsuarioService {
         response.setTipoUsuario(determinarTipoUsuario(uuid));
 
         return response;
+    }
+
+    // VER MI PERFIL, este es xq es más fácil ver un perfil sin uuid.
+    public UsuarioDTOResponse getMyProfile(String username){
+        CredentialsEntity cred = credentialsRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No existe ese usuario"));
+
+        UsuarioEntity user = cred.getUsuario();
+
+        UsuarioDTOResponse res = usuarioMapper.toResponse(user);
+        res.setTipoUsuario(determinarTipoUsuario(user.getUuid()));
+        return res;
     }
 }
