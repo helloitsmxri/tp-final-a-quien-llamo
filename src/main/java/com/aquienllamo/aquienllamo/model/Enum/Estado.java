@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum Estado {
     Confirmado,
     Rechazado,
+    Cancelado,
     @JsonProperty("Pendiente de revisión")
     Pendiente_de_revision;
 

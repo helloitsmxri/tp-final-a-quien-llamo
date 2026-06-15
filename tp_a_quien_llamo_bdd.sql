@@ -14,6 +14,8 @@ email VARCHAR(255) NOT NULL,
 clave VARCHAR(255) NOT NULL,
 telefono VARCHAR(50) NOT NULL,
 fecha_nacimiento DATE NOT NULL,
+activo BOOLEAN DEFAULT TRUE,
+fecha_fin_suspension DATE,
 fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 ultima_actividad TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 sobre_mi TEXT NOT NULL
@@ -85,6 +87,8 @@ uuid VARCHAR(36) NOT NULL UNIQUE,
 id_sender INT NOT NULL,
 id_chat INT,
 mensaje TEXT NOT NULL,
+archivo_url TEXT,
+tipo_archivo TEXT,
 fecha_mensaje DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 FOREIGN KEY(id_sender) REFERENCES Usuario(id_usuario),
 FOREIGN KEY (id_chat) REFERENCES Chat(id_chat)
@@ -142,7 +146,8 @@ FOREIGN KEY (id_usuario_destinatario) REFERENCES Usuario(id_usuario)
 CREATE TABLE Caracteristica (
 id_caracteristica INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
-valor_adjetivo VARCHAR(50)
+valor_adjetivo VARCHAR(50),
+tipo ENUM('Positiva','Negativa')
 );
 
 CREATE TABLE Rating_Caracteristica (
@@ -191,9 +196,9 @@ FOREIGN KEY (id_especialidad) REFERENCES Especialidad(id_especialidad)
 );
 
 CREATE TABLE Rubro (
-    id_rubro INT AUTO_INCREMENT PRIMARY KEY,
-    uuid VARCHAR(36) NOT NULL UNIQUE DEFAULT (UUID()), --
-    nombre_rubro VARCHAR(50)
+id_rubro INT AUTO_INCREMENT PRIMARY KEY,
+uuid VARCHAR(36) NOT NULL UNIQUE DEFAULT (UUID()), --
+nombre_rubro VARCHAR(50)
 );
 
 CREATE TABLE Rubro_Especialidad (
@@ -207,10 +212,11 @@ FOREIGN KEY(id_rubro) REFERENCES Rubro (id_rubro)
 
 
 CREATE TABLE Administrador (
-    id_admin INT AUTO_INCREMENT PRIMARY KEY,
-    uuid VARCHAR(36) NOT NULL UNIQUE,
-    nombre_usuario VARCHAR(50) NOT NULL,
-    clave VARCHAR(255) NOT NULL -- Aumentado de 20 a 255
+id_admin INT AUTO_INCREMENT PRIMARY KEY,
+uuid VARCHAR(36) NOT NULL UNIQUE,
+nombre_usuario VARCHAR(50) NOT NULL,
+clave VARCHAR(255) NOT NULL, -- Aumentado de 20 a 255
+refresh_token TEXT
 );
 
 CREATE TABLE Certificacion (
@@ -259,8 +265,9 @@ nombre_denunciado VARCHAR(50),
 apellido_denunciado VARCHAR(50),
 dni_denunciado VARCHAR(8),
 telefono_denunciado VARCHAR(20),
-estado_denuncia ENUM('Comprobado','En proceso','Pendiente') NOT NULL,
+estado_denuncia ENUM('Aprobada','En proceso','Rechazada', 'Pendiente') NOT NULL,
 motivo_denuncia TEXT NOT NULL,
+nota_del_admin TEXT,
 tipo_foto VARCHAR(50),
 foto MEDIUMBLOB,
 fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -284,6 +291,27 @@ PRIMARY KEY (credencial_id, id_role),
 FOREIGN KEY (credencial_id) REFERENCES Credencial(credencial_id),
 FOREIGN KEY (id_role) REFERENCES Rol(id_role)
 );
+
+-- ROLES AGREGADOS E INSERTADOS!!!!!!!!!!!
+INSERT INTO Rol (rol) VALUES
+('ROLE_ADMINISTRADOR'),
+('ROLE_USUARIO'),
+('ROLE_TECNICO');
+
+-- INSERT DE LAS CARACT. POSITIVAS Y NEGATIVAS!!!
+INSERT INTO Caracteristica (uuid, valor_adjetivo, tipo) VALUES
+(UUID(), 'Responsable', 'Positiva'),
+(UUID(), 'Puntual', 'Positiva'),
+(UUID(), 'Respetuoso', 'Positiva'),
+(UUID(), 'Profesional', 'Positiva'),
+(UUID(), 'Confiable', 'Positiva');
+
+INSERT INTO Caracteristica (uuid, valor_adjetivo, tipo) VALUES
+(UUID(), 'Impuntual', 'Negativa'),
+(UUID(), 'Irresponsable', 'Negativa'),
+(UUID(), 'Descortés', 'Negativa'),
+(UUID(), 'Mala comunicación', 'Negativa'),
+(UUID(), 'Poco profesional', 'Negativa');
 
 INSERT INTO Rubro(nombre_rubro)
 VALUES ('Hogar'), 
