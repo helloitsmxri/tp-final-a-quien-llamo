@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoTrabajo;
 import com.aquienllamo.aquienllamo.model.dtos.Request.TrabajoDTORequest;
@@ -29,6 +30,7 @@ public class TrabajoService {
     private final TrabajoRepository trabajoRepository;
     private final PresupuestoRepository presupuestoRepository;
     private final UsuarioRepository  usuarioRepository;
+    private final EmailService emailService;
 
     //crear un trabajo
     public TrabajoDTOResponse crearTrabajo (TrabajoDTORequest trabajoDTORequest) {
@@ -47,7 +49,9 @@ public class TrabajoService {
         TrabajoEntity trabajo = TrabajoMapper.toEntity(trabajoDTORequest,presupuesto);
         trabajo.setEstadoTrabajo(EstadoTrabajo.Pendiente);
 
-        return TrabajoMapper.toResponse(trabajoRepository.save(trabajo));
+        trabajoRepository.save(trabajo);
+        emailService.enviarTrabajoCreado(presupuesto.getUsuario().getEmail(), trabajo.getDescripcionTrabajo());
+        return TrabajoMapper.toResponse(trabajo);
 
     }
 
