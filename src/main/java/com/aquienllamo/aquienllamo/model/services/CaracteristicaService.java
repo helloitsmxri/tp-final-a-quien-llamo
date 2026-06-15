@@ -1,12 +1,15 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.Enum.TipoCaracteristicaE;
 import com.aquienllamo.aquienllamo.model.dtos.Request.CaracteristicaDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.CaracteristicaDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.CaracteristicaEntity;
 import com.aquienllamo.aquienllamo.model.mappers.CaracteristicaMapper;
 import com.aquienllamo.aquienllamo.model.repositories.CaracteristicaRepository;
+import com.aquienllamo.aquienllamo.model.specifications.CaracteristicaSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +32,12 @@ public class CaracteristicaService {
     }
 
     // encontrar una característica...
-    public CaracteristicaEntity findByUuid(String uuid){
+    public CaracteristicaDTOResponse findByUuid(String uuid){
         return caracteristicaRepository.findByUuid(uuid)
+                .map(caracteristicaMapper::toResponse)
                 .orElseThrow(() -> new RuntimeException("No se encontró la característica."));
     }
-
+    
     // crear una característica nueva:
     public CaracteristicaDTOResponse crearNuevaCaracteristica(CaracteristicaDTORequest dtoRequest){
         if (dtoRequest.getValorAdjetivo() == null || dtoRequest.getValorAdjetivo().isEmpty()){
@@ -79,6 +83,22 @@ public class CaracteristicaService {
         c.setValorAdjetivo(nuevoAdjetivo);
 
         return caracteristicaMapper.toResponse(caracteristicaRepository.save(c));
+    }
+
+    @Transactional
+    public List<CaracteristicaDTOResponse> buscar(
+            String nombre,
+            TipoCaracteristicaE tipo){
+
+        PredicateSpecification<CaracteristicaEntity> spec = PredicateSpecification.allOf(
+                        CaracteristicaSpecification.buscarPorPalabra(nombre),
+                        CaracteristicaSpecification.tipoEs(tipo)
+        );
+
+        return caracteristicaRepository.findAll(spec)
+                .stream()
+                .map(caracteristicaMapper::toResponse)
+                .toList();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.entities;
 
+import com.aquienllamo.aquienllamo.model.Enum.TipoCaracteristicaE;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,10 @@ public class CaracteristicaEntity {
 
     @Column(name = "valor_adjetivo", length = 50)
     private String valorAdjetivo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo", nullable = false)
+    private TipoCaracteristicaE tipo;
 
     // relaciones q están en la bdd
     @ManyToMany(mappedBy = "caracteristicas")
