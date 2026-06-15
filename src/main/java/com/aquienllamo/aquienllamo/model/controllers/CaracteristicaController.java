@@ -1,9 +1,11 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
+import com.aquienllamo.aquienllamo.model.Enum.TipoCaracteristicaE;
 import com.aquienllamo.aquienllamo.model.dtos.Request.CaracteristicaDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.CaracteristicaDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.CaracteristicaEntity;
 import com.aquienllamo.aquienllamo.model.services.CaracteristicaService;
+import com.aquienllamo.aquienllamo.model.specifications.CaracteristicaSpecification;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,31 +18,50 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/caracteristica")
 public class CaracteristicaController {
+
     private final CaracteristicaService  caracteristicaService;
 
     // crear característica:
     @PostMapping("/create")
-    public ResponseEntity<CaracteristicaDTOResponse> createCaracteristica(@Valid @RequestBody CaracteristicaDTORequest dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(caracteristicaService.crearNuevaCaracteristica(dto));
+    @ResponseStatus(HttpStatus.CREATED)
+
+    public CaracteristicaDTOResponse createCaracteristica(@Valid @RequestBody CaracteristicaDTORequest dto){
+        return caracteristicaService.crearNuevaCaracteristica(dto);
     }
 
     // eliminar característica:
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteCaracteristica(String uuid){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCaracteristica(@PathVariable String uuid){
         caracteristicaService.eliminarCaracteristica(uuid);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Caracteristica no encontrada");
     }
 
     // listar todas las caracteristicas:
     @GetMapping("/caracteristicas")
-    public ResponseEntity<List<CaracteristicaDTOResponse>> findAllCaracteristicas(){
-        return ResponseEntity.ok(caracteristicaService.findAll());
+    @ResponseStatus(HttpStatus.OK)
+    public List<CaracteristicaDTOResponse> findAllCaracteristicas(){
+        return caracteristicaService.findAll();
     }
 
     // actualizar caracteristica
     @PatchMapping("/update")
-    public ResponseEntity<CaracteristicaDTOResponse> updateCaracteristica(String uuid, CaracteristicaDTORequest dto){
-        return ResponseEntity.ok(caracteristicaService.modificar(uuid, dto));
+    @ResponseStatus(HttpStatus.OK)
+    public CaracteristicaDTOResponse updateCaracteristica(String uuid, CaracteristicaDTORequest dto){
+        return caracteristicaService.modificar(uuid, dto);
+    }
+
+    // encontrar por uuid
+    @GetMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public CaracteristicaDTOResponse findByUuid(@PathVariable String uuid){
+        return caracteristicaService.findByUuid(uuid);
+    }
+
+    // buscar por filtrado
+    @GetMapping("/buscar")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CaracteristicaDTOResponse> buscar(@RequestParam(required = false) String palabra, @RequestParam(required = false) TipoCaracteristicaE tipo){
+        return caracteristicaService.buscar(palabra, tipo);
     }
 }
 

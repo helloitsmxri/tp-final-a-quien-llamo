@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.specifications;
 
+import com.aquienllamo.aquienllamo.model.Enum.TipoCaracteristicaE;
 import com.aquienllamo.aquienllamo.model.entities.CaracteristicaEntity;
 import com.aquienllamo.aquienllamo.model.entities.RatingEntity;
 import jakarta.persistence.criteria.Join;
@@ -15,15 +16,12 @@ public class CaracteristicaSpecification {
                 : criteriaBuilder.like(criteriaBuilder.lower(entity.get("valorAdjetivo")), "%" + palabraParcial.toLowerCase() + "%");
     }
 
-    // podría ser filtrar caracteristicas x valoración de la reseña? -> tengo q analizarlo bien porq capaz no nos sirve
 
-    public static PredicateSpecification<CaracteristicaEntity> asociadasAPuntaje(Integer estrellas) {
-        return (entity, criteriaBuilder) -> {
-            Join<CaracteristicaEntity, RatingEntity> ratingsJoin = entity.join("ratings");
-            return criteriaBuilder.equal(ratingsJoin.get("puntuacion"), estrellas);
-        };
-
-    }
 
     // filtrar características x positivas o negativas? ¿capaz? -> creo q no sería necesario
+    public static PredicateSpecification<CaracteristicaEntity> tipoEs(TipoCaracteristicaE tipo){
+        return (root, cb) -> (tipo == null)
+                ? cb.conjunction()
+                : cb.equal(root.get("tipo"),tipo);
+    }
 }
