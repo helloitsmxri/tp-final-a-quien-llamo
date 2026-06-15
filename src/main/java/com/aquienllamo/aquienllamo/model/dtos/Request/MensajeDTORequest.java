@@ -18,8 +18,9 @@ public class MensajeDTORequest {
     @NotNull(message = "El uuid del sender no puede estar vacío")
     private String uuidSender;
 
-    @NotBlank(message = "El mensaje no puede estar vacio")
     private String mensaje;
 
     private MultipartFile archivo;
+
+    private String uuidMensaje;
 }

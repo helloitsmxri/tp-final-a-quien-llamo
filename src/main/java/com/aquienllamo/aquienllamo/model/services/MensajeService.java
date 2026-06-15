@@ -67,7 +67,7 @@ public class MensajeService {
     //modificar:
     public MensajeDTOResponse modificarMensaje(MensajeDTORequest dto)
     {
-        MensajeEntity mensaje = mensajeRepository.findByChat_UuidChat(dto.getUuidChat())
+        MensajeEntity mensaje = mensajeRepository.findByUuidMensaje(dto.getUuidMensaje())
                 .orElseThrow(()-> new ChatNotFoundEx("No se encontro el chat"));
         mensaje.setMensaje(dto.getMensaje());
         return mensajeMapper.toResponse(mensajeRepository.save(mensaje));

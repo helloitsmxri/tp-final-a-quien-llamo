@@ -28,13 +28,24 @@ public class MensajeController {
             @RequestParam(value = "mensaje", required = false) String mensaje,
             @RequestParam(value = "archivo", required = false) MultipartFile archivo) {
 
-        MensajeDTORequest dto = new MensajeDTORequest(uuidChat, uuidSender, mensaje, archivo);
+        MensajeDTORequest dto = MensajeDTORequest.builder()
+                .uuidChat(uuidChat)
+                .uuidSender(uuidSender)
+                .mensaje(mensaje)
+                .archivo(archivo)
+                .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(mensajeService.crearMensaje(dto));
     }
 
     //modificar:
-    @PatchMapping("/modificar")
-    public ResponseEntity<MensajeDTOResponse> modificarMensaje(@RequestBody MensajeDTORequest dto){
+    @PatchMapping(value = "/modificar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MensajeDTOResponse> modificarMensaje(
+            @RequestParam("uuidMensaje") String uuidMensaje,
+            @RequestParam(value = "mensaje", required = false) String mensaje) {
+
+        MensajeDTORequest dto = new MensajeDTORequest();
+        dto.setUuidMensaje(uuidMensaje);
+        dto.setMensaje(mensaje);
         return ResponseEntity.ok().body(mensajeService.modificarMensaje(dto));
     }
 
