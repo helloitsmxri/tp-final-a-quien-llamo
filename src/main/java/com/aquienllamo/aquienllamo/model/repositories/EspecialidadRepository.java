@@ -14,4 +14,6 @@ public interface EspecialidadRepository extends JpaRepository<EspecialidadEntity
     boolean existsByNombreEspecialidad(String nombreEsoecialidad);
     List<EspecialidadEntity> findByTipoValidacion(TipoValidacion tipoValidacion);
     List<EspecialidadEntity> findByNombreEspecialidadContainingIgnoreCase(String nombre);
+    boolean existsByUuid(String uuid);
+    List<EspecialidadEntity> findAllByUuidIn(List<String> uuids);
 }
