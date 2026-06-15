@@ -35,30 +35,13 @@ public class DenunciaEntity {
     @JoinColumn(name = "administrador_encargado")
     private AdministradorEntity administrador;
 
-    @Column(name = "nombre_denunciante", length = 50)
-    private String nombreDenunciante;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_denunciante", nullable = false)
+    private UsuarioEntity denunciante;
 
-    @Column(name = "apellido_denunciante", length = 50)
-    private String apellidoDenunciante;
-
-    @Column(name = "dni_denunciante", length = 8)
-    private String dniDenunciante;
-
-    @Column(name = "telefono_denunciante", length = 20)
-    private String telefonoDenunciante;
-
-    //denunciado
-    @Column(name = "nombre_denunciado", length = 50)
-    private String nombreDenunciado;
-
-    @Column(name = "apellido_denunciado", length = 50)
-    private String apellidoDenunciado;
-
-    @Column(name = "dni_denunciado", length = 8)
-    private String dniDenunciado;
-
-    @Column(name = "telefono_denunciado", length = 20)
-    private String telefonoDenunciado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_denunciado", nullable = false)
+    private UsuarioEntity denunciado;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_denuncia", nullable = false)

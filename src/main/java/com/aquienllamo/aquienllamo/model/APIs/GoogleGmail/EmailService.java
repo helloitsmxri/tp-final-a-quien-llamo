@@ -51,6 +51,18 @@ public class EmailService {
         );
     }
 
+    public void enviarPasswordActualizada(String email){
+        enviarEmail(
+                email,
+                "Contraseña actualizada",
+                """
+                Tu contraseña fue actualizada correctamente.
+    
+                Si no realizaste este cambio, comunicate con soporte de inmediato.
+                """
+        );
+    }
+
     public void enviarPresupuestoRecibido(String email, String nombreCliente){
         enviarEmail(
                 email,
@@ -178,6 +190,17 @@ public class EmailService {
     }
 
     public void enviarDenunciaRechazadaDenunciante(String email) {
+        enviarEmail(
+                email,
+                "Tu denuncia fue rechazada.",
+                """
+                        Tu denuncia fue revisada por nuestro equipo y no pudo ser aprobada.
+                        Si tenés más información, podés volver a presentarla.
+                        """
+        );
+    }
+
+    public void enviarDenunciaRechazadaDenunciado(String email) {
         enviarEmail(
                 email,
                 "Tu denuncia fue rechazada.",

@@ -64,8 +64,8 @@ public class UsuarioController {
     @PatchMapping("/amonestar/{uuid}")
     @PreAuthorize("hasRole('ADMINISTRADOR')") // para que no entre cualquiera
     @ResponseStatus(HttpStatus.OK)
-    public String amonestar(@PathVariable String uuid){
-        return usuarioService.amonestarUsuario(uuid);
+    public String amonestar(@PathVariable String uuid, @RequestParam String motivo){
+        return usuarioService.amonestarUsuario(uuid, motivo);
     }
 
     // dar de baja usuario
