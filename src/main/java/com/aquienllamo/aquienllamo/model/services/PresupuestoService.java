@@ -212,7 +212,7 @@ public class PresupuestoService {
                 .toList();
     }
 
-    // presupuestos según el estado
+    // presupuestos según el estado USUARIO
     @Transactional(readOnly = true)
     public List<PresupuestoDTOResponse> getPresupuestosUsuarioPorEstado(String emailUser, EstadoPresupuestoE estado){
         UsuarioEntity user = usuarioRepository.findByEmail(emailUser)
@@ -235,4 +235,47 @@ public class PresupuestoService {
                 .map(presupuestoMapper::toResponse)
                 .toList();
     }
+
+    // presupuesto FILTROS USUARIO
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> buscarMisPresupuestos(String emailUser, EstadoPresupuestoE estado, BigDecimal min, BigDecimal max, LocalDate fecha){
+
+        UsuarioEntity user = usuarioRepository.findByEmail(emailUser)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+        PredicateSpecification<PresupuestoEntity> spec = PredicateSpecification.allOf(
+                        PresupuestoSpecifications.presupuestoDeUsuario(user),
+                        PresupuestoSpecifications.presupuestoConEstado(estado),
+                        PresupuestoSpecifications.presupuestoGreaterThan(min),
+                        PresupuestoSpecifications.presupuestoLesserThan(max),
+                        PresupuestoSpecifications.presupuestoDeTalFecha(fecha)
+        );
+
+        return presupuestoRepository.findAll(spec)
+                .stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
+
+    // presupuesto FILTROS TECNICO
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> buscarMisPresupuestosTecnico(String emailTech, EstadoPresupuestoE estado, BigDecimal min, BigDecimal max, LocalDate fecha){
+
+        TecnicoEntity tech = tecnicoRepository.findByUsuarioEmail(emailTech)
+                .orElseThrow(() -> new TecnicoNotFoundEx("No se encontró el técnico"));
+
+        PredicateSpecification<PresupuestoEntity> spec = PredicateSpecification.allOf(
+                        PresupuestoSpecifications.presupuestoDeTecnico(tech),
+                        PresupuestoSpecifications.presupuestoConEstado(estado),
+                        PresupuestoSpecifications.presupuestoGreaterThan(min),
+                        PresupuestoSpecifications.presupuestoLesserThan(max),
+                        PresupuestoSpecifications.presupuestoDeTalFecha(fecha)
+        );
+
+        return presupuestoRepository.findAll(spec)
+                .stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
+
 }

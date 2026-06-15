@@ -7,6 +7,7 @@ import com.aquienllamo.aquienllamo.model.services.PresupuestoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ public class PresupuestoController {
 
     // Crear presupuesto dentro de un chat
     @PostMapping("/chat/{uuidChat}")
+    @PreAuthorize("hasRole('TECNICO')")
     @ResponseStatus(HttpStatus.CREATED)
     public PresupuestoDTOResponse crearPresupuesto(
             @PathVariable String uuidChat,
@@ -41,6 +43,7 @@ public class PresupuestoController {
 
     // Ver presupuesto en detalle
     @GetMapping("/{uuid}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public PresupuestoDTOResponse verPresupuesto(
             @PathVariable String uuid) {
@@ -50,6 +53,7 @@ public class PresupuestoController {
 
     // Aceptar presupuesto
     @PatchMapping("/{uuid}/aceptar")
+    @PreAuthorize("hasRole('USUARIO')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void aceptarPresupuesto(
             @PathVariable String uuid,
@@ -62,6 +66,7 @@ public class PresupuestoController {
 
     // Rechazar presupuesto
     @PatchMapping("/{uuid}/rechazar")
+    @PreAuthorize("hasRole('USUARIO')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void rechazarPresupuesto(
             @PathVariable String uuid,
@@ -74,6 +79,7 @@ public class PresupuestoController {
 
     // Cancelar presupuesto como técnico
     @PatchMapping("/{uuid}/cancelar")
+    @PreAuthorize("hasRole('TECNICO')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelarPresupuesto(
             @PathVariable String uuid,
@@ -86,6 +92,7 @@ public class PresupuestoController {
 
     // Listar todos
     @GetMapping("/todos")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
     public List<PresupuestoDTOResponse> listarTodos() {
         return presupuestoService.getAllPresupuestos();
@@ -93,6 +100,7 @@ public class PresupuestoController {
 
     // Búsqueda por filtros
     @GetMapping("/buscar")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
     public List<PresupuestoDTOResponse> buscar(
             @RequestParam(required = false) String nombre,
@@ -105,6 +113,7 @@ public class PresupuestoController {
     }
 
     @GetMapping("/mis-presupuestos")
+    @PreAuthorize("hasRole('USUARIO')")
     @ResponseStatus(HttpStatus.OK)
     public List<PresupuestoDTOResponse> misPresupuestos(
             Authentication auth){
@@ -113,6 +122,7 @@ public class PresupuestoController {
     }
 
     @GetMapping("/mis-presupuestos/filtrar")
+    @PreAuthorize("hasRole('USUARIO')")
     @ResponseStatus(HttpStatus.OK)
     public List<PresupuestoDTOResponse> misPresupuestosPorEstado(
             Authentication auth,
@@ -122,6 +132,7 @@ public class PresupuestoController {
     }
 
     @GetMapping("/mis-presupuestos-tecnico")
+    @PreAuthorize("hasRole('TECNICO')")
     @ResponseStatus(HttpStatus.OK)
     public List<PresupuestoDTOResponse> misPresupuestosTecnico(
             Authentication auth){
@@ -132,6 +143,7 @@ public class PresupuestoController {
     }
 
     @GetMapping("/mis-presupuestos-tecnico/filtrar")
+    @PreAuthorize("hasRole('TECNICO')")
     @ResponseStatus(HttpStatus.OK)
     public List<PresupuestoDTOResponse> misPresupuestosTecnicoPorEstado(
             Authentication auth,
@@ -143,4 +155,27 @@ public class PresupuestoController {
         );
     }
 
+    @GetMapping("/mis-presupuestos/buscar")
+    @PreAuthorize("hasRole('USUARIO')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> buscarMisPresupuestos(Authentication auth,
+            @RequestParam(required = false) EstadoPresupuestoE estado,
+            @RequestParam(required = false) BigDecimal min,
+            @RequestParam(required = false) BigDecimal max,
+            @RequestParam(required = false) LocalDate fecha){ // lo dejo así, así se lee mejor.
+
+        return presupuestoService.buscarMisPresupuestos(auth.getName(), estado, min, max, fecha);
+    }
+
+    @GetMapping("/mis-presupuestos-tecnico/buscar")
+    @PreAuthorize("hasRole('TECNICO')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> buscarMisPresupuestosTecnico(Authentication auth,
+            @RequestParam(required = false) EstadoPresupuestoE estado,
+            @RequestParam(required = false) BigDecimal min,
+            @RequestParam(required = false) BigDecimal max,
+            @RequestParam(required = false) LocalDate fecha){ // se lee mejor
+
+        return presupuestoService.buscarMisPresupuestosTecnico(auth.getName(), estado, min, max, fecha);
+    }
 }

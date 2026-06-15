@@ -1,7 +1,10 @@
 package com.aquienllamo.aquienllamo.model.specifications;
 
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.entities.PresupuestoEntity;
+import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 
 import java.math.BigDecimal;
@@ -51,5 +54,27 @@ public class PresupuestoSpecifications {
         return (entity, criteriaBuilder) -> fecha == null
                 ? criteriaBuilder.conjunction()
                 : criteriaBuilder.greaterThanOrEqualTo(entity.get("fechaRealizado"), fecha);
+    }
+
+    public static PredicateSpecification<PresupuestoEntity> presupuestoDeUsuario(
+            UsuarioEntity usuario){
+
+        return (entity, criteriaBuilder) -> usuario == null
+                ? criteriaBuilder.conjunction()
+                : criteriaBuilder.equal(entity.get("usuario"), usuario);
+    }
+
+    public static PredicateSpecification<PresupuestoEntity> presupuestoDeTecnico(
+            TecnicoEntity tecnico){
+
+        return (entity, criteriaBuilder) -> tecnico == null
+                ? criteriaBuilder.conjunction()
+                : criteriaBuilder.equal(entity.get("tecnico"), tecnico);
+    }
+
+    public static PredicateSpecification<PresupuestoEntity> presupuestoConEstado(EstadoPresupuestoE estado){
+        return (entity, criteriaBuilder) -> estado == null
+                ? criteriaBuilder.conjunction()
+                : criteriaBuilder.equal(entity.get("estado"), estado);
     }
 }
