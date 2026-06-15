@@ -4,6 +4,7 @@ import com.aquienllamo.aquienllamo.model.dtos.Request.MensajeDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.MensajeDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.ChatEntity;
 import com.aquienllamo.aquienllamo.model.entities.MensajeEntity;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,12 +20,13 @@ public class MensajeMapper {
                 .mensaje(mensaje.getMensaje())
                 .fechaMensaje(mensaje.getFechaMensaje())
                 .nombreSender(mensaje.getSender().getNombre())
-                .archivoUrl(mensaje.getArchivoUrl())
+                .uuidMensaje(mensaje.getUuidMensaje())
+                .archivo(mensaje.getArchivoUrl())
                 .tipoArchivo(mensaje.getTipoArchivo())
                 .build();
     }
 
-    public MensajeEntity toEntity(MensajeDTORequest dto, ChatEntity chat)
+    public MensajeEntity toEntity(MensajeDTORequest dto, ChatEntity chat, UsuarioEntity sender)
     {
         if(dto == null )
         {
@@ -33,6 +35,7 @@ public class MensajeMapper {
         return MensajeEntity.builder()
                 .chat(chat)
                 .mensaje(dto.getMensaje())
+                .sender(sender)
                 .build();
     }
 }

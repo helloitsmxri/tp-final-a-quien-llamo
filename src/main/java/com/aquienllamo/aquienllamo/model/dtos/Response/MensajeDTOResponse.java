@@ -13,9 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 public class MensajeDTOResponse {
 
+    private String uuidMensaje;
     private String mensaje;
     private LocalDateTime fechaMensaje;
     private String nombreSender;
-    private String archivoUrl;
+    private String archivo;
     private String tipoArchivo;
 }
