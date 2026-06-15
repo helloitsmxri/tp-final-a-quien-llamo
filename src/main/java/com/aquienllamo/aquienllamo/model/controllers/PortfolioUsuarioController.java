@@ -23,7 +23,7 @@ public class PortfolioUsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.crearPortafolio(uuidTecnico, request));
     }
 
-    @GetMapping("/uuidPortfolio")
+    @GetMapping("/{uuidPortfolio}")
     public ResponseEntity<PortfolioUsuarioDTOResponse> verPortfolio (@PathVariable String uuidPortfolio){
         return ResponseEntity.ok().body(service.verPortfolio(uuidPortfolio));
     }
