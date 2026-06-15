@@ -38,7 +38,7 @@ public class UsuarioEntity {
     @Column(name = "foto", columnDefinition = "MEDIUMBLOB")
     private byte[] foto;
 
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 8, unique = true)
     private String dni;
 
     @Column(nullable = false, length = 50)
@@ -47,10 +47,10 @@ public class UsuarioEntity {
     @Column(nullable = false, length = 50)
     private String apellido;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 255, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255)
     private String clave;
 
     @Column(nullable = false, length = 50)
