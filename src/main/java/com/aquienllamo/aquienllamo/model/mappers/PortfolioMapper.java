@@ -33,6 +33,8 @@ public class PortfolioMapper {
                 .notasAspirante(entity.getNotasAspirante())
                 .enlaceExterno(entity.getEnlaceExterno())
                 .tipoArchivo(entity.getTipoArchivo())
+                .estadoVerificacion(entity.getEstadoVerificacion())
+                .notasAdmin(entity.getNotasAdmin())
                 .fechaEntrega(entity.getFechaEntrega())
                 .build();
     }

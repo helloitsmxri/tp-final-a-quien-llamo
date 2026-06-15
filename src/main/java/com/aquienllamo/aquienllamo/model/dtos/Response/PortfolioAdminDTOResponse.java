@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.dtos.Response;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,8 +20,9 @@ public class PortfolioAdminDTOResponse {
     private String uuidTecnico;
     private String nombreTecnico;
 
-
     private String nombreEspecialidad;
+
+    private EstadoVerificacion estadoVerificacion;
 
     private String notasAspirante;
     private String enlaceExterno;

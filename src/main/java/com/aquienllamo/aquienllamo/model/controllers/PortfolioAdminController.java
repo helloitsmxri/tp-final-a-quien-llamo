@@ -19,6 +19,12 @@ public class PortfolioAdminController {
 
     private final PortfolioAdminService service;
 
+    //buscar un portfolio por uuid
+    @GetMapping("/{uuid}")
+    public ResponseEntity<PortfolioAdminDTOResponse> buscarPortfolioPorUuid(@PathVariable String uuid){
+        return ResponseEntity.ok(service.buscarPorfolioPorUuid(uuid));
+    }
+
     //ver todos los portfolios
     @GetMapping
     public ResponseEntity<List<PortfolioAdminDTOResponse>> listarPortfolios(){

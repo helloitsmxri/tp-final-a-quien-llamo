@@ -4,12 +4,15 @@ import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PortfolioAdminDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioAdminDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.PortfolioEntity;
+import com.aquienllamo.aquienllamo.model.exceptions.PortfolioAlreadyExistsEx;
 import com.aquienllamo.aquienllamo.model.exceptions.PortfolioNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.PortfolioMapper;
 import com.aquienllamo.aquienllamo.model.repositories.PortfolioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +22,13 @@ import java.util.List;
 public class PortfolioAdminService {
 
     private final PortfolioRepository repository;
+
+    //buscar un portfolio por uuid
+    public PortfolioAdminDTOResponse buscarPorfolioPorUuid(String uuid){
+        PortfolioEntity portfolio = repository.findByUuid(uuid)
+                .orElseThrow(() -> new PortfolioNotFoundEx("ERROR: No se encontro el portfolio que busca."));
+        return PortfolioMapper.toResponseAdmin(portfolio);
+    }
 
     //ver todos los portfolios
     public List<PortfolioAdminDTOResponse> listarPortfolios(){
