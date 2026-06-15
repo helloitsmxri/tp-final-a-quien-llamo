@@ -134,7 +134,7 @@ public class PagoService {
             throw new PaymentCannotBeCancelledException("ERROR: Solo se pueden cancelar pagos pendientes.");
         }
 
-        pago.setEstadoPago(Estado.Rechazado);
+        pago.setEstadoPago(Estado.Cancelado);
         return PagoMapper.toResponse(pagoRepository.save(pago));
 
     }

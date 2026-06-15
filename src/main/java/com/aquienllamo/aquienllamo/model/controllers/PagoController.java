@@ -23,6 +23,7 @@ public class PagoController {
 
     //crear pago
     @PostMapping
+    @PreAuthorize("hasRole('USUARIO')")
     public ResponseEntity<PagoDTOResponse> crearPago (@Valid @RequestBody PagoDTORequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(pagoService.crearPago(request));
     }
