@@ -15,7 +15,7 @@ public interface AdministradorRepository extends JpaRepository<AdministradorEnti
     Optional<AdministradorEntity> findByUuid(String uuid);
 
     Optional<AdministradorEntity> findByNombreUsuario(String nombreUsuario);
-    Optional<AdministradorEntity> findByEmail(String emailAdministrador);
+
    //utilizo solo Optional porque los campos no son repetibles.
 
     boolean existsByUuid(String uuid);

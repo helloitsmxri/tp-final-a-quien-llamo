@@ -23,10 +23,10 @@ public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
     Optional<PagoEntity> findByUuid(String uuid);
 
     //para navegar en pago a trabajo a presupuesto a usuario al uuid de usuario
-    @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.Presupuesto.usuario.uuid = :uuid")
+    @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.presupuesto.usuario.uuid = :uuid")
     List<PagoEntity> findAllByCliente(@Param("uuid") String uuid);
 
     //lo mismo pero para tecnico
-    @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.Presupuesto.tecnico.uuid = :uuid")
+    @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.presupuesto.tecnico.uuid = :uuid")
     List<PagoEntity> findAllByTecnico(@Param("uuid") String uuid);
 }
