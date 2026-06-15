@@ -22,11 +22,4 @@ public class AdministradorController {
     {
         return ResponseEntity.status(HttpStatus.CREATED).body(administradorService.registrar(dto));
     }
-
-    //logear administrador:
-    @PostMapping("/login")
-    public ResponseEntity<AdministradorDTOResponse> login(@RequestBody AdministradorDTORequest dto)
-    {
-        return ResponseEntity.ok().body(administradorService.login(dto.getNombreUsuario(),dto.getClave()));
-    }
 }

@@ -47,16 +47,14 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Usuario no encontrado"));
 
-        UsuarioEntity usuario = entity.getUsuario();
-
-        // cuenta dada de baja
-        if (Boolean.FALSE.equals(usuario.getActivo())){
-            throw new DisabledProfileEx("La cuenta se encuentra dada de baja");
-        }
-
-        // suspensión temporal
-        if(usuario.getFechaFinSuspension() != null && usuario.getFechaFinSuspension().isAfter(LocalDate.now())){
-            throw new UserSuspendedException("Usuario suspendido hasta " +usuario.getFechaFinSuspension());
+        if (entity.getUsuario() != null) {
+            UsuarioEntity usuario = entity.getUsuario();
+            if (Boolean.FALSE.equals(usuario.getActivo())){
+                throw new DisabledProfileEx("La cuenta se encuentra dada de baja");
+            }
+            if(usuario.getFechaFinSuspension() != null && usuario.getFechaFinSuspension().isAfter(LocalDate.now())){
+                throw new UserSuspendedException("Usuario suspendido hasta " + usuario.getFechaFinSuspension());
+            }
         }
 
         String accessToken=jwtService.generateToken(entity);

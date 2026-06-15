@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.auth.Credentials;
 
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
+import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,10 @@ public class CredentialsEntity implements UserDetails {
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", unique = true)
     private UsuarioEntity usuario;
+
+    @OneToOne
+    @JoinColumn(name = "id_admin", referencedColumnName = "id_admin", unique = true)
+    private AdministradorEntity administrador;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
