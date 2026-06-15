@@ -26,6 +26,7 @@ public class MensajeService {
     private final MensajeMapper mensajeMapper;
     private final ChatRepository chatRepository;
     private final UsuarioRepository usuarioRepository;
+    private final FileStorageService fileStorageService;
 
     //crear un mensaje:
     public MensajeDTOResponse crearMensaje(MensajeDTORequest dto)
@@ -36,6 +37,14 @@ public class MensajeService {
         UsuarioEntity sender = usuarioRepository.findByUuid(dto.getUuidSender())
                 .orElseThrow(()-> new UserNotFoundEx("No se encontro el usuario"));
 
+        String archivoUrl = null;
+        String tipoArchivo = null;
+
+        if (dto.getArchivo() != null && !dto.getArchivo().isEmpty()) {
+            archivoUrl = fileStorageService.guardarArchivo(dto.getArchivo());
+            String contentType = dto.getArchivo().getContentType();
+            tipoArchivo = (contentType != null && contentType.equals("application/pdf")) ? "pdf" : "imagen";
+        }
         MensajeEntity mensaje = MensajeEntity.builder()
                 .chat(chat)
                 .sender(sender)

@@ -6,8 +6,10 @@ import com.aquienllamo.aquienllamo.model.services.MensajeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,9 +20,15 @@ public class MensajeController {
 
     private final MensajeService mensajeService;
 
-    //crear:
-    @PostMapping("/crear")
-    public ResponseEntity<MensajeDTOResponse> crearMensaje(@Valid @RequestBody MensajeDTORequest dto){
+   //crear:
+    @PostMapping(value = "/crear", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MensajeDTOResponse> crearMensaje(
+            @RequestParam("uuidChat") String uuidChat,
+            @RequestParam("uuidSender") String uuidSender,
+            @RequestParam(value = "mensaje", required = false) String mensaje,
+            @RequestParam(value = "archivo", required = false) MultipartFile archivo) {
+
+        MensajeDTORequest dto = new MensajeDTORequest(uuidChat, uuidSender, mensaje, archivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(mensajeService.crearMensaje(dto));
     }
 
