@@ -70,14 +70,14 @@ public class DenunciaController {
 
     @PatchMapping("/{uuid}/aprobar")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public DenunciaDTOResponse aprobar(@PathVariable String uuid, @RequestParam String mensaje, Authentication auth){
-        return denunciaService.aprobarDenuncia(uuid, mensaje, auth.getName());
+    public DenunciaDTOResponse aprobar(@PathVariable String uuid, @RequestParam String mensaje){
+        return denunciaService.aprobarDenuncia(uuid, mensaje);
     }
 
     @PatchMapping("/{uuid}/rechazar")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public DenunciaDTOResponse rechazar(@PathVariable String uuid, @RequestParam String mensaje, Authentication auth){
-        return denunciaService.rechazarDenuncia(uuid, mensaje, auth.getName());
+    public DenunciaDTOResponse rechazar(@PathVariable String uuid, @RequestParam String mensaje){
+        return denunciaService.rechazarDenuncia(uuid, mensaje);
     }
 
 
@@ -93,7 +93,7 @@ public class DenunciaController {
 
     @GetMapping("/mis-denuncias")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    public List<DenunciaDTOResponse> verMisPresupuestos(Authentication auth, @RequestParam(required = false) EstadoDenunciaE estado){
-        return denunciaService.misDenuncias(auth.getName(), estado);
+    public List<DenunciaDTOResponse> verMisDenuncias(@RequestParam(required = false) EstadoDenunciaE estado){
+        return denunciaService.misDenuncias(estado);
     }
 }
