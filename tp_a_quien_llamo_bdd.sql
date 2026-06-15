@@ -276,7 +276,9 @@ username VARCHAR(50) UNIQUE NOT NULL,
 clave VARCHAR(255) NOT NULL,
 enabled TINYINT(1) NOT NULL,
 refresh_token VARCHAR(2048),
-id_usuario INT, 
+id_usuario INT,
+id_admin INT,
+FOREIGN KEY (id_admin) REFERENCES Administrador(id_admin), 
 FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
