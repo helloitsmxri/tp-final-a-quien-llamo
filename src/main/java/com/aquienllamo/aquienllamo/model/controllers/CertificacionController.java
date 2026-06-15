@@ -32,21 +32,25 @@ public class CertificacionController {
         return ResponseEntity.ok(certificacionService.buscarPorUuid(uuid));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','TECNICO')")
     @GetMapping("/tecnico/{uuidTecnico}")
     public ResponseEntity<List<CertificacionDTOResponse>> obtenerCertificacionesPorTecnico(@PathVariable String uuidTecnico){
         return ResponseEntity.ok(certificacionService.obtenerTecnicos(uuidTecnico));
     }
 
+    @PreAuthorize("hasRole('TECNICO')")
     @PostMapping(value="/tecnico/{uuidTecnico}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CertificacionDTOResponse> crearCertificacion(@PathVariable String uuidTecnico, @Valid @ModelAttribute CertificacionDTORequest certificacionDTORequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(certificacionService.crearCertificacion(uuidTecnico, certificacionDTORequest));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value="/actualizar/{uuid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CertificacionDTOResponse> actualizarCertificacion(@PathVariable String uuid, @Valid @ModelAttribute CertificacionDTORequest dto){
         return ResponseEntity.ok(certificacionService.actualizarCertificacion(uuid, dto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{uuid}")
     public ResponseEntity<Void> eliminarCertificacion(@PathVariable String uuid){
         certificacionService.eliminarCertificacion(uuid);
