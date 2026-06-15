@@ -13,4 +13,8 @@ public interface DenunciaRepository extends JpaRepository<DenunciaEntity, Intege
     Optional<DenunciaEntity> findByUuid(String uuid);
     List<DenunciaEntity> findByEstadoDenuncia(EstadoDenunciaE estado);
     List<DenunciaEntity> findByAdministradorIsNull();
+    List<DenunciaEntity> findAllByOrderByFechaDenunciaAsc();
+    List<DenunciaEntity> findAllByOrderByFechaDenunciaDesc();
+    List<DenunciaEntity> findByAdministradorUuid(String uuidAdmin);
+    List<DenunciaEntity> findByAdministradorUuidAndEstadoDenuncia(String uuidAdmin, EstadoDenunciaE estado);
 }

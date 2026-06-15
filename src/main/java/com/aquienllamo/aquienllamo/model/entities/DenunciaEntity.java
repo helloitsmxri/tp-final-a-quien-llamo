@@ -67,6 +67,9 @@ public class DenunciaEntity {
     @Column(name = "motivo_denuncia", nullable = false, columnDefinition = "TEXT")
     private String motivoDenuncia;
 
+    @Column(name = "nota_del_admin", columnDefinition = "TEXT")
+    private String notaDelAdmin;
+
     @Column(name = "fecha_denuncia", nullable = false, insertable = false, updatable = false)
     private LocalDateTime fechaDenuncia;
 

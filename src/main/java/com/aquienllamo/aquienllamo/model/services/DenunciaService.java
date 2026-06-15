@@ -78,6 +78,9 @@ public class DenunciaService {
                 throw new ImageDataTypeNotFoundEx("Error al procesar la foto");
             }
         }
+
+        // enviar un email para que el denunciante sepa q fue creada
+        // enviar un email para q el denunciado sepa q está bajo revisión
         return denunciaMapper.toResponse(denunciaRepository.save(nueva));
     }
 
@@ -112,22 +115,22 @@ public class DenunciaService {
     }
 
     //actualizar
-    public DenunciaDTOResponse actualizarDenuncia(String uuid, DenunciaDTORequest denuncia){
-        DenunciaEntity nueva=denunciaRepository.findByUuid(uuid)
-                .orElseThrow(()-> new DenunciaNotFoundEx("no se encontro la denuncia con ese uuid"));
-        if (denuncia.getMotivoDenuncia()!=null){
-            nueva.setMotivoDenuncia(denuncia.getMotivoDenuncia());
-        }
-        if (denuncia.getFoto() != null && !denuncia.getFoto().isEmpty()) {
-            try {
-                nueva.setFoto(denuncia.getFoto().getBytes());
-                nueva.setTipoFoto(denuncia.getFoto().getContentType());
-            } catch (IOException ex) {
-                throw new ImageDataTypeNotFoundEx("Error al procesar la foto");
-            }
-        }
-        return denunciaMapper.toResponse(denunciaRepository.save(nueva));
-    }
+//    public DenunciaDTOResponse actualizarDenuncia(String uuid, DenunciaDTORequest denuncia){
+//        DenunciaEntity nueva=denunciaRepository.findByUuid(uuid)
+//                .orElseThrow(()-> new DenunciaNotFoundEx("no se encontro la denuncia con ese uuid"));
+//        if (denuncia.getMotivoDenuncia()!=null){
+//            nueva.setMotivoDenuncia(denuncia.getMotivoDenuncia());
+//        }
+//        if (denuncia.getFoto() != null && !denuncia.getFoto().isEmpty()) {
+//            try {
+//                nueva.setFoto(denuncia.getFoto().getBytes());
+//                nueva.setTipoFoto(denuncia.getFoto().getContentType());
+//            } catch (IOException ex) {
+//                throw new ImageDataTypeNotFoundEx("Error al procesar la foto");
+//            }
+//        }
+//        return denunciaMapper.toResponse(denunciaRepository.save(nueva));
+//    }
 
     //asignar admin a denuncia
     public DenunciaDTOResponse asignarAdministrador(String uuidDenuncia, String uuidAdmin){
@@ -138,7 +141,7 @@ public class DenunciaService {
             throw new AdminAsignadoDenunciaEx("La denuncia ya tiene un administrador asignado");
         }
 
-        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Finalizado || denuncia.getEstadoDenuncia()==EstadoDenunciaE.Cancelado){
+        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Rechazada || denuncia.getEstadoDenuncia()==EstadoDenunciaE.Aprobada){
             throw new DenunciaResueltaEx("No se puede asignar una denuncia ya resuelta.");
         }
 
@@ -159,22 +162,95 @@ public class DenunciaService {
     }
 
     //aprobar denuncia
-    public DenunciaDTOResponse aprobarDenuncia(String uuidDenuncia){
+    public DenunciaDTOResponse aprobarDenuncia(String uuidDenuncia, String mensaje, String emailAdmin){
+
         DenunciaEntity denuncia=denunciaRepository.findByUuid(uuidDenuncia)
                 .orElseThrow(()-> new DenunciaNotFoundEx("No se encontro la denuncia con ese uuid"));
 
-        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Finalizado){
+        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Aprobada){
             throw new DenunciaResueltaEx("La denuncia ya esta aprobada.");
         }
 
-        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Cancelado){
+        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Rechazada){
             throw new DenunciaResueltaEx("La denuncia no se puede aprobar porque fue rechazada anteriormente.");
         }
 
-        denuncia.setEstadoDenuncia(EstadoDenunciaE.Finalizado);
+        if (denuncia.getAdministrador() == null) {
+            throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
+        }
+
+        AdministradorEntity adminLogueado = administradorRepository.findByEmail(emailAdmin)
+                        .orElseThrow(() -> new AdministradorNotFoundEx("Administrador no encontrado"));
+
+        if (!denuncia.getAdministrador().getUuid().equals(adminLogueado.getUuid())){
+            throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
+        }
+
+        denuncia.setEstadoDenuncia(EstadoDenunciaE.Aprobada);
+        denuncia.setNotaDelAdmin(mensaje);
         denunciaRepository.save(denuncia);
+        // email de notificar al q denuncia de q su denuncia fue aprobada
         //email de notificar al denunciado
         return denunciaMapper.toResponse(denuncia);
+    }
+
+    // rechazar denuncia
+    public DenunciaDTOResponse rechazarDenuncia(String uuidDenuncia, String mensaje, String emailAdmin){
+        DenunciaEntity denuncia = denunciaRepository.findByUuid(uuidDenuncia)
+                .orElseThrow(() -> new DenunciaNotFoundEx("No se encontró una denuncia."));
+
+        if (denuncia.getEstadoDenuncia() != EstadoDenunciaE.En_proceso){
+            throw new DenunciaResueltaEx("La denuncia debe estar en proceso para ser resuelta.");
+        }
+
+        if (denuncia.getAdministrador() == null) {
+            throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
+        }
+
+        AdministradorEntity adminLogueado = administradorRepository.findByEmail(emailAdmin)
+                .orElseThrow(() -> new AdministradorNotFoundEx("Administrador no encontrado"));
+
+        if (!denuncia.getAdministrador().getUuid().equals(adminLogueado.getUuid())){
+            throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
+        }
+
+        denuncia.setEstadoDenuncia(EstadoDenunciaE.Rechazada);
+        denuncia.setNotaDelAdmin(mensaje);
+
+        return denunciaMapper.toResponse(denunciaRepository.save(denuncia));
+    }
+
+    public List<DenunciaDTOResponse> denunciasMasViejasPrimero(){
+        return denunciaRepository.findAllByOrderByFechaDenunciaAsc()
+                .stream()
+                .map(denunciaMapper::toResponse)
+                .toList();
+    }
+
+    public List<DenunciaDTOResponse> denunciasMasNuevasPrimero(){
+        return denunciaRepository.findAllByOrderByFechaDenunciaDesc()
+                .stream()
+                .map(denunciaMapper::toResponse)
+                .toList();
+    }
+
+    // pendientes sin asignar
+    public List<DenunciaDTOResponse> denunciasSinAsignar(){
+        return denunciaRepository.findByAdministradorIsNull()
+                .stream()
+                .map(denunciaMapper::toResponse)
+                .toList();
+    }
+
+    // mis denuncias asignadas
+    public List<DenunciaDTOResponse> misDenuncias(String emailAdmin, EstadoDenunciaE estado){
+        AdministradorEntity adminLogueado = administradorRepository.findByEmail(emailAdmin)
+                .orElseThrow(() -> new AdministradorNotFoundEx("Administrador no encontrado"));
+
+        return denunciaRepository.findByAdministradorUuidAndEstadoDenuncia(adminLogueado.getUuid(), estado)
+                .stream()
+                .map(denunciaMapper::toResponse)
+                .toList();
     }
     
 }

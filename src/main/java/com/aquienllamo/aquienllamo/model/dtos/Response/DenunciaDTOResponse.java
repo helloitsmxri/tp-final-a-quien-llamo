@@ -28,6 +28,7 @@ public class DenunciaDTOResponse {
     private EstadoDenunciaE estadoDenuncia;
 
     private String motivoDenuncia;
+    private String notaDelAdmin;
     private LocalDateTime fechaDenuncia;
 
 }
