@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +21,6 @@ public interface TecnicoRepository extends JpaRepository<TecnicoEntity,Integer>,
     List<TecnicoEntity> findAllByOrderByUsuario_FechaRegistroAsc();
     boolean existsByUsuarioUuid(String uuid);
     Optional<TecnicoEntity> findByUsuarioEmail(String emailTech);
+    List<TecnicoEntity> findByUsuario_NombreContainingIgnoreCase(String nombre);
+    List<TecnicoEntity> findByEspecialidades_Rubros_Uuid(String uuidRubro);
 }
