@@ -104,5 +104,11 @@ public class TrabajoService {
                 .orElse(false);
     }
 
+    //obtener un trabajo por el uuid
+    public TrabajoDTOResponse obtenerTrabajoPorUuid (String uuidTrabajo){
+        TrabajoEntity trabajo = trabajoRepository.findByUuid(uuidTrabajo)
+                .orElseThrow(()-> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe"));
+        return TrabajoMapper.toResponse(trabajo);
+    }
 
 }
