@@ -37,8 +37,7 @@ public class SecurityConfig {
                                "/auth/**",
                                "/aquienllamo/usuarios/sign-up",
                                "/aquienllamo/usuarios/login",
-                               "/aquienllamo/administradores/registrar",
-                               "/aquienllamo/administradores/login"
+                               "/aquienllamo/administradores/registrar"
                        ).permitAll()
                        .requestMatchers("/aquienllamo/usuarios/todos").hasRole("ADMIN")
                        .requestMatchers("/admin/**").hasRole("ADMIN")  // protege todo lo del admin
