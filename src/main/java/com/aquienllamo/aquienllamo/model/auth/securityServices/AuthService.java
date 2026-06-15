@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.auth.securityServices;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.JWT.JwtService;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.AuthRequest;
@@ -33,6 +34,7 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         private final AuthenticationManager authenticationManager;
         private final JwtService jwtService;
         private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     public AuthResponse authenticate(AuthRequest input) {
 
@@ -137,8 +139,9 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
                 .orElseThrow(() -> new UsernameNotFoundException("No se encontró el usuario en el sistema."));
 
         String token = jwtService.generatePasswordResetToken(cred);
+        String enlace = "http://localhost:3000/reset-password?token=" + token;
 
-        // acá va lo de enviar correo pau
+        emailService.enviarRecuperacionClave(req.getEmail(), enlace);
     }
 
     @Transactional
@@ -161,6 +164,7 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         }
 
         cred.setRefreshToken(null);
+        emailService.enviarPasswordActualizada(cred.getUsername());
 
         credentialsRepository.save(cred);
     }
