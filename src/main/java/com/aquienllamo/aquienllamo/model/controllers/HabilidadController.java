@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,21 +18,25 @@ import java.util.List;
 public class HabilidadController {
     private final HabilidadService habilidadService;
 
+    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
     @GetMapping
     public ResponseEntity<List<HabilidadDTOResponse>> listarHabilidades(){
         return ResponseEntity.ok(habilidadService.listarHabilidades());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<HabilidadDTOResponse> crearHabilidad(@Valid @RequestBody HabilidadDTORequest habilidad){
         return ResponseEntity.status(HttpStatus.CREATED).body(habilidadService.crearHabilidad(habilidad));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/actualizar/{uuid}")
     public ResponseEntity<HabilidadDTOResponse> actualizarHabilidad(@PathVariable String uuid, @Valid @RequestBody HabilidadDTORequest habilidad){
         return ResponseEntity.ok(habilidadService.actualizarHabilidad(uuid, habilidad));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{uuid}")
     public ResponseEntity<Void> eliminarHabilidad(@PathVariable String uuid){
         habilidadService.eliminarHabilidad(uuid);
