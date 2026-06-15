@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
@@ -43,6 +44,7 @@ public class TecnicoService {
     private final RoleRepository roleRepository;
     private final UsuarioMapper usuarioMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     //registrar usuario como tecnico
     public TecnicoDTOResponse registrarTecnico(TecnicoDTORequest dto, String uuidUsuario){
@@ -160,6 +162,7 @@ public class TecnicoService {
         tecnico.setEspecialidades(especialidadRepository.findAllByUuidIn(tecnicoDto.getUuidEspecialidades()));
 
         TecnicoEntity tecnicoGuardado = tecnicoRepository.save(tecnico);
+        emailService.enviarBienvenida(usuario.getEmail(), usuario.getNombre());
 
         return tecnicoMapper.toResponse(tecnicoGuardado);
     }
