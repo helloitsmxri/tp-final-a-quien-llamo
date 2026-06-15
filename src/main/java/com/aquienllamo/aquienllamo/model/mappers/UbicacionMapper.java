@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.model.mappers;
 import com.aquienllamo.aquienllamo.model.dtos.Request.UbicacionDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UbicacionDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UbicacionEntity;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
 @Component // le dice a Spring que esa clase es un bean.
@@ -26,7 +27,7 @@ public class UbicacionMapper {
                 .build();
     }
 
-    public UbicacionEntity toEntity(UbicacionDTORequest dto)
+    public UbicacionEntity toEntity(UbicacionDTORequest dto, UsuarioEntity usuario)
     {
         if(dto == null)
         {
@@ -40,6 +41,7 @@ public class UbicacionMapper {
                 .numero(dto.getNumero())
                 .piso(dto.getPiso())
                 .numeroPiso(dto.getNumeroPiso())
+                .usuario(usuario)
                 .build();
     }
 

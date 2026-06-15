@@ -29,9 +29,7 @@ public class UbicacionService {
         UsuarioEntity usuario = usuarioRepository.findByUuid(uuidUsuario)
                 .orElseThrow(UserNotFoundEx::new);
 
-        UbicacionEntity ubicacion = ubicacionMapper.toEntity(dto);
-        ubicacion.setUsuario(usuario);
-
+        UbicacionEntity ubicacion = ubicacionMapper.toEntity(dto, usuario);
         return ubicacionMapper.toResponse(ubicacionRepository.save(ubicacion));
 
     }
