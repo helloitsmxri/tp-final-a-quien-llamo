@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.CertificacionDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.CertificacionDTOResponse;
@@ -24,6 +25,7 @@ public class CertificacionService {
     private final CertificacionRepository certificacionRepository;
     private final CertificacionMapper certificacionMapper;
     private final TecnicoRepository tecnicoRepository;
+    private final EmailService emailService;
 
     //crear certificacion
     public CertificacionDTOResponse crearCertificacion(String uuidTecnico, CertificacionDTORequest certificacion){
@@ -104,7 +106,8 @@ public class CertificacionService {
         certificacion.setNotasAdmin(null);
 
         certificacionRepository.save(certificacion);
-        //va lo del email aca
+
+        emailService.enviarCertificacionAprobada(certificacion.getTecnico().getUsuario().getEmail());
         return certificacionMapper.toResponse(certificacion);
     }
 
@@ -120,7 +123,8 @@ public class CertificacionService {
         certificacion.setEstadoVerificacion(EstadoVerificacion.Rechazado);
         certificacion.setNotasAdmin(motivo);
         certificacionRepository.save(certificacion);
-        //aca va lo del email
+
+        emailService.enviarCertificacionRechazada(certificacion.getTecnico().getUsuario().getEmail(), motivo);
         return certificacionMapper.toResponse(certificacion);
     }
 

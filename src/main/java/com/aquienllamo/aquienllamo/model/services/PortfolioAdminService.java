@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PortfolioAdminDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioAdminDTOResponse;
@@ -21,6 +22,7 @@ import java.util.List;
 public class PortfolioAdminService {
 
     private final PortfolioRepository repository;
+    private final EmailService emailService;
 
     //buscar un portfolio por uuid
     public PortfolioAdminDTOResponse buscarPorfolioPorUuid(String uuid){
@@ -83,7 +85,9 @@ public class PortfolioAdminService {
         }
         portfolio.setEstadoVerificacion(EstadoVerificacion.Aprobado);
         portfolio.setNotasAdmin(notas);
-        return PortfolioMapper.toResponseAdmin(repository.save(portfolio));
+        repository.save(portfolio);
+        emailService.enviarPortafolioAprobado(portfolio.getTecnico().getUsuario().getEmail());
+        return PortfolioMapper.toResponseAdmin(portfolio);
 
     }
 
@@ -97,7 +101,9 @@ public class PortfolioAdminService {
         }
         portfolio.setEstadoVerificacion(EstadoVerificacion.Rechazado);
         portfolio.setNotasAdmin(notas);
-        return PortfolioMapper.toResponseAdmin(repository.save(portfolio));
+        repository.save(portfolio);
+        emailService.enviarPortafolioRechazado(portfolio.getTecnico().getUsuario().getEmail());
+        return PortfolioMapper.toResponseAdmin(portfolio);
     }
 
 }

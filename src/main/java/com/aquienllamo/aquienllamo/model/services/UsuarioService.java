@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
@@ -35,6 +36,7 @@ public class UsuarioService {
     private final TecnicoRepository tecnicoRepository;
     private final CredentialsRepository credentialsRepository;
     private final RoleRepository roleRepository;
+    private final EmailService emailService;
 
     @Transactional(readOnly = true)
     public String determinarTipoUsuario(String uuid) {
@@ -93,6 +95,8 @@ public class UsuarioService {
         // acá genero la response
         UsuarioDTOResponse response = usuarioMapper.toResponse(user);
         response.setTipoUsuario(determinarTipoUsuario(user.getUuid()));
+
+        emailService.enviarBienvenida(user.getEmail(), user.getNombre());
 
         return response;
     }

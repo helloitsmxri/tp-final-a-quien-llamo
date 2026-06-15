@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoTrabajo;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PresupuestoDTORequest;
@@ -34,6 +35,7 @@ public class PresupuestoService {
     private final MensajeRepository mensajeRepository;
     private final ChatRepository chatRepository;
     private final TrabajoRepository trabajoRepository;
+    private final EmailService emailService;
     // acá iría un private final de CHAT REPOSITORY Y MENSAJE REPOSITORY!!!! todavía está en desarrollo
 
     // Registrar un nuevo presupuesto en el sistema
@@ -77,6 +79,8 @@ public class PresupuestoService {
         );
 
         mensajeRepository.save(mensaje);
+
+        emailService.enviarPresupuestoRecibido(usuario.getEmail(), usuario.getNombre());
 
         return presupuestoMapper.toResponse(saved);
     }
@@ -124,6 +128,8 @@ public class PresupuestoService {
         presupuesto.setEstado(EstadoPresupuestoE.Aceptado);
         presupuestoRepository.save(presupuesto);
 
+        emailService.enviarPresupuestoAceptado(presupuesto.getTecnico().getUsuario().getEmail());
+
         // quité lo de crearlo automáticamente porque trabajo pide muchos datos y no los puedo proveer yo.
 
         // crear un mensaje en el chat para avisar q se aceptó el trabajo
@@ -152,6 +158,7 @@ public class PresupuestoService {
 
         presupuesto.setEstado(EstadoPresupuestoE.Cancelado);
         presupuestoRepository.save(presupuesto);
+        emailService.enviarPresupuestoRechazado(presupuesto.getUsuario().getEmail());
     }
 
     // mostrar todos los presupuestos (creo q esto puede servir para los admins):
