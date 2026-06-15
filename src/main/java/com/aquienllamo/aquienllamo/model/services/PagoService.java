@@ -4,15 +4,13 @@ import com.aquienllamo.aquienllamo.model.APIs.MercadoPago.MercadoPagoService;
 import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUResponseDTO;
 import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUService;
 import com.aquienllamo.aquienllamo.model.Enum.Estado;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PagoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.PagoEntity;
 import com.aquienllamo.aquienllamo.model.entities.TrabajoEntity;
-import com.aquienllamo.aquienllamo.model.exceptions.PagoNotFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.TecnicoNotFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.TrabajoNotFoundEx;
-import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
+import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.PagoMapper;
 import com.aquienllamo.aquienllamo.model.repositories.PagoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.TecnicoRepository;
@@ -42,6 +40,10 @@ public class PagoService {
 
         TrabajoEntity trabajo = trabajoRepository.findByUuid(request.getUuidTrabajo())
                 .orElseThrow(()-> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe."));
+
+        if(!trabajo.getPresupuesto().getEstado().equals(EstadoPresupuestoE.Aceptado)){
+            throw new TrabajoNotAcceptedEx("ERROR: El trabajo que intenta pagar no esta aprobado.");
+        }
 
         PagoEntity pago = PagoMapper.toEntity(request, trabajo);
 
@@ -122,6 +124,35 @@ public class PagoService {
         PagoEntity pago = pagoRepository.findByUuid(uuid)
                 .orElseThrow(()-> new PagoNotFoundEx("ERROR: El pago ingresado no existe."));
         return PagoMapper.toResponse(pago);
+    }
+
+    //cancelar pago
+    public PagoDTOResponse cancelarPago (String uuid){
+        PagoEntity pago = pagoRepository.findByUuid(uuid)
+                .orElseThrow(()-> new PagoNotFoundEx("ERROR: El pago ingresado no existe."));
+        if(!pago.getEstadoPago().equals(Estado.Pendiente_de_revision)){
+            throw new PaymentCannotBeCancelledException("ERROR: Solo se pueden cancelar pagos pendientes.");
+        }
+
+        pago.setEstadoPago(Estado.Rechazado);
+        return PagoMapper.toResponse(pagoRepository.save(pago));
+
+    }
+
+    //metodo que corrobora que el usuario ingresado del uuid es el mismo logueado con ese mail
+    //busca al usuario por el uuid que viene en la url, si lo encontro compara el email con el del token, sino existe ese uuid devuelve false
+    public boolean perteneceAlUsuario(String uuid, String email){
+        return usuarioRepository.findByUuid(uuid)
+                .map(usuario -> usuario.getEmail().equals(email))
+                .orElse(false);
+    }
+
+    //buscar un pago por uuid, busca al usuario dueño del presupuesto asociado
+    //y compara el email con el del usuario logueado, si son iguales devuelve true, sino existe false
+    public boolean pagoPerteneceAlUsuario(String uuid, String email){
+        return pagoRepository.findByUuid(uuid)
+                .map(pago -> pago.getTrabajo().getPresupuesto().getUsuario().getEmail().equals(email))
+                .orElse(false);
     }
 
 }
