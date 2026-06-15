@@ -59,7 +59,7 @@ public class ChatService {
         ChatEntity chat= chatRepository.findByUuidChat(uuidChat)
                 .orElseThrow(()-> new ChatNotFoundEx("El chat con ese id no existe"));
 
-                return chatMapper.toResponse(chatRepository.save(chat));
+                return chatMapper.toResponse(chat);
     }
 
     //listar chats por usuario:
