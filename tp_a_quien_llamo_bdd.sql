@@ -256,22 +256,18 @@ FOREIGN KEY (id_admin_verificador) REFERENCES Administrador(id_admin)
 CREATE TABLE Denuncia (
 id_denuncia INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
+id_denunciante INT NOT NULL,
+id_denunciado INT NOT NULL,
 administrador_encargado INT,
-nombre_denunciante VARCHAR(50),
-apellido_denunciante VARCHAR(50),
-dni_denunciante VARCHAR(8),
-telefono_denunciante VARCHAR(20),
-nombre_denunciado VARCHAR(50),
-apellido_denunciado VARCHAR(50),
-dni_denunciado VARCHAR(8),
-telefono_denunciado VARCHAR(20),
 estado_denuncia ENUM('Aprobada','En proceso','Rechazada', 'Pendiente') NOT NULL,
 motivo_denuncia TEXT NOT NULL,
 nota_del_admin TEXT,
+fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 tipo_foto VARCHAR(50),
 foto MEDIUMBLOB,
-fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-FOREIGN KEY (administrador_encargado) REFERENCES Administrador (id_admin)
+FOREIGN KEY (id_denunciante) REFERENCES Usuario(id_usuario),
+FOREIGN KEY (id_denunciado) REFERENCES Usuario(id_usuario),
+FOREIGN KEY (administrador_encargado) REFERENCES Administrador(id_admin)
 );
 
 CREATE TABLE Credencial(
