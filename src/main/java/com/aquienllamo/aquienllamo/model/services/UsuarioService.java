@@ -224,7 +224,7 @@ public class UsuarioService {
     }
 
     // se me ocurrió q para amonestar sea un mes de baja
-    public String amonestarUsuario(String uuid){
+    public String amonestarUsuario(String uuid, String motivo){
         UsuarioEntity user = usuarioRepository.findByUuid(uuid)
                 .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
 
@@ -242,6 +242,7 @@ public class UsuarioService {
 
         user.setFechaFinSuspension(LocalDate.now().plusMonths(1));
         usuarioRepository.save(user);
+        emailService.enviarSuspensionCuenta(user.getEmail(), motivo);
 
         return "Se ha suspendido al usuario por un mes";
     }
