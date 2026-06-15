@@ -4,13 +4,14 @@ import com.aquienllamo.aquienllamo.model.auth.JWT.JwtAuthenticationFilter;
 import com.aquienllamo.aquienllamo.model.auth.exceptions.RestAuthenticateEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean     //Bean "encriptador"
@@ -42,6 +44,12 @@ public class SecurityConfig {
                        .requestMatchers("/admin/**").hasRole("ADMIN")  // protege todo lo del admin
                        .requestMatchers("/chats/**").authenticated()   // solo usuarios autenticados
                        .requestMatchers("/mensajes/**").authenticated() // solo usuarios autenticados
+
+                       .requestMatchers(HttpMethod.POST, "/aquienllamo/pagos").hasRole("CLIENTE")
+                       .requestMatchers(HttpMethod.PATCH, "/aquienllamo/pagos/*/cancelar").hasRole("CLIENTE")
+                       .requestMatchers("/aquienllamo/pagos/cliente/**").hasAnyRole("CLIENTE", "ADMIN")
+                       .requestMatchers("/aquienllamo/pagos/tecnico/**").hasAnyRole("TECNICO", "ADMIN") //esto no estoy segura si es tecnico o prestador
+
                        .anyRequest().authenticated())
                .cors(Customizer.withDefaults())
                .csrf(AbstractHttpConfigurer::disable)
