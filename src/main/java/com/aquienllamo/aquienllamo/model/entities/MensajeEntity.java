@@ -30,12 +30,18 @@ public class MensajeEntity {
     @JoinColumn(name= "id_chat", nullable = false)
     private ChatEntity chat;
 
-    @Column(nullable = false)
+    @Column(nullable = true) //este campo puede ser null si solo se manda un archivo.
     private String mensaje;
 
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime fechaMensaje;
+
+    @Column(name ="archivo_url")
+    private String archivoUrl;
+
+    @Column(name="tipo_archivo")
+    private String tipoArchivo;
 
     @Column(name ="uuid", nullable = false)
     private String uuidMensaje;

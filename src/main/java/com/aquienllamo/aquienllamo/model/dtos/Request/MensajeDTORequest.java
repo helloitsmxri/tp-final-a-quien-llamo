@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.model.dtos.Request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -19,4 +20,6 @@ public class MensajeDTORequest {
 
     @NotBlank(message = "El mensaje no puede estar vacio")
     private String mensaje;
+
+    private MultipartFile archivo;
 }
