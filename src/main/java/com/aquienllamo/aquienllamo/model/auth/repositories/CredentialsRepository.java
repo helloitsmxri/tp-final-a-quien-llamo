@@ -14,5 +14,6 @@ public interface CredentialsRepository extends JpaRepository<CredentialsEntity, 
     Optional<CredentialsEntity> findByRefreshToken(String refreshToken);
     Optional<CredentialsEntity> findByUsuario(UsuarioEntity user);
     boolean existsByRefreshToken(String refreshToken);
+    Optional<CredentialsEntity> findByUsuario_Uuid(String uuid);
 
 }
