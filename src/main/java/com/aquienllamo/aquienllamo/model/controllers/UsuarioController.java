@@ -93,4 +93,20 @@ public class UsuarioController {
         return usuarioService.getByEmail(email);
     }
 
+    // quitar suspensión
+    @PatchMapping("/quitar-suspension/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public String quitarSuspension(String uuid){
+        return usuarioService.quitarSuspension(uuid);
+    }
+
+    // quitar amonestación
+    @PatchMapping("/quitar-amonestacion/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public String quitarAmonestacion(String uuid){
+        return usuarioService.quitarSuspension(uuid);
+    }
+
 }
