@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,11 +14,13 @@ public interface TecnicoRepository extends JpaRepository<TecnicoEntity,Integer>,
     Optional<TecnicoEntity> findByUuid(String uuid);
     Optional<TecnicoEntity> findByCuit(String cuit);
     boolean existsByCuit(String cuit);
-    boolean existsByUsuario_idUsuario(Integer idUsuario);
-    List<TecnicoEntity> findByHabilidades_IdHabilidad(Integer idHabilidad);
-    List<TecnicoEntity> findByEspecialidades_IdEspecialidad(Integer idEspecialidad);
+    boolean existsByUsuario_Uuid(String uuid);
+    List<TecnicoEntity> findByHabilidades_Uuid(String uuid);
+    List<TecnicoEntity> findByEspecialidades_Uuid(String uuid);
     List<TecnicoEntity> findAllByOrderByUsuario_FechaRegistroDesc();
     List<TecnicoEntity> findAllByOrderByUsuario_FechaRegistroAsc();
     boolean existsByUsuarioUuid(String uuid);
     Optional<TecnicoEntity> findByUsuarioEmail(String emailTech);
+    List<TecnicoEntity> findByUsuario_NombreContainingIgnoreCase(String nombre);
+    List<TecnicoEntity> findByEspecialidades_Rubros_Uuid(String uuidRubro);
 }

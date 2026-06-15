@@ -1,12 +1,14 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.TecnicoDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.TecnicoNuevoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.TecnicoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +21,16 @@ import java.util.List;
 public class TecnicoController {
     private final TecnicoService tecnicoService;
 
-    //post registrar usuario como tecnico
+    //registrar usuario como tecnico
     @PostMapping("/registrar/{uuidUsuario}")
     public ResponseEntity<TecnicoDTOResponse> registrarTecnico(@PathVariable String uuidUsuario, @Valid @RequestBody TecnicoDTORequest dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.registrarTecnico(dto, uuidUsuario));
+    }
+
+    //registrar un tecnico nuevo
+    @PostMapping(value = "/registrar-nuevo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TecnicoDTOResponse> registrarTecnicoNuevo(@Valid @ModelAttribute TecnicoNuevoDTORequest dto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.registrarTecnicoNuevo(dto.getUsuario(), dto.getTecnico()));
     }
 
     //listar todos los tecnicos
@@ -33,20 +41,32 @@ public class TecnicoController {
 
     //buscar tecnico por uuid
     @GetMapping("/perfil/{uuid}")
-    public ResponseEntity<TecnicoDTOResponse> getTecnicoByUuid(@PathVariable String uuid){
+    public ResponseEntity<TecnicoDTOResponse> verPerfil(@PathVariable String uuid){
         return ResponseEntity.ok(tecnicoService.getTecnicoByUuid(uuid));
     }
 
     //filtrar por habilidad
-    @GetMapping("/habilidad/{idHabilidad}")
-    public ResponseEntity<List<TecnicoDTOResponse>> getTecnicoByHabilidad(@PathVariable Integer idHabilidad){
-        return ResponseEntity.ok(tecnicoService.getTecnicosByHabilidad(idHabilidad));
+    @GetMapping("/habilidad/{uuidHabilidad}")
+    public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorHabilidad(@PathVariable String uuidHabilidad){
+        return ResponseEntity.ok(tecnicoService.obtenerTecnicosPorHabilidad(uuidHabilidad));
     }
 
     //filtrar por especialidad
-    @GetMapping("/especialidad/{idEspecialidad}")
-    public ResponseEntity<List<TecnicoDTOResponse>> getTecnicoByEspecialidad(@PathVariable Integer idEspecialidad){
-        return ResponseEntity.ok(tecnicoService.getTecnicosByEspecialidad(idEspecialidad));
+    @GetMapping("/especialidad/{uuidEspecialidad}")
+    public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorEspecialidad(@PathVariable String uuidEspecialidad){
+        return ResponseEntity.ok(tecnicoService.obtenerTecnicosPorEspecialidad(uuidEspecialidad));
+    }
+
+    //filtrar por nombre
+    @GetMapping("/nombre/{nombre}")
+    public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorNombre(@PathVariable String nombre){
+        return ResponseEntity.ok(tecnicoService.obtenerTecnicosPorNombre(nombre));
+    }
+
+    //filtrar por rubros
+    @GetMapping("/rubro/{uuidRubro}")
+    public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorRubro(@PathVariable String uuidRubro){
+        return ResponseEntity.ok(tecnicoService.getTecnicosByRubro(uuidRubro));
     }
 
     //buscar por filtros combinados

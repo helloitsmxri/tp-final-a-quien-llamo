@@ -7,7 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,16 +17,17 @@ public class TecnicoDTORequest {
     @Pattern(regexp = "^\\d{11}$", message = "El CUIT debe contener solo números.")
     private String cuit;
 
+    @NotBlank(message = "La descripcion es obligatoria.")
     @Size(min = 10, message = "La descripción debe tener al menos 10 caracteres.")
     private String descripcionTrabajo;
 
+    @NotBlank(message = "Los proyectos son obligatorios.")
     @Size(min = 10, max = 5000, message = "Los proyectos deben tener entre 10 y 5000 caracteres.")
     private String proyectos;
 
     @NotEmpty(message = "Debe seleccionar al menos una habilidad.")
-    private List<Integer> idHabilidades;
-    
-    @NotEmpty(message = "Debe seleccionar al menos una especialidad.")
-    private List <Integer> idEspecialidades;
+    private List<String> uuidHabilidades;
 
+    @NotEmpty(message = "Debe seleccionar al menos una especialidad.")
+    private List<String> uuidEspecialidades;
 }
