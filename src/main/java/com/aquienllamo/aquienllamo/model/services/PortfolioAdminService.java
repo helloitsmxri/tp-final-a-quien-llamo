@@ -4,14 +4,13 @@ import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PortfolioAdminDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioAdminDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.PortfolioEntity;
-import com.aquienllamo.aquienllamo.model.exceptions.PortfolioAlreadyExistsEx;
+import com.aquienllamo.aquienllamo.model.exceptions.PortfolioAlreadyReviewedEx;
 import com.aquienllamo.aquienllamo.model.exceptions.PortfolioNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.PortfolioMapper;
 import com.aquienllamo.aquienllamo.model.repositories.PortfolioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,17 +74,30 @@ public class PortfolioAdminService {
                 .toList();
     }
 
-    //actualizar estado de portfolio
-    public PortfolioAdminDTOResponse revisionPortfolio(String uuid, PortfolioAdminDTORequest request){
+    //aceptar portfolio
+    public PortfolioAdminDTOResponse aprobarPortfolio(String uuid, String notas){
         PortfolioEntity portfolio = repository.findByUuid(uuid)
-                .orElseThrow(() -> new PortfolioNotFoundEx("ERROR: No se ha encontrado el portfolio ingresado."));
-
-        portfolio.setEstadoVerificacion(request.getEstadoVerificacion());
-        portfolio.setNotasAdmin(request.getNotasAdmin());
-
+                .orElseThrow(() -> new PortfolioNotFoundEx("ERROR: No se encontro el portfolio."));
+        if(portfolio.getEstadoVerificacion() != EstadoVerificacion.Pendiente){
+            throw new PortfolioAlreadyReviewedEx("ERROR: Solo se pueden revisar los portfolios pendientes.");
+        }
+        portfolio.setEstadoVerificacion(EstadoVerificacion.Aprobado);
+        portfolio.setNotasAdmin(notas);
         return PortfolioMapper.toResponseAdmin(repository.save(portfolio));
 
     }
 
+    //rechazar portfolio
+    public PortfolioAdminDTOResponse rechazarPortfolio(String uuid, String notas){
+        PortfolioEntity portfolio = repository.findByUuid(uuid)
+                .orElseThrow(()-> new PortfolioNotFoundEx("ERROR: No se encontro el portfolio."));
+
+        if(portfolio.getEstadoVerificacion() != EstadoVerificacion.Pendiente){
+            throw new PortfolioAlreadyReviewedEx("ERROR: Solo se pueden revisar los portfolios pendientes.");
+        }
+        portfolio.setEstadoVerificacion(EstadoVerificacion.Rechazado);
+        portfolio.setNotasAdmin(notas);
+        return PortfolioMapper.toResponseAdmin(repository.save(portfolio));
+    }
 
 }
