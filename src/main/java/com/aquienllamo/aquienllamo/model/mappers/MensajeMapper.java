@@ -19,7 +19,8 @@ public class MensajeMapper {
                 .mensaje(mensaje.getMensaje())
                 .fechaMensaje(mensaje.getFechaMensaje())
                 .nombreSender(mensaje.getSender().getNombre())
-
+                .archivoUrl(mensaje.getArchivoUrl())
+                .tipoArchivo(mensaje.getTipoArchivo())
                 .build();
     }
 
