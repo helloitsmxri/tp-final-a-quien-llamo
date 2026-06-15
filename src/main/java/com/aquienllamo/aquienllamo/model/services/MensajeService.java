@@ -37,6 +37,13 @@ public class MensajeService {
         UsuarioEntity sender = usuarioRepository.findByUuid(dto.getUuidSender())
                 .orElseThrow(()-> new UserNotFoundEx("No se encontro el usuario"));
 
+        // verificar que el sender pertenece al chat
+        boolean esUsuarioDelChat = chat.getUsuario().getUuid().equals(sender.getUuid());
+        boolean esTecnicoDelChat = chat.getTecnico().getUsuario().getUuid().equals(sender.getUuid());
+
+        if (!esUsuarioDelChat && !esTecnicoDelChat) {
+            throw new UserNotFoundEx("El usuario no pertenece a este chat");
+        }
         String archivoUrl = null;
         String tipoArchivo = null;
 
@@ -49,6 +56,8 @@ public class MensajeService {
                 .chat(chat)
                 .sender(sender)
                 .mensaje(dto.getMensaje())
+                .archivoUrl(archivoUrl)
+                .tipoArchivo(tipoArchivo)
                 .build();
 
         return mensajeMapper.toResponse(mensajeRepository.save(mensaje));

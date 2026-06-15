@@ -16,4 +16,6 @@ public class MensajeDTOResponse {
     private String mensaje;
     private LocalDateTime fechaMensaje;
     private String nombreSender;
+    private String archivoUrl;
+    private String tipoArchivo;
 }
