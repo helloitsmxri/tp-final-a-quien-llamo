@@ -1,5 +1,10 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
+import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
+import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;
 import com.aquienllamo.aquienllamo.model.dtos.Request.TecnicoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
@@ -28,6 +33,8 @@ public class TecnicoService {
     private final HabilidadRepository  habilidadRepository;
     private final EspecialidadRepository especialidadRepository;
     private final TecnicoMapper tecnicoMapper;
+    private final CredentialsRepository credentialsRepository;
+    private final RoleRepository roleRepository;
 
     //registrar usuario como tecnico
     public TecnicoDTOResponse registrarTecnico(TecnicoDTORequest dto, String uuidUsuario){
@@ -56,7 +63,24 @@ public class TecnicoService {
         tecnico.setUsuario(user);
         tecnico.setHabilidades(habilidadRepository.findAllById(dto.getIdHabilidades()));
         tecnico.setEspecialidades(especialidadRepository.findAllById(dto.getIdEspecialidades()));
-        return tecnicoMapper.toResponse(tecnicoRepository.save(tecnico));
+
+        //guardar tecnico
+        TecnicoEntity tecnicoGuardado=tecnicoRepository.save(tecnico);
+
+        //buscar rol tecnico
+        RoleEntity roleTecnico=roleRepository.findByRole(RolesUser.ROLE_TECNICO)
+                .orElseThrow(()-> new RoleNotFoundEx("No existe el ROLE_TECNICO."));
+
+        //buscar credenciales del usuario
+        CredentialsEntity credencial=credentialsRepository.findByUsuario_Uuid(uuidUsuario)
+                .orElseThrow(()-> new CredentialsNotFoundEx("No se encontraron las credenciales del usuario."));
+
+        //asignar rol a tecnico
+        credencial.getRoles().add(roleTecnico);
+
+        //guardar credenciales actualizadas
+        credentialsRepository.save(credencial);
+        return tecnicoMapper.toResponse(tecnicoGuardado);
     }
 
     //listar todos los tecnicos
