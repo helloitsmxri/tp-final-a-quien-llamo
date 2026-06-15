@@ -14,21 +14,21 @@ import java.time.LocalDateTime;
 public class DenunciaDTOResponse {
     private String uuid;
 
-    //administrador
     private String nombreAdministrador;
 
-    // Denunciante
     private String nombreDenunciante;
     private String apellidoDenunciante;
+    private String emailDenunciante;
 
-    // Denunciado
     private String nombreDenunciado;
     private String apellidoDenunciado;
+    private String emailDenunciado;
 
     private EstadoDenunciaE estadoDenuncia;
 
     private String motivoDenuncia;
     private String notaDelAdmin;
+
     private LocalDateTime fechaDenuncia;
 
 }
