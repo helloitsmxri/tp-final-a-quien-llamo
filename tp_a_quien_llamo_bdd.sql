@@ -271,13 +271,17 @@ FOREIGN KEY (administrador_encargado) REFERENCES Administrador(id_admin)
 );
 
 CREATE TABLE Credencial(
-credencial_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-username VARCHAR(50) UNIQUE NOT NULL, 
+credencial_id INT AUTO_INCREMENT PRIMARY KEY,
+username VARCHAR(255) UNIQUE NOT NULL,
 clave VARCHAR(255) NOT NULL,
 enabled TINYINT(1) NOT NULL,
 refresh_token VARCHAR(2048),
-id_usuario INT, 
-FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+
+id_usuario INT NULL,
+id_admin INT NULL,
+
+FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+FOREIGN KEY (id_admin) REFERENCES Administrador(id_admin)
 );
 
 CREATE TABLE Credencial_Rol(
