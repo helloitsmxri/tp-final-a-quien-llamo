@@ -93,5 +93,11 @@ public class UsuarioEntity {
     // Relación @OneToMany con Presupuesto
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PresupuestoEntity>presupuestosSolicitados;
+
+    @OneToMany(mappedBy = "denunciante")
+    private List<DenunciaEntity> denunciasRealizadas;
+
+    @OneToMany(mappedBy = "denunciado")
+    private List<DenunciaEntity> denunciasRecibidas;
     
 }
