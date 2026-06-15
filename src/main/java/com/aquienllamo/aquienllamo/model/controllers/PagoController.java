@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,13 +47,21 @@ public class PagoController {
 
     //listar pagos hechos por cliente
     @GetMapping("/cliente/{uuid}")
+    @PreAuthorize("hasRole('ADMIN') or @pagoService.perteneceAlUsuario(#uuid, authentication.name)") //garantiza que cada cliente solo pueda ver los pagos suyos
     public ResponseEntity<List<PagoDTOResponse>> listarPagoCliente (@PathVariable String uuid){
         return ResponseEntity.ok().body(pagoService.listarPagosPorClienteUuid(uuid));
     }
 
     //listar pagos recibidos por tecnico
     @GetMapping("/tecnico/{uuid}")
+    @PreAuthorize("hasRole('ADMIN') or @pagoService.perteneceAlUsuario(#uuid, authentication.name)")
     public ResponseEntity<List<PagoDTOResponse>> listarPagoTecnico (@PathVariable String uuid){
         return ResponseEntity.ok().body(pagoService.listarPagosRecibidosPorTecnico(uuid));
+    }
+
+    @PatchMapping("/{uuid}/cancelar")
+    @PreAuthorize("hasRole('ADMIN') or @pagoService.pagoPerteneceAlUsuario(#uuid, authentication.name)")
+    public ResponseEntity<PagoDTOResponse> cancelarPago (@PathVariable String uuid){
+        return ResponseEntity.ok(pagoService.cancelarPago(uuid));
     }
 }
