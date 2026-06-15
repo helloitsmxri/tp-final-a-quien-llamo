@@ -57,4 +57,10 @@ public class TrabajoController {
     public ResponseEntity<List<TrabajoDTOResponse>> listarTrabajoPorTecnico(@PathVariable String uuid){
         return ResponseEntity.ok(trabajoService.listarTrabajosPorTecnico(uuid));
     }
+
+    @GetMapping("/{uuid}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<TrabajoDTOResponse> obtenerTrabajo(@PathVariable String uuid){
+        return ResponseEntity.ok(trabajoService.obtenerTrabajoPorUuid(uuid));
+    }
 }
