@@ -22,7 +22,7 @@ public class AdministradorEntity {
     @Column(nullable = false, length = 50, name = "nombre_usuario")
     private String nombreUsuario;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 100)
     private String clave;
 
     @Column(name ="uuid", nullable = false, unique = true)
