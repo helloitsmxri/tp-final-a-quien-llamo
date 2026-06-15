@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -127,6 +128,9 @@ public class TecnicoService {
         // crear usuario
         UsuarioEntity usuario = usuarioMapper.toEntity(usuarioDto);
         usuario.setClave(passwordEncoder.encode(usuarioDto.getClave()));
+        // procesar foto
+        processImage(usuario, usuarioDto);
+
         usuarioRepository.save(usuario);
 
         // buscar roles
@@ -160,6 +164,25 @@ public class TecnicoService {
         return tecnicoMapper.toResponse(tecnicoGuardado);
     }
 
+    // procesar foto
+    private void processImage(UsuarioEntity user, UsuarioDTORequest request){
+        if (request.getFoto() != null && !request.getFoto().isEmpty()){
+            try{
+                String tipoImagen = request.getFoto().getContentType();
+                if (tipoImagen == null || !tipoImagen.startsWith("image/")){
+                    throw new ImageDataTypeNotFoundEx("Formato no válido de imagen");
+                }
+                user.setTipoImagen(tipoImagen);
+                user.setFoto(request.getFoto().getBytes());
+            }catch (IOException errorImagen){
+                throw new RuntimeException("Hubo un error con la imagen");
+            }
+        }else{
+            user.setTipoImagen("None");
+            user.setFoto(null);
+        }
+    }
+
     //listar todos los tecnicos
     public List<TecnicoDTOResponse> getAllTecnicos(){
         return tecnicoRepository.findAll()
@@ -177,7 +200,7 @@ public class TecnicoService {
     }
 
     //filtrar por habilidad
-    public List<TecnicoDTOResponse> getTecnicosByHabilidad(String uuid){
+    public List<TecnicoDTOResponse> obtenerTecnicosPorHabilidad(String uuid){
         return tecnicoRepository.findByHabilidades_Uuid(uuid)
                 .stream()
                 .map(tecnicoMapper::toResponse)
@@ -185,8 +208,24 @@ public class TecnicoService {
     }
 
     //filtrar por especialidad
-    public List<TecnicoDTOResponse> getTecnicosByEspecialidad(String uuid){
+    public List<TecnicoDTOResponse> obtenerTecnicosPorEspecialidad(String uuid){
         return tecnicoRepository.findByEspecialidades_Uuid(uuid)
+                .stream()
+                .map(tecnicoMapper::toResponse)
+                .toList();
+    }
+
+    //filtrar por nombres
+    public List<TecnicoDTOResponse> obtenerTecnicosPorNombre(String nombre){
+        return tecnicoRepository.findByUsuario_NombreContainingIgnoreCase(nombre)
+                .stream()
+                .map(tecnicoMapper::toResponse)
+                .toList();
+    }
+
+    //filtrar por rubros
+    public List<TecnicoDTOResponse> getTecnicosByRubro(String uuidRubro){
+        return tecnicoRepository.findByEspecialidades_Rubros_Uuid(uuidRubro)
                 .stream()
                 .map(tecnicoMapper::toResponse)
                 .toList();
@@ -250,7 +289,7 @@ public class TecnicoService {
                 .toList();
     }
 
-    //listar tecnicos ordenados por fecha de registros del mas viejo al mas nuevi
+    //listar tecnicos ordenados por fecha de registros del mas viejo al mas nuevo
     public List<TecnicoDTOResponse> getTecnicosOrderByFechaRegistroAsc(){
         return tecnicoRepository.findAllByOrderByUsuario_FechaRegistroAsc()
                 .stream()
