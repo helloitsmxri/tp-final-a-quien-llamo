@@ -1,13 +1,19 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoTrabajo;
 import com.aquienllamo.aquienllamo.model.dtos.Request.TrabajoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TrabajoDTOResponse;
+import com.aquienllamo.aquienllamo.model.entities.PresupuestoEntity;
 import com.aquienllamo.aquienllamo.model.entities.TrabajoEntity;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
+import com.aquienllamo.aquienllamo.model.exceptions.PresupuestoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.exceptions.TrabajoAlreadyExistsEx;
 import com.aquienllamo.aquienllamo.model.exceptions.TrabajoNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.TrabajoMapper;
+import com.aquienllamo.aquienllamo.model.repositories.PresupuestoRepository;
 import com.aquienllamo.aquienllamo.model.repositories.TrabajoRepository;
+import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +27,27 @@ import java.util.List;
 public class TrabajoService {
 
     private final TrabajoRepository trabajoRepository;
+    private final PresupuestoRepository presupuestoRepository;
+    private final UsuarioRepository  usuarioRepository;
 
     //crear un trabajo
     public TrabajoDTOResponse crearTrabajo (TrabajoDTORequest trabajoDTORequest) {
 
-        TrabajoEntity trabajoEntity = trabajoRepository.findByUuid(trabajoDTORequest.getUuid())
-                .orElseThrow(()-> new TrabajoAlreadyExistsEx("ERROR: El trabajo ingresado ya existe."));
+        PresupuestoEntity presupuesto = presupuestoRepository.findByUuid(trabajoDTORequest.getUuidPresupuesto())
+                .orElseThrow(()-> new PresupuestoNotFoundEx("ERROR: El presupuesto ingresado no existe."));
 
-        return TrabajoMapper.toResponse(trabajoRepository.save(trabajoEntity));
+        if(!presupuesto.getEstado().equals(EstadoPresupuestoE.Aceptado)){
+            throw new PresupuestoNotFoundEx("ERROR: Solo se pueden crear trabajos con presupuestos aceptados.");
+        }
+
+        if(trabajoRepository.existsByPresupuestoUuid(trabajoDTORequest.getUuidPresupuesto())){
+            throw new TrabajoAlreadyExistsEx("ERROR: El trabajo ya existe.");
+        }
+
+        TrabajoEntity trabajo = TrabajoMapper.toEntity(trabajoDTORequest,presupuesto);
+        trabajo.setEstadoTrabajo(EstadoTrabajo.Pendiente);
+
+        return TrabajoMapper.toResponse(trabajoRepository.save(trabajo));
 
     }
 
@@ -56,5 +75,30 @@ public class TrabajoService {
         return TrabajoMapper.toResponse(trabajoRepository.save(trabajo));
     }
     
+    //enlistar a todos los trabajos por cliente
+    public List<TrabajoDTOResponse> listarTrabajosPorCliente (String uuidCliente){
+        return trabajoRepository.findAllByUuidUsuario(uuidCliente)
+                .stream()
+                .map(TrabajoMapper::toResponse)
+                .toList();
+    }
+
+    //enlistar a todos los trabajos por tecnico
+    public List<TrabajoDTOResponse> listarTrabajosPorTecnico(String uuidTecnico){
+        return trabajoRepository.findAllByUuidTecnico(uuidTecnico)
+                .stream()
+                .map(TrabajoMapper::toResponse)
+                .toList();
+    }
+
+    //un cliente solo puede ver sus propios
+    // trabajos, un técnico solo puede ver los suyos, y
+    // el administrador puede ver todos
+    public boolean perteneceAlUsuario(String uuidUsuario, String email){
+        return usuarioRepository.findByUuid(uuidUsuario)
+                .map(usuario -> usuario.getEmail().equals(email))
+                .orElse(false);
+    }
+
 
 }
