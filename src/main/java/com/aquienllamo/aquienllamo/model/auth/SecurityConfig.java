@@ -45,10 +45,10 @@ public class SecurityConfig {
                        .requestMatchers("/chats/**").authenticated()   // solo usuarios autenticados
                        .requestMatchers("/mensajes/**").authenticated() // solo usuarios autenticados
 
-                       .requestMatchers(HttpMethod.POST, "/aquienllamo/pagos").hasRole("CLIENTE")
-                       .requestMatchers(HttpMethod.PATCH, "/aquienllamo/pagos/*/cancelar").hasRole("CLIENTE")
-                       .requestMatchers("/aquienllamo/pagos/cliente/**").hasAnyRole("CLIENTE", "ADMIN")
-                       .requestMatchers("/aquienllamo/pagos/tecnico/**").hasAnyRole("TECNICO", "ADMIN") //esto no estoy segura si es tecnico o prestador
+                       .requestMatchers(HttpMethod.POST, "/aquienllamo/pagos").hasRole("USUARIO")
+                       .requestMatchers(HttpMethod.PATCH, "/aquienllamo/pagos/*/cancelar").hasRole("USUARIO")
+                       .requestMatchers("/aquienllamo/pagos/cliente/**").hasAnyRole("USUARIO", "ADMINISTRADOR")
+                       .requestMatchers("/aquienllamo/pagos/tecnico/**").hasAnyRole("TECNICO", "ADMINISTRADOR") //esto no estoy segura si es tecnico o prestador
 
                        .anyRequest().authenticated())
                .cors(Customizer.withDefaults())
