@@ -11,26 +11,29 @@ import java.util.Base64;
 @Component
 public class DenunciaMapper {
     public DenunciaDTOResponse toResponse(DenunciaEntity denuncia){
-        if (denuncia == null){
-            return null;
-        }
+
         return DenunciaDTOResponse.builder()
                 .uuid(denuncia.getUuid())
-                .nombreAdministrador(denuncia.getAdministrador().getNombreUsuario())
-                .nombreDenunciante(denuncia.getNombreDenunciante())
-                .apellidoDenunciante(denuncia.getApellidoDenunciante())
-                .nombreDenunciado(denuncia.getNombreDenunciado())
-                .apellidoDenunciado(denuncia.getApellidoDenunciado())
+                .nombreAdministrador(
+                        denuncia.getAdministrador() != null
+                                ? denuncia.getAdministrador().getNombreUsuario()
+                                : null
+                )
+                .nombreDenunciante(denuncia.getDenunciante().getNombre())
+                .apellidoDenunciante(denuncia.getDenunciante().getApellido())
+                .emailDenunciante(denuncia.getDenunciante().getEmail())
+                .nombreDenunciado(denuncia.getDenunciado().getNombre())
+                .apellidoDenunciado(denuncia.getDenunciado().getApellido())
+                .emailDenunciado(denuncia.getDenunciado().getEmail())
                 .estadoDenuncia(denuncia.getEstadoDenuncia())
                 .motivoDenuncia(denuncia.getMotivoDenuncia())
+                .notaDelAdmin(denuncia.getNotaDelAdmin())
                 .fechaDenuncia(denuncia.getFechaDenuncia())
                 .build();
     }
 
     public DenunciaEntity toEntity(DenunciaDTORequest dto){
-        if (dto == null){
-            return null;
-        }
+
         return DenunciaEntity.builder()
                 .motivoDenuncia(dto.getMotivoDenuncia())
                 .build();

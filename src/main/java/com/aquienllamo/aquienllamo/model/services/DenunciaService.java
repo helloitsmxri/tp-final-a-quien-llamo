@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoDenunciaE;
 import com.aquienllamo.aquienllamo.model.details.UsuarioSecurity;
 import com.aquienllamo.aquienllamo.model.dtos.Request.DenunciaDTORequest;
@@ -32,6 +33,7 @@ public class DenunciaService {
     private final UsuarioRepository usuarioRepository;
     private final ChatRepository chatRepository;
     private final AdministradorRepository administradorRepository;
+    private final EmailService emailService;
 
     //crear
     public DenunciaDTOResponse crearDenuncia(DenunciaDTORequest denuncia, String uuidChat){
@@ -57,18 +59,8 @@ public class DenunciaService {
 
         DenunciaEntity nueva=denunciaMapper.toEntity(denuncia);
         nueva.setEstadoDenuncia(EstadoDenunciaE.Pendiente);
-        //denunciante
-        nueva.setNombreDenunciante(denunciante.getNombre());
-        nueva.setApellidoDenunciante(denunciante.getApellido());
-        nueva.setDniDenunciante(denunciante.getDni());
-        nueva.setTelefonoDenunciante(denunciante.getTelefono());
-        //denunciado
-        nueva.setNombreDenunciado(denunciado.getNombre());
-        nueva.setApellidoDenunciado(denunciado.getApellido());
-        nueva.setDniDenunciado(denunciado.getDni());
-        nueva.setTelefonoDenunciado(denunciado.getTelefono());
-
-        nueva.setFechaDenuncia(LocalDateTime.now());
+        nueva.setDenunciante(denunciante);
+        nueva.setDenunciado(denunciado);
 
         if (denuncia.getFoto()!=null && !denuncia.getFoto().isEmpty()){
             try {
@@ -79,8 +71,9 @@ public class DenunciaService {
             }
         }
 
-        // enviar un email para que el denunciante sepa q fue creada
-        // enviar un email para q el denunciado sepa q está bajo revisión
+        emailService.enviarDenunciaAprobadaDenunciante(denunciante.getEmail());
+        emailService.enviarDenunciaAprobadaDenunciado(denunciado.getEmail());
+        emailService.enviarDenunciaAdmin("aquienllamoinfo@gmail.com", nueva.getUuid());
         return denunciaMapper.toResponse(denunciaRepository.save(nueva));
     }
 
@@ -189,8 +182,8 @@ public class DenunciaService {
         denuncia.setEstadoDenuncia(EstadoDenunciaE.Aprobada);
         denuncia.setNotaDelAdmin(mensaje);
         denunciaRepository.save(denuncia);
-        // email de notificar al q denuncia de q su denuncia fue aprobada
-        //email de notificar al denunciado
+        emailService.enviarDenunciaAprobadaDenunciante(denuncia.getDenunciante().getEmail());
+        emailService.enviarDenunciaAprobadaDenunciado(denuncia.getDenunciado().getEmail());
         return denunciaMapper.toResponse(denuncia);
     }
 
@@ -216,8 +209,10 @@ public class DenunciaService {
 
         denuncia.setEstadoDenuncia(EstadoDenunciaE.Rechazada);
         denuncia.setNotaDelAdmin(mensaje);
-
-        return denunciaMapper.toResponse(denunciaRepository.save(denuncia));
+        denunciaRepository.save(denuncia);
+        emailService.enviarDenunciaRechazadaDenunciante(denuncia.getDenunciante().getEmail());
+        emailService.enviarDenunciaRechazadaDenunciado(denuncia.getDenunciado().getEmail());
+        return denunciaMapper.toResponse(denuncia);
     }
 
     public List<DenunciaDTOResponse> denunciasMasViejasPrimero(){
