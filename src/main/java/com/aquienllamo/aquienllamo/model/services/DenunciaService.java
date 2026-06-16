@@ -178,14 +178,12 @@ public class DenunciaService {
             throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
         }
 
-        UsuarioSecurity usuarioLogueado =
-                (UsuarioSecurity) SecurityContextHolder
+        CredentialsEntity cred =
+                (CredentialsEntity) SecurityContextHolder
                         .getContext()
                         .getAuthentication()
                         .getPrincipal();
 
-        CredentialsEntity cred = credentialsRepository.findByUsername(usuarioLogueado.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Credencial no encontrada"));
 
         AdministradorEntity adminLogueado = cred.getAdministrador();
 
@@ -217,15 +215,12 @@ public class DenunciaService {
         if (denuncia.getAdministrador() == null) {
             throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
         }
-        UsuarioSecurity usuarioLogueado =
-                (UsuarioSecurity) SecurityContextHolder
+        CredentialsEntity cred =
+                (CredentialsEntity) SecurityContextHolder
                         .getContext()
                         .getAuthentication()
                         .getPrincipal();
-
-        CredentialsEntity cred = credentialsRepository
-                .findByUsername(usuarioLogueado.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Credencial no encontrada"));
+        
 
         AdministradorEntity adminLogueado = cred.getAdministrador();
 
@@ -270,15 +265,12 @@ public class DenunciaService {
 
     public List<DenunciaDTOResponse> misDenuncias(EstadoDenunciaE estado){
 
-        UsuarioSecurity usuarioLogueado =
-                (UsuarioSecurity) SecurityContextHolder
+        CredentialsEntity cred =
+                (CredentialsEntity) SecurityContextHolder
                         .getContext()
                         .getAuthentication()
                         .getPrincipal();
 
-        CredentialsEntity cred = credentialsRepository
-                .findByUsername(usuarioLogueado.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Credencial no encontrada"));
 
         AdministradorEntity adminLogueado = cred.getAdministrador();
 
