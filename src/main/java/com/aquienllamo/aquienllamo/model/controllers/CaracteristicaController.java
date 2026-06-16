@@ -47,7 +47,7 @@ public class CaracteristicaController {
     }
 
     // actualizar caracteristica
-    @PatchMapping("/update")
+    @PatchMapping("/update/{uuid}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
     public CaracteristicaDTOResponse updateCaracteristica(@PathVariable String uuid, @RequestBody CaracteristicaDTORequest dto){
