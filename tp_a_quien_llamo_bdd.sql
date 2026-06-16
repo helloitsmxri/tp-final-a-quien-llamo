@@ -568,4 +568,16 @@ INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES
 INSERT INTO Habilidad_Especialidad (id_especialidad, id_habilidad) VALUES 
 (22, 187), (22, 188), (22, 189), (22, 190);
 
+SET SQL_SAFE_UPDATES = 0;
+UPDATE Denuncia
+SET estado_denuncia = 'En_proceso'
+WHERE estado_denuncia = 'En proceso';
 
+ALTER TABLE Denuncia
+MODIFY COLUMN estado_denuncia
+ENUM(
+    'Pendiente',
+    'En_proceso',
+    'Aprobada',
+    'Rechazada'
+) NOT NULL;
