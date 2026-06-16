@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.EspecialidadDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadCreadaDTOResponse;
 import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.model.entities.HabilidadEntity;
@@ -51,4 +52,17 @@ public class EspecialidadMapper {
                 .tipoValidacion(dto.getTipoValidacion())
                 .build();
     }
+
+    public EspecialidadCreadaDTOResponse toResponseCreado(EspecialidadEntity especialidad) {
+        if (especialidad == null) {
+            return null;
+        }
+
+        return EspecialidadCreadaDTOResponse.builder()
+                .uuid(especialidad.getUuid())
+                .nombreEspecialidad(especialidad.getNombreEspecialidad())
+                .tipoValidacion(especialidad.getTipoValidacion())
+                .build();
+    }
+
 }

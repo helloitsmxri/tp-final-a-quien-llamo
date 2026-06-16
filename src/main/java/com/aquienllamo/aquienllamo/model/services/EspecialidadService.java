@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.Enum.TipoValidacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.EspecialidadDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadCreadaDTOResponse;
 import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.EspecialidadAlreadyExistsEx;
@@ -19,15 +20,15 @@ import java.util.List;
 @Transactional
 public class EspecialidadService {
     private final EspecialidadRepository especialidadRepository;
-    private final EspecialidadMapper  especialidadMapper;
+    private final EspecialidadMapper especialidadMapper;
 
     //crear especialidad
-    public EspecialidadDTOResponse createEspecialidad(EspecialidadDTORequest dto){
+    public EspecialidadCreadaDTOResponse createEspecialidad(EspecialidadDTORequest dto){
         if (especialidadRepository.existsByNombreEspecialidad(dto.getNombreEspecialidad())){
            throw new EspecialidadAlreadyExistsEx("Ya existe una especialidad con ese nombre.");
         }
         EspecialidadEntity especialidad=especialidadMapper.toEntity(dto);
-        return especialidadMapper.toResponse(especialidadRepository.save(especialidad));
+        return especialidadMapper.toResponseCreado(especialidad);
     }
 
     //listar especialidades
