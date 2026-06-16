@@ -20,7 +20,7 @@ public class HabilidadController {
     private final HabilidadService habilidadService;
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<HabilidadDTOResponse>> listarHabilidades(){
         return ResponseEntity.ok(habilidadService.listarHabilidades());
     }
