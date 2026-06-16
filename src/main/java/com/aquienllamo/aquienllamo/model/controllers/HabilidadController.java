@@ -18,25 +18,25 @@ import java.util.List;
 public class HabilidadController {
     private final HabilidadService habilidadService;
 
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping
     public ResponseEntity<List<HabilidadDTOResponse>> listarHabilidades(){
         return ResponseEntity.ok(habilidadService.listarHabilidades());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<HabilidadDTOResponse> crearHabilidad(@Valid @RequestBody HabilidadDTORequest habilidad){
         return ResponseEntity.status(HttpStatus.CREATED).body(habilidadService.crearHabilidad(habilidad));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/actualizar/{uuid}")
     public ResponseEntity<HabilidadDTOResponse> actualizarHabilidad(@PathVariable String uuid, @Valid @RequestBody HabilidadDTORequest habilidad){
         return ResponseEntity.ok(habilidadService.actualizarHabilidad(uuid, habilidad));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/eliminar/{uuid}")
     public ResponseEntity<Void> eliminarHabilidad(@PathVariable String uuid){
         habilidadService.eliminarHabilidad(uuid);

@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.model.details.UsuarioSecurity;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
@@ -22,19 +23,11 @@ public class UsuarioDetails implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
     private final TecnicoRepository tecnicoRepository;
 
+    private final CredentialsRepository credentialsRepository; // ← cambiás esto
+
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UsuarioEntity user = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email no encontrado: " + email));
-
-        List<SimpleGrantedAuthority> permisos = new ArrayList<>();
-        permisos.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        // si está en la tabla de técnicos le doy el rol técnico.
-        if (tecnicoRepository.existsByUsuarioUuid(user.getUuid())) {
-            permisos.add(new SimpleGrantedAuthority("ROLE_TECNICO"));
-        }
-
-        return new UsuarioSecurity(user, permisos);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return credentialsRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
     }
 }
