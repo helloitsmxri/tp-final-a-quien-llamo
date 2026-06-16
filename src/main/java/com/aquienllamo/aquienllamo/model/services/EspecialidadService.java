@@ -28,6 +28,7 @@ public class EspecialidadService {
            throw new EspecialidadAlreadyExistsEx("Ya existe una especialidad con ese nombre.");
         }
         EspecialidadEntity especialidad=especialidadMapper.toEntity(dto);
+        especialidadRepository.save(especialidad);
         return especialidadMapper.toResponseCreado(especialidad);
     }
 
