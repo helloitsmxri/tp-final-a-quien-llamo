@@ -18,7 +18,7 @@ import java.util.List;
 public class ChatController {
     private final ChatService chatService;
 
-    @PostMapping
+    @PostMapping("/iniciar-chat")
     public  ResponseEntity<ChatDTOResponse> iniciarChat(@RequestBody @Valid ChatDTORequest dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(chatService.iniciarChat(dto));
     }
