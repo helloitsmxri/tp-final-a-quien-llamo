@@ -24,13 +24,12 @@ public class CaracteristicaController {
     // crear característica:
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-
     public CaracteristicaDTOResponse createCaracteristica(@Valid @RequestBody CaracteristicaDTORequest dto){
         return caracteristicaService.crearNuevaCaracteristica(dto);
     }
 
     // eliminar característica:
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCaracteristica(@PathVariable String uuid){
         caracteristicaService.eliminarCaracteristica(uuid);
@@ -46,7 +45,7 @@ public class CaracteristicaController {
     // actualizar caracteristica
     @PatchMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public CaracteristicaDTOResponse updateCaracteristica(String uuid, CaracteristicaDTORequest dto){
+    public CaracteristicaDTOResponse updateCaracteristica(@PathVariable String uuid, @RequestBody CaracteristicaDTORequest dto){
         return caracteristicaService.modificar(uuid, dto);
     }
 
