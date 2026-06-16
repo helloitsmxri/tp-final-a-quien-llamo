@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class CaracteristicaController {
 
     // crear característica:
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.CREATED)
     public CaracteristicaDTOResponse createCaracteristica(@Valid @RequestBody CaracteristicaDTORequest dto){
         return caracteristicaService.crearNuevaCaracteristica(dto);
@@ -30,6 +32,7 @@ public class CaracteristicaController {
 
     // eliminar característica:
     @DeleteMapping("/delete/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCaracteristica(@PathVariable String uuid){
         caracteristicaService.eliminarCaracteristica(uuid);
@@ -37,6 +40,7 @@ public class CaracteristicaController {
 
     // listar todas las caracteristicas:
     @GetMapping("/caracteristicas")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
     public List<CaracteristicaDTOResponse> findAllCaracteristicas(){
         return caracteristicaService.findAll();
@@ -44,6 +48,7 @@ public class CaracteristicaController {
 
     // actualizar caracteristica
     @PatchMapping("/update")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
     public CaracteristicaDTOResponse updateCaracteristica(@PathVariable String uuid, @RequestBody CaracteristicaDTORequest dto){
         return caracteristicaService.modificar(uuid, dto);
@@ -51,6 +56,7 @@ public class CaracteristicaController {
 
     // encontrar por uuid
     @GetMapping("/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
     public CaracteristicaDTOResponse findByUuid(@PathVariable String uuid){
         return caracteristicaService.findByUuid(uuid);
