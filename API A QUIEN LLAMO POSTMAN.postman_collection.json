@@ -1,0 +1,4899 @@
+{
+  "info": {
+    "_postman_id": "bd6d676d-8c85-4538-bdde-1c01d4c7b561",
+    "name": "API A QUIEN LLAMO POSTMAN",
+    "description": "Sirve de testeo para el funcionamiento correcto de los métodos creados.\n\n**CLASES DE CADA UNA:**\n\n- Benvenutto, Irina: **TRABAJO, PAGO, RATING, PORTFOLIO, RUBRO, INTEGRACIÓN API: PAY U Y MERCADO PAGO** (consultar)\n    \n- Elencow, Lourdes María: **USUARIO + LOGIN DEL USUARIO, CARACTERÍSTICA, PRESUPUESTO**\n    \n- Roldán, Paulina Juana: **TÉCNICO, HABILIDAD, ESPECIALIDAD, CERTIFICACIÓN**\n    \n- Saffer, Paulina: **UBICACIÓN, CHAT, ADMINISTRADOR.**\n    \n- Saffer, Paulina y Benvenutto, Irina: **MENSAJE/S**\n    \n- Elencow, Lourdes María y Roldán, Paulina Juana: **DENUNCIA/S, INTEGRACIÓN API: ABSTRACT Y GMAIL.**\n    \n- Las cuatro: **JWT, AUTH, todo lo relacionado a seguridad.**\n    \n\n**\\*recomiendo** _**dropear**_ **la base de datos y volver a crearla para que no se lancen excepciones con usuarios/técnicos repetidos.**",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55933447"
+  },
+  "item": [
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "POST REQUESTS",
+          "item": [
+            {
+              "name": "Registrar Usuario (Lour)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "nombre",
+                      "value": "Lourdes María",
+                      "type": "text",
+                      "uuid": "dcdaf21a-b059-467b-b066-a64e49baca27"
+                    },
+                    {
+                      "key": "apellido",
+                      "value": "Elencow",
+                      "type": "text",
+                      "uuid": "1d3481b1-e23d-43f3-8d13-e7d2545167a1"
+                    },
+                    {
+                      "key": "dni",
+                      "value": "44169304",
+                      "type": "text",
+                      "uuid": "94b6befc-cf13-4afd-b72f-bb89d2728967"
+                    },
+                    {
+                      "key": "email",
+                      "value": "mariaelencow@gmail.com",
+                      "type": "text",
+                      "uuid": "5ace2944-866c-407b-a119-c1285b300da2"
+                    },
+                    {
+                      "key": "clave",
+                      "value": "prOgrA20!26!",
+                      "type": "text",
+                      "uuid": "23e4c3d4-09a2-415c-9072-d429ee6e4c62"
+                    },
+                    {
+                      "key": "telefono",
+                      "value": "2267448841",
+                      "type": "text",
+                      "uuid": "572c2528-4bf8-468c-ae83-d407a571ebff"
+                    },
+                    {
+                      "key": "fechaNacimiento",
+                      "value": "2002-06-12",
+                      "type": "text",
+                      "uuid": "51de8a2f-df34-4c29-be6e-9a6d87bb16d8"
+                    },
+                    {
+                      "key": "sobreMi",
+                      "value": "Hola! Soy estudiante de Progra III. Estoy probando mi API.",
+                      "type": "text",
+                      "uuid": "9ed53b9a-06fc-4e39-afe4-fd2addac7e55"
+                    },
+                    {
+                      "key": "foto",
+                      "type": "file",
+                      "uuid": "ff73977d-459b-4147-97ec-023e308ebfef",
+                      "src": "/C:/Users/maria/Downloads/X/d898bc144bfe1777a53da39a781fc043.jpg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Registrar Usuario(Pauli)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "nombre",
+                      "value": "Lourdes María",
+                      "type": "text",
+                      "uuid": "dcdaf21a-b059-467b-b066-a64e49baca27"
+                    },
+                    {
+                      "key": "apellido",
+                      "value": "Elencow",
+                      "type": "text",
+                      "uuid": "1d3481b1-e23d-43f3-8d13-e7d2545167a1"
+                    },
+                    {
+                      "key": "dni",
+                      "value": "44169304",
+                      "type": "text",
+                      "uuid": "94b6befc-cf13-4afd-b72f-bb89d2728967"
+                    },
+                    {
+                      "key": "email",
+                      "value": "mariaelencow@gmail.com",
+                      "type": "text",
+                      "uuid": "5ace2944-866c-407b-a119-c1285b300da2"
+                    },
+                    {
+                      "key": "clave",
+                      "value": "prOgrA20!26!",
+                      "type": "text",
+                      "uuid": "23e4c3d4-09a2-415c-9072-d429ee6e4c62"
+                    },
+                    {
+                      "key": "telefono",
+                      "value": "2267448841",
+                      "type": "text",
+                      "uuid": "572c2528-4bf8-468c-ae83-d407a571ebff"
+                    },
+                    {
+                      "key": "fechaNacimiento",
+                      "value": "2002-06-12",
+                      "type": "text",
+                      "uuid": "51de8a2f-df34-4c29-be6e-9a6d87bb16d8"
+                    },
+                    {
+                      "key": "sobreMi",
+                      "value": "Hola! Soy estudiante de Progra III. Estoy probando mi API.",
+                      "type": "text",
+                      "uuid": "9ed53b9a-06fc-4e39-afe4-fd2addac7e55"
+                    },
+                    {
+                      "key": "foto",
+                      "type": "file",
+                      "uuid": "ff73977d-459b-4147-97ec-023e308ebfef",
+                      "src": "/C:/Users/maria/Downloads/X/d898bc144bfe1777a53da39a781fc043.jpg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Registrar Usuario(Prueba)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "nombre",
+                      "value": "Monica",
+                      "type": "text",
+                      "uuid": "dcdaf21a-b059-467b-b066-a64e49baca27"
+                    },
+                    {
+                      "key": "apellido",
+                      "value": "Valencia",
+                      "type": "text",
+                      "uuid": "1d3481b1-e23d-43f3-8d13-e7d2545167a1"
+                    },
+                    {
+                      "key": "dni",
+                      "value": "26051732",
+                      "type": "text",
+                      "uuid": "94b6befc-cf13-4afd-b72f-bb89d2728967"
+                    },
+                    {
+                      "key": "email",
+                      "value": "monicavalencia@yahoo.com.ar",
+                      "type": "text",
+                      "uuid": "5ace2944-866c-407b-a119-c1285b300da2"
+                    },
+                    {
+                      "key": "clave",
+                      "value": "Clave12345!",
+                      "type": "text",
+                      "uuid": "23e4c3d4-09a2-415c-9072-d429ee6e4c62"
+                    },
+                    {
+                      "key": "telefono",
+                      "value": "2266479834",
+                      "type": "text",
+                      "uuid": "572c2528-4bf8-468c-ae83-d407a571ebff"
+                    },
+                    {
+                      "key": "fechaNacimiento",
+                      "value": "2002-06-12",
+                      "type": "text",
+                      "uuid": "51de8a2f-df34-4c29-be6e-9a6d87bb16d8"
+                    },
+                    {
+                      "key": "sobreMi",
+                      "value": "Hola! Soy estudiante de Progra III. Estoy probando mi API.",
+                      "type": "text",
+                      "uuid": "9ed53b9a-06fc-4e39-afe4-fd2addac7e55"
+                    },
+                    {
+                      "key": "foto",
+                      "type": "file",
+                      "uuid": "ff73977d-459b-4147-97ec-023e308ebfef",
+                      "src": "/C:/Users/maria/Downloads/X/d898bc144bfe1777a53da39a781fc043.jpg"
+                    },
+                    {
+                      "key": "",
+                      "value": "",
+                      "description": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibW9uaWNhdmFsZW5jaWFAeWFob28uY29tLmFyIiwiaWF0IjoxNzgxNjI3MzcxLCJleHAiOjE3ODE3MTM3NzF9.a-FiqMr_rdQpmCz419KhodyGbduMOw_hCmfvOuLOLizFouPV2DqNqhlhJQ6E8bMT",
+                      "type": "text",
+                      "uuid": "75a2435d-ad78-46c4-afab-82631e74baa7"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Iniciar sesión",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"mncmlnm@hotmail.com\",\r\n    \"password\": \"Clave12345!\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Iniciar sesión (Usuario 2)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"mariaelencow@gmail.com\",\r\n    \"password\": \"prOgrA20!26!\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Iniciar sesión (Usuario 3)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"mariaelencow@gmail.com\",\r\n    \"password\": \"prOgrA20!26!\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Refresh Token",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzM4NCJ9.eyJ0eXBlIjoicmVmcmVzaCIsInN1YiI6Im1hcmlhZWxlbmNvd0BnbWFpbC5jb20iLCJpYXQiOjE3ODE1NzU3MDIsImV4cCI6MTc4MjE4MDUwMn0.g6Myr3po3SH_8bAvKjj5RrsABtAYIW8Wk_wDqStjKF64Tix74g8tTlWCTFODH40V\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/refresh",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "refresh"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzM4NCJ9.eyJ0eXBlIjoicmVmcmVzaCIsInN1YiI6Im1hcmlhZWxlbmNvd0BnbWFpbC5jb20iLCJpYXQiOjE3ODE1NzU1ODMsImV4cCI6MTc4MjE4MDM4M30.24irZ-63096nME_fZRocacFvVqJFRiuxjx4_y4n4FKR4xYc4HbGvC5pZm1KrLOcl\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cambiar contraseña autenticado (la sabe y quiere modificar)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"oldPassword\": \"\",\r\n    \"newPassword\": \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/change-password",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "change-password"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Olvidé mi contraseña",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"mariaelencow@gmail.com\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/forgot-password",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "forgot-password"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Resetear contraseña (token)",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzM4NCJ9.eyJ0eXBlIjoicGFzc3dvcmQtcmVzZXQiLCJzdWIiOiJtYXJpYWVsZW5jb3dAZ21haWwuY29tIiwiaWF0IjoxNzgxNTc3NDAyLCJleHAiOjE3ODE1NzgzMDJ9.JggPflSnDdtD3eYUshQV7EuVFk4WYPOgEShU5lVryPgXCVLD-rUn78iRcs1zwJxf\",\r\n    \"newPassword\": \"nuEvACLAVE!progra\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/reset-password",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "reset-password"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ],
+      "description": "Todos los métodos que tienen que ver con la autenticación."
+    },
+    {
+      "name": "USUARIO",
+      "item": [
+        {
+          "name": "GET REQUESTS",
+          "item": [
+            {
+              "name": "VER MI PERFIL",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "VER PERFIL POR UUID",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFlbGVuY293QGdtYWlsLmNvbSIsImlhdCI6MTc4MTU3NjU2MywiZXhwIjoxNzgxNjYyOTYzfQ.WrUfFQPMmaNhOZ2pe4Fq0PJwdAhajkIHNXDjf84u_r0a_ZN74zXHyz1aGJohES_g",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/usuarios/perfil/9b3e912a-f5a3-4eeb-9073-52b44bfbb431",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "usuarios",
+                    "perfil",
+                    "9b3e912a-f5a3-4eeb-9073-52b44bfbb431"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH REQUESTS",
+          "item": [
+            {
+              "name": "ACTUALIZAR PARTES DE UN PERFIL",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFlbGVuY293QGdtYWlsLmNvbSIsImlhdCI6MTc4MTU3NjU2MywiZXhwIjoxNzgxNjYyOTYzfQ.WrUfFQPMmaNhOZ2pe4Fq0PJwdAhajkIHNXDjf84u_r0a_ZN74zXHyz1aGJohES_g",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "nombre",
+                      "value": "Pau Juana",
+                      "type": "text",
+                      "uuid": "5bd1dcb1-f9e8-4139-a5e6-f7a347a8179b"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/usuarios/actualizar/9b3e912a-f5a3-4eeb-9073-52b44bfbb431",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "usuarios",
+                    "actualizar",
+                    "9b3e912a-f5a3-4eeb-9073-52b44bfbb431"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE REQUESTS",
+          "item": [
+            {
+              "name": "ELIMINAR USUARIO",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoianVhbmlnbmFjaW9hbHZhcmV6MTc3QGdtYWlsLmNvbSIsImlhdCI6MTc4MTU4MDk4NSwiZXhwIjoxNzgxNjY3Mzg1fQ.FGdJt7yfup-ibYGFj3JFNXnqxj4Bs2qwHQQ-rodE7XCXHKjVfr9CM3BYzfB4rdph",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"password\": \"prOgrA20!26!\" \r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/usuarios/eliminar/c95aefb1-f66a-460c-a30f-96fd76bd5246",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "usuarios",
+                    "eliminar",
+                    "c95aefb1-f66a-460c-a30f-96fd76bd5246"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "MEDIDAS DEL ADMIN. PARA EL USUARIO",
+          "item": [
+            {
+              "name": "PATCH REQUESTS",
+              "item": [
+                {
+                  "name": "Amonestar usuario",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/usuarios/amonestar/{uuid}?motivo=Conducta inapropiada",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "usuarios",
+                        "amonestar",
+                        "{uuid}"
+                      ],
+                      "query": [
+                        {
+                          "key": "motivo",
+                          "value": "Conducta inapropiada"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Dar de baja",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/usuarios/baja/{uuid}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "usuarios",
+                        "baja",
+                        "{uuid}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Quitar amonestación",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/usuarios/quitar-suspension/{uuid}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "usuarios",
+                        "quitar-suspension",
+                        "{uuid}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Quitar baja",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTU4Njc2NiwiZXhwIjoxNzgxNjczMTY2fQ.pbHYWzfEEyTc5Oeb_5t3Dr8exkC00_H9TR_gHuTEZknZk2v-GhIMAFdQ5de92DPv",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/usuarios/quitar-baja/{uuid}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "usuarios",
+                        "quitar-baja",
+                        "{uuid}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "GET REQUESTS",
+              "item": [
+                {
+                  "name": "Listar todos los usuarios",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/usuarios/todos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "usuarios",
+                        "todos"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Buscar por DNI",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/usuarios/usuario/dni/{dni}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "usuarios",
+                        "usuario",
+                        "dni",
+                        "{dni}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Buscar por email",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/usuarios/usuario/email/{email}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "usuarios",
+                        "usuario",
+                        "email",
+                        "{email}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ],
+          "description": "Estos son los métodos en el **controller del usuario** para que el **ADMINISTRADOR** tome medidas de precaución o las revoque."
+        }
+      ],
+      "description": "Todos los métodos del controller que puede tener el USUARIO en nuestra API."
+    },
+    {
+      "name": "CARACTERÍSTICAS",
+      "item": [
+        {
+          "name": "GET REQUESTS",
+          "item": [
+            {
+              "name": "Listar todas",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTU4NDQ1MCwiZXhwIjoxNzgxNjcwODUwfQ.7UQdPBKfGoyAbRR_h1Y1Lt4wdVeIeBQLVARBpYrNUQvRNOBLvAut7fCua_d6kET4",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/caracteristica/caracteristicas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "caracteristica",
+                    "caracteristicas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar con filtros",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTU4NDQ1MCwiZXhwIjoxNzgxNjcwODUwfQ.7UQdPBKfGoyAbRR_h1Y1Lt4wdVeIeBQLVARBpYrNUQvRNOBLvAut7fCua_d6kET4",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/caracteristica/buscar?palabra=puntu&tipo=POSITIVA",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "caracteristica",
+                    "buscar"
+                  ],
+                  "query": [
+                    {
+                      "key": "palabra",
+                      "value": "puntu"
+                    },
+                    {
+                      "key": "tipo",
+                      "value": "POSITIVA"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar por UUID",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTU4NDQ1MCwiZXhwIjoxNzgxNjcwODUwfQ.7UQdPBKfGoyAbRR_h1Y1Lt4wdVeIeBQLVARBpYrNUQvRNOBLvAut7fCua_d6kET4",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/caracteristica/ea6abc9c-691c-11f1-8fb2-ddcb62867ad1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "caracteristica",
+                    "ea6abc9c-691c-11f1-8fb2-ddcb62867ad1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "POST REQUESTS",
+          "item": [
+            {
+              "name": "Crear nueva característica",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTU4NDQ1MCwiZXhwIjoxNzgxNjcwODUwfQ.7UQdPBKfGoyAbRR_h1Y1Lt4wdVeIeBQLVARBpYrNUQvRNOBLvAut7fCua_d6kET4",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"valorAdjetivo\": \"Amigable\",\r\n    \"tipo\": \"POSITIVA\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/caracteristica/create",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "caracteristica",
+                    "create"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE REQUESTS",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTU4NDQ1MCwiZXhwIjoxNzgxNjcwODUwfQ.7UQdPBKfGoyAbRR_h1Y1Lt4wdVeIeBQLVARBpYrNUQvRNOBLvAut7fCua_d6kET4",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/caracteristica/delete/9ecc3430-1e6b-4f13-8044-43e99b27656c",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "caracteristica",
+                    "delete",
+                    "9ecc3430-1e6b-4f13-8044-43e99b27656c"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH REQUESTS",
+          "item": [
+            {
+              "name": "Modificar un valorAdjetivo",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/caracteristica/update/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "caracteristica",
+                    "update",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ],
+      "description": "Estos son los métodos de las características.\n\nLas características en realidad son **valores adjetivos** que utilizan los usuarios y técnicos de las páginas cuando realizan una reseña o evaluación ya sea del trabajo o la persona. Y ahí es donde pueden elegir diversas opciones: puntual, impuntual, responsable, prolijo, agradable..."
+    },
+    {
+      "name": "Mensaje",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "http://localhost:8080/aquienllamo/mensajes/crear",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "uuidChat",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "2cf674ee-5373-4540-9b8c-ea836639c962"
+                    },
+                    {
+                      "key": "uuidSender",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "dc40d68a-ddb8-416c-827a-4ee7deb1f0f3"
+                    },
+                    {
+                      "key": "mensaje",
+                      "value": "Hola, necesito un plomero mañana",
+                      "type": "text",
+                      "uuid": "7465c4e7-bdc3-48e5-9581-fd149eb88462"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/mensajes/crear",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "mensajes",
+                    "crear"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "http://localhost:8080/aquienllamo/mensajes/modificar",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "uuidMensaje",
+                      "value": "",
+                      "type": "text",
+                      "uuid": "2213f0ec-5159-473b-a637-940ffab72e3d"
+                    },
+                    {
+                      "key": "mensaje",
+                      "value": "Hola, prefiero a la mañana mejor",
+                      "type": "text",
+                      "uuid": "a9f10bd7-86d4-41f0-9de4-5545df2d3cd5"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/mensajes/modificar",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "mensajes",
+                    "modificar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "http://localhost:8080/aquienllamo/mensajes/listar",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/mensajes/listar",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "mensajes",
+                    "listar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Iniciar chat",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibW9uaWNhdmFsZW5jaWFAeWFob28uY29tLmFyIiwiaWF0IjoxNzgxNjI3MzcxLCJleHAiOjE3ODE3MTM3NzF9.a-FiqMr_rdQpmCz419KhodyGbduMOw_hCmfvOuLOLizFouPV2DqNqhlhJQ6E8bMT",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n \"idUsuario\": 8,\r\n \"idTecnico\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/chats/iniciar-chat",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "chats",
+                    "iniciar-chat"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "Buscar UUID",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/chats/buscar-por-uuid/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "chats",
+                    "buscar-por-uuid",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar chats por usuario",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/chats/listar-chats-por-usuario/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "chats",
+                    "listar-chats-por-usuario",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar chats técnicos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/chats/listar-chats-por-tecnico/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "chats",
+                    "listar-chats-por-tecnico",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ubicacion",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"codigoPostal\": \"7500\",\r\n  \"provincia\":   \"Buenos Aires\",\r\n  \"ciudad\":      \"Tres Arroyos\",\r\n  \"calle\":       \"Av. Rivadavia\",\r\n  \"numero\":      1234,\r\n  \"piso\":        2,\r\n  \"numeroPiso\":  5\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ubicaciones/crear/{uuidUsuario}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ubicaciones",
+                    "crear",
+                    "{uuidUsuario}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ubicaciones/usuario/{uuidUsuario}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ubicaciones",
+                    "usuario",
+                    "{uuidUsuario}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ubicaciones/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ubicaciones",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PUT",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"codigoPostal\": \"7500\",\r\n  \"provincia\":   \"Buenos Aires\",\r\n  \"ciudad\":      \"Tres Arroyos\",\r\n  \"calle\":       \"Belgrano\",\r\n  \"numero\":      850,\r\n  \"piso\":        null,\r\n  \"numeroPiso\":  null\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ubicaciones/actualizar/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ubicaciones",
+                    "actualizar",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ubicaciones/eliminar/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ubicaciones",
+                    "eliminar",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PRESUPUESTO",
+      "item": [
+        {
+          "name": "POST REQUESTS",
+          "item": [
+            {
+              "name": "Crear presupuesto",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"descripcionPresupuesto\": \"Reparación de cañería\",\r\n    \"precioEstimado\": 5000.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/presupuestos/chat/{uuid}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "chat",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET REQUESTS",
+          "item": [
+            {
+              "name": "Ver presupuesto en detalle",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/presupuestos/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar todos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/presupuestos/todos",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "todos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Búsqueda con filtros",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/presupuestos/buscar",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "buscar"
+                  ],
+                  "query": [
+                    {
+                      "key": "nombre",
+                      "value": "",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "apellido",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "min",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "max",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "fecha",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Ver MIS presupuestos (usuario)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoicGF1bGluYXNhZmZlcjVAZ21haWwuY29tIiwiaWF0IjoxNzgxNjIzMjk2LCJleHAiOjE3ODE3MDk2OTZ9.M7Aw5q49rmO2TLtZN2bzyayEs99zfECy4r2yU6FsC_pxw2HXc-yhPoyugO4ROQGj",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/presupuestos/mis-presupuestos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "mis-presupuestos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "MIS presupuestos filtrados por estado (usuario)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoicGF1bGluYXNhZmZlcjVAZ21haWwuY29tIiwiaWF0IjoxNzgxNjIzMjk2LCJleHAiOjE3ODE3MDk2OTZ9.M7Aw5q49rmO2TLtZN2bzyayEs99zfECy4r2yU6FsC_pxw2HXc-yhPoyugO4ROQGj",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/presupuestos/mis-presupuestos-tecnico/filtrar?estado=Pendiente",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "mis-presupuestos-tecnico",
+                    "filtrar"
+                  ],
+                  "query": [
+                    {
+                      "key": "estado",
+                      "value": "Pendiente"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Mis presupuestos TÉCNICO",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/presupuestos/mis-presupuestos-tecnico",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "mis-presupuestos-tecnico"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Mis presupuestos filtrados TÉCNICOS",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/presupuestos/mis-presupuestos-tecnico/filtrar?estado=Pendiente",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "mis-presupuestos-tecnico",
+                    "filtrar"
+                  ],
+                  "query": [
+                    {
+                      "key": "estado",
+                      "value": "Pendiente"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar mis presupuestos (USUARIO, FILTROS)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/presupuestos/mis-presupuestos/buscar?estado=Pendiente&min=1000&max=10000&fecha=2026-06-20",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "mis-presupuestos",
+                    "buscar"
+                  ],
+                  "query": [
+                    {
+                      "key": "estado",
+                      "value": "Pendiente"
+                    },
+                    {
+                      "key": "min",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "max",
+                      "value": "10000"
+                    },
+                    {
+                      "key": "fecha",
+                      "value": "2026-06-20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar mis presupuestos (TÉCNICO, FILTRADO)",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH REQUESTS",
+          "item": [
+            {
+              "name": "Aceptar presupuesto",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibW9uaWNhdmFsZW5jaWFAeWFob28uY29tLmFyIiwiaWF0IjoxNzgxNjI3MzcxLCJleHAiOjE3ODE3MTM3NzF9.a-FiqMr_rdQpmCz419KhodyGbduMOw_hCmfvOuLOLizFouPV2DqNqhlhJQ6E8bMT",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/presupuestos/{uuid}/aceptar",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "{uuid}",
+                    "aceptar"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Rechazar presupuesto(CLIENTE)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/presupuestos/{uuid}/rechazar",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "{uuid}",
+                    "rechazar"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cancelar presupuesto (TÉCNICO)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/presupuestos/{uuid}/cancelar",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "presupuestos",
+                    "{uuid}",
+                    "cancelar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Administrador",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "registrar",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombreUsuario\": \"admin01\",\r\n    \"clave\": \"Admin123!\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/administradores/registrar",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "administradores",
+                    "registrar"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "login",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"p.admin\",\r\n    \"password\": \"Admin123!\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"refreshToken\":  \"eyJhbGciOiJIUzM4NCJ9.eyJ0eXBlIjoicmVmcmVzaCIsInN1YiI6ImFkbWluMDEiLCJpYXQiOjE3ODE1Nzg3MzAsImV4cCI6MTc4MjE4MzUzMH0.4DlocvyTsSzLzytx5s7S_kRW2JR-mlgW70wIivip1U7VBYhzUz6Fmt5LJgH6wjpr\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/logout",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TECNICO",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "ver tecnico",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFwZXJlekBlbWFpbC5jb20iLCJpYXQiOjE3ODE1NzgwNTEsImV4cCI6MTc4MTY2NDQ1MX0.Z7PYJlrjy4lmsDscZiY5A3DSDLEJTF27WM6S-VaZhCUVR-jKXTMJQExcRJLABXif",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/perfil/8438b036-1c05-489e-bd29-812612ca3b50",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "perfil",
+                    "8438b036-1c05-489e-bd29-812612ca3b50"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ver tecnicos por habilidad",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFwZXJlekBlbWFpbC5jb20iLCJpYXQiOjE3ODE1NzgwNTEsImV4cCI6MTc4MTY2NDQ1MX0.Z7PYJlrjy4lmsDscZiY5A3DSDLEJTF27WM6S-VaZhCUVR-jKXTMJQExcRJLABXif",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/habilidad/146e69f0-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "habilidad",
+                    "146e69f0-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ver tecnicos por especialidad",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFwZXJlekBlbWFpbC5jb20iLCJpYXQiOjE3ODE1NzgwNTEsImV4cCI6MTc4MTY2NDQ1MX0.Z7PYJlrjy4lmsDscZiY5A3DSDLEJTF27WM6S-VaZhCUVR-jKXTMJQExcRJLABXif",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/especialidad/146a8b20-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "especialidad",
+                    "146a8b20-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "buscar distintas cosas",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFwZXJlekBlbWFpbC5jb20iLCJpYXQiOjE3ODE1NzgwNTEsImV4cCI6MTc4MTY2NDQ1MX0.Z7PYJlrjy4lmsDscZiY5A3DSDLEJTF27WM6S-VaZhCUVR-jKXTMJQExcRJLABXif",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/buscar?apellido=",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "buscar"
+                  ],
+                  "query": [
+                    {
+                      "key": "apellido",
+                      "value": "",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ver tecnicos",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoiY2FybG9zQGVtYWlsLmNvbSIsImlhdCI6MTc4MTU3NTQyNSwiZXhwIjoxNzgxNjYxODI1fQ.2nm4YIVtDZyq_5DfthA2Hm6lN3_AJSs7o1gRQUMgilflweyq0mtmuruGga9T1XiQ",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "login",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"username\": \"mariaperez@email.com\",\r\n  \"password\": \"Clave563!\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "registrar usuario",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoiY2FybG9zQGVtYWlsLmNvbSIsImlhdCI6MTc4MTU3NTQyNSwiZXhwIjoxNzgxNjYxODI1fQ.2nm4YIVtDZyq_5DfthA2Hm6lN3_AJSs7o1gRQUMgilflweyq0mtmuruGga9T1XiQ",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "nombre",
+                      "value": "Maria",
+                      "type": "text",
+                      "uuid": "73493c0b-579b-41ed-80c7-115d3961cff8"
+                    },
+                    {
+                      "key": "apellido",
+                      "value": "Perez",
+                      "type": "text",
+                      "uuid": "44852f60-ce25-48a0-9046-47e2bceef273"
+                    },
+                    {
+                      "key": "dni",
+                      "value": "38423902",
+                      "type": "text",
+                      "uuid": "bd9fb48c-1a21-4477-9da8-6043d5118354"
+                    },
+                    {
+                      "key": "email",
+                      "value": "mariaperez@email.com",
+                      "type": "text",
+                      "uuid": "41baf3fb-b175-4835-94d1-76b5d5cf323b"
+                    },
+                    {
+                      "key": "clave",
+                      "value": "Clave563!",
+                      "type": "text",
+                      "uuid": "f5f8125d-a88e-4f30-9f1e-aaa09e2f84bb"
+                    },
+                    {
+                      "key": "telefono",
+                      "value": "3242342432",
+                      "type": "text",
+                      "uuid": "c6cea776-eb9e-4843-86fa-b5fcda359e6e"
+                    },
+                    {
+                      "key": "fechaNacimiento",
+                      "value": "1980-03-09",
+                      "type": "text",
+                      "uuid": "b815e661-f735-40bc-8b5d-00ce45a04eb2"
+                    },
+                    {
+                      "key": "sobreMi",
+                      "value": "algo sobre mi",
+                      "type": "text",
+                      "uuid": "016e5e88-ea1c-4898-9f98-7a8c7d66b9bb"
+                    },
+                    {
+                      "key": "foto",
+                      "type": "file",
+                      "uuid": "12c2c95d-5d20-444d-95fb-27cb21b44cb7",
+                      "src": "postman-cloud:///1f165a6c-5880-4bc0-acfc-5e48e99b54be"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "registrar tecnico",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFwZXJlekBlbWFpbC5jb20iLCJpYXQiOjE3ODE1NzgwNTEsImV4cCI6MTc4MTY2NDQ1MX0.Z7PYJlrjy4lmsDscZiY5A3DSDLEJTF27WM6S-VaZhCUVR-jKXTMJQExcRJLABXif",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1VTVUFSSU8iXSwic3ViIjoibWFyaWFwZXJlekBlbWFpbC5jb20iLCJpYXQiOjE3ODE1NzgwNTEsImV4cCI6MTc4MTY2NDQ1MX0.Z7PYJlrjy4lmsDscZiY5A3DSDLEJTF27WM6S-VaZhCUVR-jKXTMJQExcRJLABXif"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"cuit\": \"20356601122\",\r\n  \"descripcionTrabajo\": \"Instalaciones eléctricas domiciliarias e industriales.\",\r\n  \"proyectos\": \"Instalé más de 200 tableros eléctricos en Mar del Plata.\",\r\n  \"uuidHabilidades\": [\"146e69f0-6919-11f1-a8ec-f2f6fa04229d\"],\r\n  \"uuidEspecialidades\": [\"146a8b20-6919-11f1-a8ec-f2f6fa04229d\"]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/registrar/e2902b0d-ad0c-4c0c-93ad-3815800419ca",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "registrar",
+                    "e2902b0d-ad0c-4c0c-93ad-3815800419ca"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "registrar tecnico nuevo",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "usuario.nombre",
+                      "value": "Marcela",
+                      "type": "text",
+                      "uuid": "805be0ae-7ec7-4639-a19c-7862ccfff15f"
+                    },
+                    {
+                      "key": "usuario.apellido",
+                      "value": "Caffaro",
+                      "type": "text",
+                      "uuid": "38d6b8df-c558-4d5e-9724-e3ccc00fe394"
+                    },
+                    {
+                      "key": "usuario.dni",
+                      "value": "23818628",
+                      "type": "text",
+                      "uuid": "f7c73adb-2488-498c-8231-3c4f16e78cb8"
+                    },
+                    {
+                      "key": "usuario.email",
+                      "value": "mncmlnm@hotmail.com",
+                      "type": "text",
+                      "uuid": "3c080d97-20cf-40a5-b3c8-782d54dc0cbf"
+                    },
+                    {
+                      "key": "usuario.clave",
+                      "value": "Clave12345!",
+                      "type": "text",
+                      "uuid": "4830a2d6-8d11-42da-a333-37ad836473c2"
+                    },
+                    {
+                      "key": "usuario.telefono",
+                      "value": "2254413386",
+                      "type": "text",
+                      "uuid": "a6e10a8c-738a-4a1a-b62d-70f51778a9f7"
+                    },
+                    {
+                      "key": "usuario.fechaNacimiento",
+                      "value": "2004-08-09",
+                      "type": "text",
+                      "uuid": "1d91877e-7ea8-4c23-afc2-1ab1929ee9db"
+                    },
+                    {
+                      "key": "usuario.sobreMi",
+                      "value": "algo sobre mi",
+                      "type": "text",
+                      "uuid": "f418710d-e7f1-4929-b6ca-0dfd77ca2b22"
+                    },
+                    {
+                      "key": "usuario.foto",
+                      "type": "file",
+                      "uuid": "9ae7324c-8e3e-4fe9-9961-acb1eb41c12a",
+                      "src": "postman-cloud:///1f165a6c-5880-4bc0-acfc-5e48e99b54be"
+                    },
+                    {
+                      "key": "tecnico.cuit",
+                      "value": "20238186280",
+                      "type": "text",
+                      "uuid": "1c3012de-292c-4a1f-85f0-a8b9c8bac807"
+                    },
+                    {
+                      "key": "tecnico.descripcionTrabajo",
+                      "value": "Instalaciones eléctricas domiciliarias e industriales",
+                      "type": "text",
+                      "uuid": "275a1747-ec27-42d4-a16c-7d1bb4a1df3f"
+                    },
+                    {
+                      "key": "tecnico.proyectos",
+                      "value": "Instalé más de 100 tableros eléctricos en Mar del Plata",
+                      "type": "text",
+                      "uuid": "914ce865-94f7-4e0a-b494-813973431aeb"
+                    },
+                    {
+                      "key": "tecnico.uuidHabilidades[0]",
+                      "value": "ea7eaa49-691c-11f1-8fb2-ddcb62867ad1",
+                      "type": "text",
+                      "uuid": "2884e88f-530e-46fb-beb4-9027037976db"
+                    },
+                    {
+                      "key": "tecnico.uuidEspecialidades[0]",
+                      "value": "ea6e775a-691c-11f1-8fb2-ddcb62867ad1",
+                      "type": "text",
+                      "uuid": "851b0353-df0a-4fe4-8707-1da510b2cbf5"
+                    },
+                    {
+                      "key": "",
+                      "value": "",
+                      "description": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTYyNzYxOCwiZXhwIjoxNzgxNzE0MDE4fQ.WxLSwFMy9XcLMJcpr1QxMBx8_6wuOjKXwy7zMT4XdsseyOfRUHPDXgpfXuAnLksb",
+                      "type": "text",
+                      "uuid": "02ec2ece-bf17-41b3-a670-49318c7ae06e"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/registrar-nuevo",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "registrar-nuevo"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PUT",
+          "item": [
+            {
+              "name": "actualizar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"cuit\": \"20312889012\",\r\n  \"descripcionTrabajo\": \"Descripción actualizada con más detalle sobre el trabajo.\",\r\n  \"proyectos\": \"Proyectos actualizados con nuevas experiencias laborales.\",\r\n  \"uuidHabilidades\": [\"146e69f0-6919-11f1-a8ec-f2f6fa04229d\"],\r\n  \"uuidEspecialidades\": [\"146a8b20-6919-11f1-a8ec-f2f6fa04229d\"]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/actualizar-perfil/765ce582-9ca6-4b77-932f-8a8f6a96be83",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "actualizar-perfil",
+                    "765ce582-9ca6-4b77-932f-8a8f6a96be83"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "http://localhost:8080/aquienllamo/tecnicos/eliminar/765ce582-9ca6-4b77-932f-8a8f6a96be83",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/tecnicos/eliminar/765ce582-9ca6-4b77-932f-8a8f6a96be83",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "tecnicos",
+                    "eliminar",
+                    "765ce582-9ca6-4b77-932f-8a8f6a96be83"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Trabajo",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"uuidPresupuesto\": \"pres-uuid-001\",\r\n  \"descripcionTrabajo\": \"Se necesita cambiar\r\nel tablero eléctrico completo\r\ndel departamento 3B, incluye\r\nmateriales y mano de obra.\",\r\n  \"fechaEstimadaInicio\": \"2026-07-01\",\r\n  \"fechaEstimadaFin\": \"2026-07-05\",\r\n  \"estadoTrabajo\": \"PENDIENTE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/trabajos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "trabajos"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "Obtener todos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/trabajos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "trabajos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener todos por estado",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/trabajos/listarTrabajos/{estadoTrabajo}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "trabajos",
+                    "listarTrabajos",
+                    "{estadoTrabajo}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener trabajos por cliente",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/trabajos/cliente/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "trabajos",
+                    "cliente",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener trabajos por tecnico",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/trabajos/tecnico/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "trabajos",
+                    "tecnico",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener trabajo por uuid",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/trabajos/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "trabajos",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Actualizar estado trabajo",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/trabajos/{uuid}/estado?estadoTrabajo=EN_PROGRESO",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "trabajos",
+                    "{uuid}",
+                    "estado"
+                  ],
+                  "query": [
+                    {
+                      "key": "estadoTrabajo",
+                      "value": "EN_PROGRESO"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pago",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "Listar todos los pagos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/pagos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "pagos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filtrar por metodo de pago",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/pagos/metodoPago?metodoDePago=TARJETA",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "pagos",
+                    "metodoPago"
+                  ],
+                  "query": [
+                    {
+                      "key": "metodoDePago",
+                      "value": "TARJETA"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filtrar por estado",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/pagos/estado?estado=PENDIENTE",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "pagos",
+                    "estado"
+                  ],
+                  "query": [
+                    {
+                      "key": "estado",
+                      "value": "PENDIENTE"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pagos de un cliente",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/pagos/cliente/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "pagos",
+                    "cliente",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pagos recibidos por tecnico",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/pagos/tecnico/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "pagos",
+                    "tecnico",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "crear un pago",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"uuidTrabajo\": \"trabajo-uuid-abc\",\r\n  \"metodoDePago\": \"TARJETA\",\r\n  \"buyerFullName\": \"Juan Pérez\",\r\n  \"buyerEmail\": \"juan@email.com\",\r\n  \"buyerDNI\": \"30123456\",\r\n  \"buyerPhone\": \"2235001122\",\r\n  \"monto\": 15000.00,\r\n  \"currency\": \"ARS\",\r\n  \"numeroTarjeta\": \"4111111111111111\",\r\n  \"cvv\": \"123\",\r\n  \"vencimientoTarjeta\": \"2027/05\",\r\n  \"franquicia\": \"VISA\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/pagos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "pagos"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "New Request",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/pagos/{uuid}/cancelar",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "pagos",
+                    "{uuid}",
+                    "cancelar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rubro",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Crear rubro",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreRubro\": \"Electricidad\",\r\n  \"uuidEspecialidad\": [\r\n    \"uuid-esp-001\",\r\n    \"uuid-esp-002\"\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "Listar todos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar por UUID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar por uuid",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros/nombre/{nombre}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros",
+                    "nombre",
+                    "{nombre}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar por nombre exacto",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros/nombre/{nombre}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros",
+                    "nombre",
+                    "{nombre}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar por parte del nombre",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros/buscar?nombre=elec",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros",
+                    "buscar"
+                  ],
+                  "query": [
+                    {
+                      "key": "nombre",
+                      "value": "elec"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Eliminar rubro",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PUT",
+          "item": [
+            {
+              "name": "Modificar rubro",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreRubro\": \"Electricidad y Gas\",\r\n  \"uuidEspecialidad\": [\r\n    \"uuid-esp-001\"\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/rubros/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "rubros",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rating",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Crear reseña",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"uuidRemitente\": \"usuario-uuid-001\",\r\n  \"uuidDestinatario\": \"tecnico-uuid-001\",\r\n  \"valoracion\": 5,\r\n  \"descripcion\": \"Excelente trabajo,\r\nmuy puntual y prolijo.\r\nRecomendado 100%.\",\r\n  \"tipoFoto\": \"JPG\",\r\n  \"foto\": null,\r\n  \"uuidCaracteristicas\": [\r\n    \"caract-uuid-001\",\r\n    \"caract-uuid-002\"\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ratings",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ratings"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "Reseñas hechas por un usuario",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ratings/remitidas/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ratings",
+                    "remitidas",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reseñas recibidas por un usuario",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/ratings/recibidas/{uuid}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "ratings",
+                    "recibidas",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Portfolio",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Crear portfolio",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"uuidEspecialidad\": \"esp-uuid-001\",\r\n  \"notasAspirante\": \"Tengo 5 años de\r\nexperiencia en instalaciones\r\neléctricas residenciales y\r\ncomerciales. Certificado...\",\r\n  \"enlaceExterno\": \"https://mi-portfolio.com\",\r\n  \"tipoArchivo\": \"PDF\",\r\n  \"archivoAdjunto\": null\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/portafolios/usuario/{uuidTecnico}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "portafolios",
+                    "usuario",
+                    "{uuidTecnico}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "Usuario",
+              "item": [
+                {
+                  "name": "Ver un portfolio usuario",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/usuario/{uuidPortfolio}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "usuario",
+                        "{uuidPortfolio}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar portfolios enviados",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/usuario/{uuidTecnico}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "usuario",
+                        "{uuidTecnico}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Administrador",
+              "item": [
+                {
+                  "name": "Ver todos los portfolios",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Ver portfolio por UUID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin/{uuid}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin",
+                        "{uuid}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Filtrar por estado",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin/estadoVerificacion?estadoVerificacion=PENDIENTE",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin",
+                        "estadoVerificacion"
+                      ],
+                      "query": [
+                        {
+                          "key": "estadoVerificacion",
+                          "value": "PENDIENTE"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Filtrar por rango de fechas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin/fecha?desde=...&hasta=...",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin",
+                        "fecha"
+                      ],
+                      "query": [
+                        {
+                          "key": "desde",
+                          "value": "..."
+                        },
+                        {
+                          "key": "hasta",
+                          "value": "..."
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Filtrar por especialidad",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin/especialidad/{nombreEspecialidad}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin",
+                        "especialidad",
+                        "{nombreEspecialidad}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Ver portfolios de un técnico",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin/tecnico/{uuidTecnico}",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin",
+                        "tecnico",
+                        "{uuidTecnico}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Administrador",
+              "item": [
+                {
+                  "name": "Aprobar portfolio",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin/aprobar/{uuid}?notasAdmin=OK",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin",
+                        "aprobar",
+                        "{uuid}"
+                      ],
+                      "query": [
+                        {
+                          "key": "notasAdmin",
+                          "value": "OK"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Rechazar portfolio",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/aquienllamo/portafolios/admin/rechazar/{uuid}?notasAdmin=...",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "aquienllamo",
+                        "portafolios",
+                        "admin",
+                        "rechazar",
+                        "{uuid}"
+                      ],
+                      "query": [
+                        {
+                          "key": "notasAdmin",
+                          "value": "..."
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ESPECIALIDAD",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "ver especialidades",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ver por uuid",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/especialidades/146a7f6e-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "especialidades",
+                    "146a7f6e-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "buscar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/especialidades/buscar?nombre=Electricidad",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "especialidades",
+                    "buscar"
+                  ],
+                  "query": [
+                    {
+                      "key": "nombre",
+                      "value": "Electricidad"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "buscar por validacion",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/especialidades/tipo-validacion?tipoValidacion=Certificado",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "especialidades",
+                    "tipo-validacion"
+                  ],
+                  "query": [
+                    {
+                      "key": "tipoValidacion",
+                      "value": "Certificado"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "eliminar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/especialidades/eliminar/146a7f6e-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "especialidades",
+                    "eliminar",
+                    "146a7f6e-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PUT",
+          "item": [
+            {
+              "name": "actualizar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreEspecialidad\": \"Electricidad Industrial\",\r\n  \"tipoValidacion\": \"Certificado\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/especialidades/actualizar/146a7f6e-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "especialidades",
+                    "actualizar",
+                    "146a7f6e-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "cargar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreEspecialidad\": \"Algo2\",\r\n  \"tipoValidacion\": \"Certificado\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/especialidades",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "especialidades"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CERTIFICACIÓN",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "cargar certificacion",
+              "request": {
+                "auth": {
+                  "type": "basic"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "numMatricula",
+                      "value": "MAT-001234",
+                      "type": "text",
+                      "uuid": "58e71497-19b0-4181-8611-3c595ed4c4dd"
+                    },
+                    {
+                      "key": "enteOtorgador",
+                      "value": "Colegio de Técnicos Mar del Plata",
+                      "type": "text",
+                      "uuid": "8510ddc4-31c0-4257-8d30-7c240540437c"
+                    },
+                    {
+                      "key": "fechaVencimiento",
+                      "value": "2027-12-31",
+                      "type": "text",
+                      "uuid": "ba18d619-41f4-4f55-8a00-a4de4125c083"
+                    },
+                    {
+                      "key": "imagenCertificado",
+                      "type": "file",
+                      "uuid": "417fb891-0961-4830-b995-276598d16b3a",
+                      "src": "postman-cloud:///1f165a6c-5880-4bc0-acfc-5e48e99b54be"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/tecnico/8438b036-1c05-489e-bd29-812612ca3b50",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "tecnico",
+                    "8438b036-1c05-489e-bd29-812612ca3b50"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "ver certificaciones",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ver una certificacion",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/af07f8cf-544f-4fe9-9f1f-64601a432f1d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "af07f8cf-544f-4fe9-9f1f-64601a432f1d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ver certificacion por tecnico",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/tecnico/8438b036-1c05-489e-bd29-812612ca3b50",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "tecnico",
+                    "8438b036-1c05-489e-bd29-812612ca3b50"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ver estado",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/estado/Pendiente",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "estado",
+                    "Pendiente"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "aprobar certificacion",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/aprobar/af07f8cf-544f-4fe9-9f1f-64601a432f1d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "aprobar",
+                    "af07f8cf-544f-4fe9-9f1f-64601a432f1d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "rechazar certificacion",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/rechazar/397f700d-7ace-4654-a19e-6d080f4b1b7f?motivo=Documentación inválida o ilegible",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "rechazar",
+                    "397f700d-7ace-4654-a19e-6d080f4b1b7f"
+                  ],
+                  "query": [
+                    {
+                      "key": "motivo",
+                      "value": "Documentación inválida o ilegible"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "eliminar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": []
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/eliminar/af07f8cf-544f-4fe9-9f1f-64601a432f1d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "eliminar",
+                    "af07f8cf-544f-4fe9-9f1f-64601a432f1d"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PUT",
+          "item": [
+            {
+              "name": "actualizar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "numMatricula",
+                      "value": "MAT-001234-V2",
+                      "type": "text",
+                      "uuid": "86740e42-c5cb-4ea8-bf37-c3d63d69efcd"
+                    },
+                    {
+                      "key": "enteOtorgador",
+                      "value": "Colegio de Técnicos Mar del Plata",
+                      "type": "text",
+                      "uuid": "82716714-9df0-4de5-b5f3-f431b71e9b1f"
+                    },
+                    {
+                      "key": "fechaVencimiento",
+                      "value": "2028-06-30",
+                      "type": "text",
+                      "uuid": "e7d23551-5914-4431-9e20-58bd3b3174a5"
+                    },
+                    {
+                      "key": "imagenCertificado",
+                      "type": "file",
+                      "uuid": "d8d62416-d18a-4eca-95e7-ccbf193f8dc9",
+                      "src": "postman-cloud:///1f165a6c-5880-4bc0-acfc-5e48e99b54be"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/certificaciones/actualizar/397f700d-7ace-4654-a19e-6d080f4b1b7f",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "certificaciones",
+                    "actualizar",
+                    "397f700d-7ace-4654-a19e-6d080f4b1b7f"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DENUNCIA",
+      "item": [
+        {
+          "name": "POST REQUESTS",
+          "item": [
+            {
+              "name": "Crear denuncia",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX1RFQ05JQ08iLCJST0xFX1VTVUFSSU8iXSwic3ViIjoibW5jbWxubUBob3RtYWlsLmNvbSIsImlhdCI6MTc4MTY0MjA4MSwiZXhwIjoxNzgxNzI4NDgxfQ.2K34z9oqqfODio-hDT_R6Khv5TOytnx9G0CPDBEEDrfmjALwkGkpz6nUx78sRxWW",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "motivoDenuncia",
+                      "value": "El técnico me insultó",
+                      "type": "text",
+                      "uuid": "c555b41c-d881-4ab3-9e64-b5f885e08998"
+                    },
+                    {
+                      "key": "foto",
+                      "type": "file",
+                      "uuid": "75aae60f-e3e1-488a-b2e9-304c8f056a3c",
+                      "src": "/C:/Users/maria/OneDrive/Pictures/Screenpresso/2026-06-03_18h38_45.png"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/crear/ec076503-c946-46b7-bbae-5c9ec2aefd0e",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "crear",
+                    "ec076503-c946-46b7-bbae-5c9ec2aefd0e"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET REQUESTS",
+          "item": [
+            {
+              "name": "Listar por estado ADMIN",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/estado/Pendiente",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "estado",
+                    "Pendiente"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Mis denuncias (ADMIN)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/mis-denuncias?estado=Pendiente",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "mis-denuncias"
+                  ],
+                  "query": [
+                    {
+                      "key": "estado",
+                      "value": "Pendiente"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Todas las denuncias",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar denuncias sin asignar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/sin-asignar",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "sin-asignar"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Ordenar denuncias",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/ordenar?orden=asc",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "ordenar"
+                  ],
+                  "query": [
+                    {
+                      "key": "orden",
+                      "value": "asc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PATCH REQUESTS",
+          "item": [
+            {
+              "name": "Asignar admin",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/104cc69d-143a-4bc9-b43b-b4d2be9b4db1/asignar-administrador/7e9ca0e8-582f-4326-9b37-64974b1eb261",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "104cc69d-143a-4bc9-b43b-b4d2be9b4db1",
+                    "asignar-administrador",
+                    "7e9ca0e8-582f-4326-9b37-64974b1eb261"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Aprobar denuncia",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/104cc69d-143a-4bc9-b43b-b4d2be9b4db1/aprobar?mensaje=Denuncia validada",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "104cc69d-143a-4bc9-b43b-b4d2be9b4db1",
+                    "aprobar"
+                  ],
+                  "query": [
+                    {
+                      "key": "mensaje",
+                      "value": "Denuncia validada"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Rechazar denuncia",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/104cc69d-143a-4bc9-b43b-b4d2be9b4db1/rechazar?mensaje=No se encontraron pruebas",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "104cc69d-143a-4bc9-b43b-b4d2be9b4db1",
+                    "rechazar"
+                  ],
+                  "query": [
+                    {
+                      "key": "mensaje",
+                      "value": "No se encontraron pruebas"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE REQUESTS",
+          "item": [
+            {
+              "name": "Eliminar denuncia",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoicC5hZG1pbiIsImlhdCI6MTc4MTY0MjI5NiwiZXhwIjoxNzgxNzI4Njk2fQ.dO15LwgulfMNcoe7i8WfxOpCGoXAKh49q9oNC3ArE-nFd-hGz_vMl4zXWm-AaZSS",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/aquienllamo/denuncias/eliminar/{uuid}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "denuncias",
+                    "eliminar",
+                    "{uuid}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HABILIDAD",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "cargar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreHabilidad\": \"Plomeríasa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/habilidades",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "habilidades"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "mostrar habilidades",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreHabilidad\": \"Plomeríasa\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/habilidades",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "habilidades"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "buscar por uuid",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreHabilidad\": \"Plomeríasa\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/habilidades/146e579f-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "habilidades",
+                    "146e579f-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "buscar por nombre",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreHabilidad\": \"Plomeríasa\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/habilidades/buscar?nombre=Elect",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "habilidades",
+                    "buscar"
+                  ],
+                  "query": [
+                    {
+                      "key": "nombre",
+                      "value": "Elect"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PUT",
+          "item": [
+            {
+              "name": "actualizar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombreHabilidad\": \"Elect\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/habilidades/actualizar/146e579f-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "habilidades",
+                    "actualizar",
+                    "146e579f-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "eliminar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOSVNUUkFET1IiXSwic3ViIjoiYWRtaW5QYXVAZW1haWwuY29tIiwiaWF0IjoxNzgxNTgxMDMyLCJleHAiOjE3ODE2Njc0MzJ9.1ZVD780ykj6XhnXauJL1WcbOTKtV6UqsZleRwCxs5JffcLbzVULaswvodDsAb8m7",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/aquienllamo/habilidades/eliminar/146e579f-6919-11f1-a8ec-f2f6fa04229d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "aquienllamo",
+                    "habilidades",
+                    "eliminar",
+                    "146e579f-6919-11f1-a8ec-f2f6fa04229d"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
