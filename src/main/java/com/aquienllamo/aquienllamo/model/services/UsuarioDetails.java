@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Service
+//@Service
 public class UsuarioDetails implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
