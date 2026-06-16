@@ -211,7 +211,7 @@ public class UsuarioService {
         return usuarioRepository.findAll()
                 .stream()
                 .map(usuarioMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
