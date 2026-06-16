@@ -38,49 +38,49 @@ public class TecnicoController {
     }
 
     //listar todos los tecnicos
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping
     public ResponseEntity<List<TecnicoDTOResponse>> getAllTecnicos(){
         return ResponseEntity.ok(tecnicoService.getAllTecnicos());
     }
 
     //buscar tecnico por uuid
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/perfil/{uuid}")
     public ResponseEntity<TecnicoDTOResponse> verPerfil(@PathVariable String uuid){
         return ResponseEntity.ok(tecnicoService.getTecnicoByUuid(uuid));
     }
 
     //filtrar por habilidad
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/habilidad/{uuidHabilidad}")
     public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorHabilidad(@PathVariable String uuidHabilidad){
         return ResponseEntity.ok(tecnicoService.obtenerTecnicosPorHabilidad(uuidHabilidad));
     }
 
     //filtrar por especialidad
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/especialidad/{uuidEspecialidad}")
     public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorEspecialidad(@PathVariable String uuidEspecialidad){
         return ResponseEntity.ok(tecnicoService.obtenerTecnicosPorEspecialidad(uuidEspecialidad));
     }
 
     //filtrar por nombre
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/nombre/{nombre}")
     public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorNombre(@PathVariable String nombre){
         return ResponseEntity.ok(tecnicoService.obtenerTecnicosPorNombre(nombre));
     }
 
     //filtrar por rubros
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/rubro/{uuidRubro}")
     public ResponseEntity<List<TecnicoDTOResponse>> obtenerTecnicosPorRubro(@PathVariable String uuidRubro){
         return ResponseEntity.ok(tecnicoService.getTecnicosByRubro(uuidRubro));
     }
 
     //buscar por filtros combinados
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/buscar")
     public ResponseEntity<List<TecnicoDTOResponse>> buscarTecnicos(@RequestParam(required = false) String nombre, @RequestParam(required = false) String apellido, @RequestParam(required = false) String habilidad, @RequestParam(required = false) String especialidad, @RequestParam(required = false) @DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha){
         return ResponseEntity.ok(tecnicoService.buscarTecnicos(nombre,apellido,habilidad,especialidad,fecha));
@@ -88,14 +88,14 @@ public class TecnicoController {
     }
 
     //ordenar por fecha mas reciente
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/ordenar/recientes")
     public ResponseEntity<List<TecnicoDTOResponse>> getTecnicosOrderByFechaRegistroDesc() {
         return ResponseEntity.ok(tecnicoService.getTecnicosOrderByFechaRegistroDesc());
     }
 
     //ordenar por fecha mas antigua
-    @PreAuthorize("hasAnyRole('ADMIN','USUARIO','TECNICO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/ordenar/antiguos")
     public ResponseEntity<List<TecnicoDTOResponse>> getTecnicosOrderByFechaRegistroAsc() {
         return ResponseEntity.ok(tecnicoService.getTecnicosOrderByFechaRegistroAsc());
@@ -109,7 +109,7 @@ public class TecnicoController {
     }
 
     //eliminar tecnico
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/eliminar/{uuid}")
     public ResponseEntity<Void> deleteTecnico(@PathVariable String uuid) {
         tecnicoService.deleteTecnico(uuid);

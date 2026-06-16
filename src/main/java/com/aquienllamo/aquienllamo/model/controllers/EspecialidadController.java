@@ -20,49 +20,49 @@ public class EspecialidadController {
     private final EspecialidadService especialidadService;
 
     //crear especialidad
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<EspecialidadDTOResponse> createEspecialidad(@Valid @RequestBody EspecialidadDTORequest dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(especialidadService.createEspecialidad(dto));
     }
 
     //listar todas las especialidades
-    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMIN')")
+    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<List<EspecialidadDTOResponse>> getAllEspecialidades() {
         return ResponseEntity.ok(especialidadService.getAllEspecialidades());
     }
 
     //buscar especialidad por uuid
-    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMIN')")
+    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMINISTRADOR')")
     @GetMapping("/{uuid}")
     public ResponseEntity<EspecialidadDTOResponse> getEspecialidadByUuid(@PathVariable String uuid) {
         return ResponseEntity.ok(especialidadService.getEspecialidadByUuid(uuid));
     }
 
     //buscar especialidad por nombre
-    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMIN')")
+    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMINISTRADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<EspecialidadDTOResponse>> getEspecialidadesByNombre(@RequestParam String nombre) {
         return ResponseEntity.ok(especialidadService.getEspecialidadesByNombre(nombre));
     }
 
     //filtrar por tipo de validacion
-    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMIN')")
+    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMINISTRADOR')")
     @GetMapping("/tipo-validacion")
     public ResponseEntity<List<EspecialidadDTOResponse>> getEspecialidadesByTipoValidacion(@RequestParam TipoValidacion tipoValidacion) {
         return ResponseEntity.ok(especialidadService.getEspecialidadesByTipoValidacion(tipoValidacion));
     }
 
     //actualizar especialidad
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/actualizar/{uuid}")
     public ResponseEntity<EspecialidadDTOResponse> updateEspecialidad(@PathVariable String uuid, @Valid @RequestBody EspecialidadDTORequest dto) {
         return ResponseEntity.ok(especialidadService.updateEspecialidad(uuid, dto));
     }
 
     //eliminar especialidad
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/eliminar/{uuid}")
     public ResponseEntity<Void> deleteEspecialidad(@PathVariable String uuid) {
         especialidadService.deleteEspecialidad(uuid);
