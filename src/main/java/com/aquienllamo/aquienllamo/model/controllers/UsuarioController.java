@@ -105,7 +105,7 @@ public class UsuarioController {
     @PatchMapping("/quitar-baja/{uuid}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
-    public String quitarAmonestacion(@PathVariable String uuid){
+    public String quitarBaja(@PathVariable String uuid){
         return usuarioService.quitarBaja(uuid);
     }
 
