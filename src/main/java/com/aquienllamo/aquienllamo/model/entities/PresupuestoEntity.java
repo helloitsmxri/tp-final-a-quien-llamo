@@ -26,13 +26,6 @@ public class PresupuestoEntity {
     @Column(name = "uuid", nullable = false, unique = true)
     private String uuid;
 
-    @PrePersist
-    public void generarUUID(){
-        if (this.uuid == null){
-            this.uuid = UUID.randomUUID().toString();
-        }
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     @ToString.Exclude // buscar info ¿?
@@ -53,12 +46,22 @@ public class PresupuestoEntity {
     @Column(name = "descripcion_presupuesto", columnDefinition = "TEXT", nullable = false)
     private String descripcionPresupuesto;
 
+
     @Column(name = "fecha_realizado", nullable = false, updatable = false)
     private LocalDateTime fechaRealizado;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+        if (this.fechaRealizado == null) {
+            this.fechaRealizado = LocalDateTime.now();
+        }
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
     private EstadoPresupuestoE estado;
-
 
 }
