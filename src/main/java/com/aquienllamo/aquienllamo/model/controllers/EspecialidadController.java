@@ -29,7 +29,7 @@ public class EspecialidadController {
 
     //listar todas las especialidades
     @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMINISTRADOR')")
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<EspecialidadDTOResponse>> getAllEspecialidades() {
         return ResponseEntity.ok(especialidadService.getAllEspecialidades());
     }
