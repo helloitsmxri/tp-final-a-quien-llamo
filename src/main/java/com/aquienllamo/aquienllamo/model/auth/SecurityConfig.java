@@ -40,7 +40,7 @@ public class SecurityConfig {
                                "/aquienllamo/administradores/registrar",
                                "/aquienllamo/tecnicos/registrar-nuevo"
                        ).permitAll()
-                       .requestMatchers("/aquienllamo/usuarios/todos").hasRole("ADMIN")
+                       .requestMatchers("/aquienllamo/usuarios/todos").hasRole("ADMINISTRADOR")
                        .requestMatchers("/admin/**").hasRole("ADMIN")  // protege todo lo del admin
                        .requestMatchers("/chats/**").authenticated()   // solo usuarios autenticados
                        .requestMatchers("/mensajes/**").authenticated() // solo usuarios autenticados
