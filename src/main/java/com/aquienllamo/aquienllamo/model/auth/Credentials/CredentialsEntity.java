@@ -42,6 +42,7 @@ public class CredentialsEntity implements UserDetails {
     @JoinColumn(name = "id_admin", referencedColumnName = "id_admin", unique = true)
     private AdministradorEntity administrador;
 
+    @Builder.Default
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "Credencial_Rol",
