@@ -16,6 +16,7 @@ public class CaracteristicaMapper {
 
         return CaracteristicaEntity.builder()
                 .valorAdjetivo(dtoRequest.getValorAdjetivo())
+                .tipo(dtoRequest.getTipo())
                 .build();
     }
 
@@ -28,6 +29,7 @@ public class CaracteristicaMapper {
         return CaracteristicaDTOResponse.builder()
                 .uuid(entity.getUuid())
                 .valorAdjetivo(entity.getValorAdjetivo())
+                .tipo(entity.getTipo())
                 .build();
     }
 

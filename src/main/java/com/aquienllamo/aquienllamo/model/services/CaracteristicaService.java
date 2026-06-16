@@ -44,6 +44,10 @@ public class CaracteristicaService {
             throw new RuntimeException("No se puede enviar un campo vacío.");
         }
 
+        if (dtoRequest.getTipo() == null){
+            throw new RuntimeException("Debe especificar un tipo de característica (POSITIVA o NEGATIVA).");
+        }
+
         // comparar si ya existe esa misma
         if (caracteristicaRepository.existsByValorAdjetivo(dtoRequest.getValorAdjetivo())) {
             throw new RuntimeException("Esta característica ya existe en el sistema.");
