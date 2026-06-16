@@ -74,9 +74,21 @@ public class EspecialidadService {
     }
 
     //eliminar
-    public void deleteEspecialidad(String uuid){
-        EspecialidadEntity especialidad=especialidadRepository.findByUuid(uuid)
-                .orElseThrow(()-> new EspecialidadNotFoundEx("no se encontro la especialidad con ese uuid."));
+    public void deleteEspecialidad(String uuid) {
+        EspecialidadEntity especialidad = especialidadRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EspecialidadNotFoundEx("No se encontró la especialidad."));
+        //Limpiar relaciones con habilidades
+        if (especialidad.getHabilidades() != null) {
+            especialidad.getHabilidades().forEach(h -> h.getEspecialidades().remove(especialidad));
+        }
+        //Limpiar relaciones con rubros
+        if (especialidad.getRubros() != null) {
+            especialidad.getRubros().forEach(r -> r.getEspecialidades().remove(especialidad));
+        }
+        //Limpiar relaciones con técnicos
+        if (especialidad.getTecnicos() != null) {
+            especialidad.getTecnicos().forEach(t -> t.getEspecialidades().remove(especialidad));
+        }
         especialidadRepository.delete(especialidad);
     }
 }
