@@ -39,6 +39,21 @@ public class HabilidadService {
                 .toList();
     }
 
+    // buscar por uuid
+    public HabilidadDTOResponse buscarPorUuid(String uuid){
+        return habilidadRepository.findByUuid(uuid)
+                .map(habilidadMapper::toResponse)
+                .orElseThrow(() -> new HabilidadNotFoundEx("la habilidad con ese uuid no se encontro."));
+    }
+
+    // buscar por nombre
+    public List<HabilidadDTOResponse> buscarPorNombre(String nombre){
+        return habilidadRepository.findByNombreHabilidadContainingIgnoreCase(nombre)
+                .stream()
+                .map(habilidadMapper::toResponse)
+                .toList();
+    }
+
     //actualizar
     public HabilidadDTOResponse actualizarHabilidad(String uuid, HabilidadDTORequest habilidad){
         HabilidadEntity nueva=habilidadRepository.findByUuid(uuid)

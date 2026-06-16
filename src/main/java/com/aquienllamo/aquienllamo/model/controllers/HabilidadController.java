@@ -43,4 +43,16 @@ public class HabilidadController {
         habilidadService.eliminarHabilidad(uuid);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
+    @GetMapping("/{uuid}")
+    public ResponseEntity<HabilidadDTOResponse> buscarPorUuid(@PathVariable String uuid){
+        return ResponseEntity.ok(habilidadService.buscarPorUuid(uuid));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
+    @GetMapping("/buscar")
+    public ResponseEntity<List<HabilidadDTOResponse>> buscarPorNombre(@RequestParam String nombre){
+        return ResponseEntity.ok(habilidadService.buscarPorNombre(nombre));
+    }
 }
