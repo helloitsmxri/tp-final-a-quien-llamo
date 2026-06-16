@@ -10,5 +10,4 @@ import lombok.*;
 @Builder
 public class AdministradorDTOResponse {
     private String nombreUsuario;
-    private String token;
 }
