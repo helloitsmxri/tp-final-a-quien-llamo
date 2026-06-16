@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.model.controllers;
 
 import com.aquienllamo.aquienllamo.model.Enum.TipoValidacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.EspecialidadDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadCreadaDTOResponse;
 import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.EspecialidadService;
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class EspecialidadController {
     //crear especialidad
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
-    public ResponseEntity<EspecialidadDTOResponse> createEspecialidad(@Valid @RequestBody EspecialidadDTORequest dto) {
+    public ResponseEntity<EspecialidadCreadaDTOResponse> createEspecialidad(@Valid @RequestBody EspecialidadDTORequest dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(especialidadService.createEspecialidad(dto));
     }
 

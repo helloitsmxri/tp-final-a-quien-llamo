@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.Enum.TipoValidacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.EspecialidadDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadCreadaDTOResponse;
 import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.EspecialidadAlreadyExistsEx;
@@ -19,15 +20,16 @@ import java.util.List;
 @Transactional
 public class EspecialidadService {
     private final EspecialidadRepository especialidadRepository;
-    private final EspecialidadMapper  especialidadMapper;
+    private final EspecialidadMapper especialidadMapper;
 
     //crear especialidad
-    public EspecialidadDTOResponse createEspecialidad(EspecialidadDTORequest dto){
+    public EspecialidadCreadaDTOResponse createEspecialidad(EspecialidadDTORequest dto){
         if (especialidadRepository.existsByNombreEspecialidad(dto.getNombreEspecialidad())){
            throw new EspecialidadAlreadyExistsEx("Ya existe una especialidad con ese nombre.");
         }
         EspecialidadEntity especialidad=especialidadMapper.toEntity(dto);
-        return especialidadMapper.toResponse(especialidadRepository.save(especialidad));
+        especialidadRepository.save(especialidad);
+        return especialidadMapper.toResponseCreado(especialidad);
     }
 
     //listar especialidades
@@ -72,9 +74,21 @@ public class EspecialidadService {
     }
 
     //eliminar
-    public void deleteEspecialidad(String uuid){
-        EspecialidadEntity especialidad=especialidadRepository.findByUuid(uuid)
-                .orElseThrow(()-> new EspecialidadNotFoundEx("no se encontro la especialidad con ese uuid."));
+    public void deleteEspecialidad(String uuid) {
+        EspecialidadEntity especialidad = especialidadRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EspecialidadNotFoundEx("No se encontró la especialidad."));
+        //Limpiar relaciones con habilidades
+        if (especialidad.getHabilidades() != null) {
+            especialidad.getHabilidades().forEach(h -> h.getEspecialidades().remove(especialidad));
+        }
+        //Limpiar relaciones con rubros
+        if (especialidad.getRubros() != null) {
+            especialidad.getRubros().forEach(r -> r.getEspecialidades().remove(especialidad));
+        }
+        //Limpiar relaciones con técnicos
+        if (especialidad.getTecnicos() != null) {
+            especialidad.getTecnicos().forEach(t -> t.getEspecialidades().remove(especialidad));
+        }
         especialidadRepository.delete(especialidad);
     }
 }
