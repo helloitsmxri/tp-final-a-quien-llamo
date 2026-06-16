@@ -12,4 +12,5 @@ public interface HabilidadRepository extends JpaRepository<HabilidadEntity,Integ
     Optional<HabilidadEntity> findByUuid(String uuid);
     boolean existsByUuid(String uuid);
     List<HabilidadEntity> findAllByUuidIn(List<String> uuids);
+    boolean existsByNombreHabilidad(String nombreHabilidad);
 }

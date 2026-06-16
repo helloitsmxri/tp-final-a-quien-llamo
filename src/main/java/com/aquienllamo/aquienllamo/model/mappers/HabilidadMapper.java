@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.HabilidadDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadCreadaDTOResponse;
 import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.model.entities.HabilidadEntity;
@@ -26,6 +27,15 @@ public class HabilidadMapper {
         }
         return HabilidadEntity.builder()
                 .nombreHabilidad(dto.getNombreHabilidad())
+                .build();
+    }
+
+    public HabilidadCreadaDTOResponse toResponseCreada (HabilidadEntity habilidad){
+        if (habilidad==null){
+            return null;
+        }
+        return HabilidadCreadaDTOResponse.builder()
+                .nombreHabilidad(habilidad.getNombreHabilidad())
                 .build();
     }
 }

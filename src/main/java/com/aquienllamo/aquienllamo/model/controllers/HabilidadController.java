@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.HabilidadDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadCreadaDTOResponse;
 import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.HabilidadService;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class HabilidadController {
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
-    public ResponseEntity<HabilidadDTOResponse> crearHabilidad(@Valid @RequestBody HabilidadDTORequest habilidad){
+    public ResponseEntity<HabilidadCreadaDTOResponse> crearHabilidad(@Valid @RequestBody HabilidadDTORequest habilidad){
         return ResponseEntity.status(HttpStatus.CREATED).body(habilidadService.crearHabilidad(habilidad));
     }
 

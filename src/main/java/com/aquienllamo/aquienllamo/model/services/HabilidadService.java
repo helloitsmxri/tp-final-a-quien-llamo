@@ -1,8 +1,10 @@
 package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.HabilidadDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadCreadaDTOResponse;
 import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.HabilidadEntity;
+import com.aquienllamo.aquienllamo.model.exceptions.HabilidadAlreadyExistsEx;
 import com.aquienllamo.aquienllamo.model.exceptions.HabilidadNotFoundEx;
 import com.aquienllamo.aquienllamo.model.mappers.HabilidadMapper;
 import com.aquienllamo.aquienllamo.model.repositories.HabilidadRepository;
@@ -20,9 +22,13 @@ public class HabilidadService {
     private final HabilidadMapper habilidadMapper;
 
     //crear habilidad
-    public HabilidadDTOResponse crearHabilidad(HabilidadDTORequest habilidad){
+    public HabilidadCreadaDTOResponse crearHabilidad(HabilidadDTORequest habilidad){
+        if (habilidadRepository.existsByNombreHabilidad(habilidad.getNombreHabilidad())){
+            throw new HabilidadAlreadyExistsEx("Ya existe una habilidad con ese nombre.");
+        }
         HabilidadEntity nueva=habilidadMapper.toEntity(habilidad);
-        return habilidadMapper.toResponse(habilidadRepository.save(nueva));
+        habilidadRepository.save(nueva);
+        return habilidadMapper.toResponseCreada(nueva);
     }
 
     //listar habilidades
@@ -37,6 +43,9 @@ public class HabilidadService {
     public HabilidadDTOResponse actualizarHabilidad(String uuid, HabilidadDTORequest habilidad){
         HabilidadEntity nueva=habilidadRepository.findByUuid(uuid)
                 .orElseThrow(()-> new HabilidadNotFoundEx("la habilidad con ese uuid no se encontro."));
+        if (habilidadRepository.existsByNombreHabilidad(habilidad.getNombreHabilidad())){
+            throw new HabilidadNotFoundEx("Ya existe una habilidad con ese nombre.");
+        }
         nueva.setNombreHabilidad(habilidad.getNombreHabilidad());
         return habilidadMapper.toResponse(habilidadRepository.save(nueva));
     }

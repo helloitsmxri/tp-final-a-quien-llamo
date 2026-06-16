@@ -2,16 +2,11 @@ package com.aquienllamo.aquienllamo.model.dtos.Response;
 
 import lombok.*;
 
-
-import java.util.List;
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HabilidadDTOResponse {
-    private String uuid;
+public class HabilidadCreadaDTOResponse {
     private String nombreHabilidad;
-    private List<String> especialidades;
 }
