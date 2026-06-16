@@ -66,6 +66,16 @@ public class GlobalExceptionHandler {
                 .build());
     }
 
+    @ExceptionHandler(HabilidadAlreadyExistsEx.class)
+    public ResponseEntity<ErrorResponseDTO> habilidadAlreadyExistsEx(HabilidadAlreadyExistsEx ex)
+    {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
+                .status(409)
+                .mensaje(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build());
+    }
+
     @ExceptionHandler(TecnicoNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> tecnicoNotFoundEx(TecnicoNotFoundEx ex)
     {
