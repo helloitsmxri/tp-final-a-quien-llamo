@@ -16,6 +16,6 @@ public class CaracteristicaDTORequest {
     @NotBlank(message = "Se debe seleccionar al menos un adjetivo!")
     private String valorAdjetivo;
 
-    @NotNull
+    @NotNull(message = "Se debe seleccionar un tipo de valor para el adjetivo!")
     private TipoCaracteristicaE tipo;
 }
