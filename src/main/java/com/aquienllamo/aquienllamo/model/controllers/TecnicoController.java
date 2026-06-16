@@ -79,6 +79,7 @@ public class TecnicoController {
         return ResponseEntity.ok(tecnicoService.getTecnicosByRubro(uuidRubro));
     }
 
+
     //buscar por filtros combinados
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/buscar")
@@ -87,6 +88,7 @@ public class TecnicoController {
 
     }
 
+    /*
     //ordenar por fecha mas reciente
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/ordenar/recientes")
@@ -94,12 +96,16 @@ public class TecnicoController {
         return ResponseEntity.ok(tecnicoService.getTecnicosOrderByFechaRegistroDesc());
     }
 
+
+
     //ordenar por fecha mas antigua
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/ordenar/antiguos")
     public ResponseEntity<List<TecnicoDTOResponse>> getTecnicosOrderByFechaRegistroAsc() {
         return ResponseEntity.ok(tecnicoService.getTecnicosOrderByFechaRegistroAsc());
     }
+
+     */
 
     //actualizar tecnico
     @PreAuthorize("hasRole('TECNICO')")

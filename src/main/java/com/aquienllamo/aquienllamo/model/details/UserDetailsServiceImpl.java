@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/*
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService { //UserDetailsService: es una interfaz de JAVA.
@@ -23,3 +24,5 @@ public class UserDetailsServiceImpl implements UserDetailsService { //UserDetail
                         UsernameNotFoundException("User not found"));
     }
 }
+
+ */

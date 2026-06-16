@@ -284,6 +284,7 @@ public class TecnicoService {
         tecnicoRepository.delete(tecnico);
     }
 
+    /*
     //listar tecnicos ordenados por fecha de registros del mas nuevo al mas viejo
     public List<TecnicoDTOResponse> getTecnicosOrderByFechaRegistroDesc(){
         return tecnicoRepository.findAllByOrderByUsuario_FechaRegistroDesc()
@@ -299,4 +300,6 @@ public class TecnicoService {
                 .map(tecnicoMapper::toResponse)
                 .toList();
     }
+
+     */
 }
