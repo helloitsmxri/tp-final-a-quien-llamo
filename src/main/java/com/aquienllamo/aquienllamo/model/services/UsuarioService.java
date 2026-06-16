@@ -6,6 +6,7 @@ import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;
 import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioUpdateDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
@@ -138,43 +139,71 @@ public class UsuarioService {
         }
     }
 
-    // actualizar
-    public UsuarioDTOResponse update(String uuid, UsuarioDTORequest request){
+    private void processImage(UsuarioEntity user, UsuarioUpdateDTORequest request) {
+        if (request.getFoto() != null && !request.getFoto().isEmpty()){
+            try{
+                String tipoImagen = request.getFoto().getContentType();
+                if (tipoImagen == null || !tipoImagen.startsWith("image/")){
+                    throw new ImageDataTypeNotFoundEx("Formato no válido de imagen");
+                }
+                user.setTipoImagen(tipoImagen);
+                user.setFoto(request.getFoto().getBytes());
+            }catch (IOException errorImagen){
+                throw new RuntimeException("Hubo un error con la imagen");
+            }
+        }else{
+            user.setTipoImagen("None");
+            user.setFoto(null);
+        }
+    }
+
+    public UsuarioDTOResponse update(String uuid, UsuarioUpdateDTORequest request){
+
         UsuarioEntity user = usuarioRepository.findByUuid(uuid)
                 .orElseThrow(() -> new UserNotFoundEx("No se encontró dicho usuario"));
 
-        user.setNombre(request.getNombre());
-        user.setApellido(request.getApellido());
+        if (request.getNombre() != null) {
+            user.setNombre(request.getNombre());
+        }
 
-        String nuevoCorreo = request.getEmail();
-        // si el nuevo correo es diferente al actual
-        if (!user.getEmail().equals(nuevoCorreo)){
-            if (usuarioRepository.existsByEmail(nuevoCorreo)){
+        if (request.getApellido() != null) {
+            user.setApellido(request.getApellido());
+        }
+
+        if (request.getTelefono() != null) {
+            user.setTelefono(request.getTelefono());
+        }
+
+        if (request.getSobreMi() != null) {
+            user.setSobreMi(request.getSobreMi());
+        }
+
+        if (request.getEmail() != null &&
+                !request.getEmail().equals(user.getEmail())) {
+
+            if (usuarioRepository.existsByEmail(request.getEmail())) {
                 throw new UserFoundEx("Ese correo ya existe");
             }
-            // y sino, lo seteo
-            user.setEmail(nuevoCorreo);
 
-            // como credencial tiene de username el correo:
-            CredentialsEntity credencial = credentialsRepository.findByUsuario(user)
-                            .orElseThrow(() -> new UserNotFoundEx("El usuario no existe."));
+            user.setEmail(request.getEmail());
 
-            credencial.setUsername(nuevoCorreo);
+            CredentialsEntity credencial =
+                    credentialsRepository.findByUsuario(user)
+                            .orElseThrow(() ->
+                                    new UserNotFoundEx("El usuario no existe"));
+
+            credencial.setUsername(request.getEmail());
             credentialsRepository.save(credencial);
         }
 
-        user.setTelefono(request.getTelefono());
-        user.setSobreMi(request.getSobreMi());
+        if (request.getFoto() != null &&
+                !request.getFoto().isEmpty()) {
 
-        // y si el user sube nueva foto:
-        if (request.getFoto() != null && !request.getFoto().isEmpty()){
             processImage(user, request);
         }
 
-        // guardar y mapear:
-
-        return usuarioMapper.toResponse(usuarioRepository.save(user));
-
+        return usuarioMapper.toResponse(
+                usuarioRepository.save(user));
     }
 
     // mostrar todos los usuarios admin

@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.model.controllers;
 import com.aquienllamo.aquienllamo.model.dtos.Request.DeleteUsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Request.LoginUsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioUpdateDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.UsuarioService;
 import jakarta.validation.Valid;
@@ -31,10 +32,9 @@ public class UsuarioController {
     }
 
     // actualizar el perfil
-    @PutMapping("/actualizar/{uuid}")
+    @PatchMapping("/actualizar/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioDTOResponse actualizar(@PathVariable String uuid, @ModelAttribute UsuarioDTORequest dto){
-        // chicas, si usamos multipartfile para las fotos necesitamos usar modelattribute aparentemente
+    public UsuarioDTOResponse actualizar(@PathVariable String uuid, @ModelAttribute UsuarioUpdateDTORequest dto){
         return usuarioService.update(uuid, dto);
     }
 
@@ -81,7 +81,7 @@ public class UsuarioController {
     @GetMapping("/usuario/dni/{dni}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioDTOResponse mostrarPorDocumento(String dni){
+    public UsuarioDTOResponse mostrarPorDocumento(@PathVariable String dni){
         return usuarioService.getByDni(dni);
     }
 
@@ -89,7 +89,7 @@ public class UsuarioController {
     @GetMapping("/usuario/email/{email}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioDTOResponse mostrarPorCorreo(String email){
+    public UsuarioDTOResponse mostrarPorCorreo(@PathVariable String email){
         return usuarioService.getByEmail(email);
     }
 
@@ -97,16 +97,16 @@ public class UsuarioController {
     @PatchMapping("/quitar-suspension/{uuid}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
-    public String quitarSuspension(String uuid){
+    public String quitarSuspension(@PathVariable String uuid){
         return usuarioService.quitarSuspension(uuid);
     }
 
     // quitar amonestación
-    @PatchMapping("/quitar-amonestacion/{uuid}")
+    @PatchMapping("/quitar-baja/{uuid}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
-    public String quitarAmonestacion(String uuid){
-        return usuarioService.quitarSuspension(uuid);
+    public String quitarAmonestacion(@PathVariable String uuid){
+        return usuarioService.quitarBaja(uuid);
     }
 
 }
