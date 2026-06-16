@@ -42,20 +42,21 @@ public class DenunciaService {
     //crear
     public DenunciaDTOResponse crearDenuncia(DenunciaDTORequest denuncia, String uuidChat){
         //obtener usuario logueado
-        UsuarioSecurity usuarioLogueado=(UsuarioSecurity) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+        CredentialsEntity cred =
+                (CredentialsEntity) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
 
-        UsuarioEntity denunciante=usuarioRepository.findByUuid(usuarioLogueado.getUuid())
-                .orElseThrow(()-> new UserNotFoundEx("no se encontro el usuario con ese uuid"));
+        UsuarioEntity denunciante = cred.getUsuario();
 
         //obtener el chat y sacar el denunciado
         ChatEntity chat=chatRepository.findByUuidChat(uuidChat)
                 .orElseThrow(()-> new ChatNotFoundEx("el chat con ese uuid no se encontro"));
 
         UsuarioEntity denunciado;
-        if (chat.getUsuario().getUuid().equals(usuarioLogueado.getUuid())) {
+
+        if (chat.getUsuario().getUuid().equals(denunciante.getUuid())) {
             denunciado=chat.getTecnico().getUsuario();
         }else {
             denunciado=chat.getUsuario();
