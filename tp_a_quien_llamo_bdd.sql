@@ -2,6 +2,8 @@ DROP DATABASE IF EXISTS a_quien_llamo;
 CREATE DATABASE a_quien_llamo;
 USE a_quien_llamo;
 
+SELECT * FROM Administrador;
+
 CREATE TABLE Usuario (
 id_usuario INT AUTO_INCREMENT PRIMARY KEY,
 uuid VARCHAR(36) NOT NULL UNIQUE,
@@ -259,7 +261,7 @@ uuid VARCHAR(36) NOT NULL UNIQUE,
 id_denunciante INT NOT NULL,
 id_denunciado INT NOT NULL,
 administrador_encargado INT,
-estado_denuncia ENUM('Aprobada','En proceso','Rechazada', 'Pendiente') NOT NULL,
+estado_denuncia ENUM('Aprobada','En_proceso','Rechazada', 'Pendiente') NOT NULL,
 motivo_denuncia TEXT NOT NULL,
 nota_del_admin TEXT,
 fecha_denuncia TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

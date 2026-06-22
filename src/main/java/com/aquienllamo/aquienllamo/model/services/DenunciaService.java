@@ -76,6 +76,7 @@ public class DenunciaService {
             }
         }
 
+        // dsps cambiarlo al msj a ENVIADO
         emailService.enviarDenunciaAprobadaDenunciante(denunciante.getEmail());
         emailService.enviarDenunciaAprobadaDenunciado(denunciado.getEmail());
         emailService.enviarDenunciaAdmin("aquienllamoinfo@gmail.com", nueva.getUuid());
