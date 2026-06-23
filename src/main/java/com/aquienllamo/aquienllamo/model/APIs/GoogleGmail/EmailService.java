@@ -448,4 +448,46 @@ public class EmailService {
         );
     }
 
+    public void enviarSeCreoDenunciaDenunciante(String email, String nombreDenunciante, String enlace){
+        enviarEmail(email, "¡Se registró tu denuncia!",
+        """
+                Hola %s:
+                Queremos informarte que hemos registrado tu denuncia, por el momento no tiene asignado un administrador.
+                Podés seguir el proceso de la denuncia a través de este enlace:
+                %s
+                
+                En las próximas horas deberías ver un cambio de estado en la denuncia, no te preocupes, de suceder, recibirás un correo.
+                Saludos,
+                El equipo de ¿A Quién Llamo?
+                
+                AVISO DE SEGURIDAD IMPORTANTE
+                Recordá que desde ¿A Quién Llamo? JAMÁS te vamos a solicitar contraseñas, datos de tarjetas de crédito o códigos por este medio.
+                Para proteger tu cuenta, revisá siempre que el correo del cual recibís nuestros avisos provenga de una dirección oficial terminada en @aquienllamo.com. Si desconfiás de la legitimidad de un mensaje, no hagas clic en ningún enlace y comunicate con soporte.
+                """.formatted(nombreDenunciante, enlace)
+        );
+    }
+
+    public void enviarSeCreoDenunciaDenunciado(String email, String nombreDenunciado, String enlace){
+        enviarEmail(email, "¡Se registró tu denuncia!",
+                        """
+                        Hola %s:
+                        Queremos informarte que se ha creado una denuncia asociada a tu cuenta.
+                        Podés seguir el proceso de la denuncia a través de este enlace:
+                        %s
+                        
+                        En las próximas 72 horas deberías ver un cambio de estado en la denuncia, no te preocupes, de suceder, recibirás un correo.
+                        ¿Por qué puedo estar recibiendo este correo? Tal vez hayas incumplido con alguna de las normas. Los motivos están adjuntos para que puedas leerlos, con total transparencia.
+                        
+                        Si creés que se trata de un error, podés contactarte con nuestro soporte.
+                        Que se haya creado una denuncia no significa que tu cuenta esté suspendida, podés seguir usándola con normalidad hasta que determinemos la acción a seguir.
+                        
+                        Saludos,
+                        El equipo de ¿A Quién Llamo?
+                        
+                        AVISO DE SEGURIDAD IMPORTANTE
+                        Recordá que desde ¿A Quién Llamo? JAMÁS te vamos a solicitar contraseñas, datos de tarjetas de crédito o códigos por este medio.
+                        Para proteger tu cuenta, revisá siempre que el correo del cual recibís nuestros avisos provenga de una dirección oficial terminada en @aquienllamo.com. Si desconfiás de la legitimidad de un mensaje, no hagas clic en ningún enlace y comunicate con soporte.
+                        """.formatted(nombreDenunciado, enlace)
+        );
+    }
 }
