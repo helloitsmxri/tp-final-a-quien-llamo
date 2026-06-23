@@ -75,12 +75,11 @@ public class DenunciaService {
                 throw new ImageDataTypeNotFoundEx("Error al procesar la foto");
             }
         }
-
-        // dsps cambiarlo al msj a ENVIADO
-        emailService.enviarDenunciaAprobadaDenunciante(denunciante.getEmail());
-        emailService.enviarDenunciaAprobadaDenunciado(denunciado.getEmail());
-        emailService.enviarDenunciaAdmin("aquienllamoinfo@gmail.com", nueva.getUuid());
+        
         denunciaRepository.save(nueva);
+        emailService.enviarDenunciaAdmin("aquienllamoinfo@gmail.com", nueva.getUuid());
+        emailService.enviarSeCreoDenunciaDenunciante(denunciante.getEmail(), denunciante.getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + nueva.getUuid());
+        emailService.enviarSeCreoDenunciaDenunciado(denunciado.getEmail(), denunciado.getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + nueva.getUuid());
         return denunciaMapper.toResponse(nueva);
     }
 
@@ -150,6 +149,9 @@ public class DenunciaService {
 
         denuncia.setAdministrador(admin);
         denuncia.setEstadoDenuncia(EstadoDenunciaE.En_proceso);
+        DenunciaEntity denunciaGuardada=denunciaRepository.save(denuncia);
+        emailService.enviarSeAsignoUnAdmin(denunciaGuardada.getDenunciante().getEmail(), denunciaGuardada.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denunciaGuardada.getUuid());
+        emailService.enviarSeAsignoUnAdmin2(denunciaGuardada.getDenunciado().getEmail(), denunciaGuardada.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denunciaGuardada.getUuid());
         return denunciaMapper.toResponse(denunciaRepository.save(denuncia));
     }
 
@@ -199,8 +201,8 @@ public class DenunciaService {
         denuncia.setEstadoDenuncia(EstadoDenunciaE.Aprobada);
         denuncia.setNotaDelAdmin(mensaje);
         denunciaRepository.save(denuncia);
-        emailService.enviarDenunciaAprobadaDenunciante(denuncia.getDenunciante().getEmail());
-        emailService.enviarDenunciaAprobadaDenunciado(denuncia.getDenunciado().getEmail());
+        emailService.enviarDenunciaAprobadaDenunciante(denuncia.getDenunciante().getEmail(), denuncia.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
+        emailService.enviarDenunciaAprobadaDenunciado(denuncia.getDenunciado().getEmail(),  denuncia.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
         return denunciaMapper.toResponse(denuncia);
     }
 
@@ -221,7 +223,7 @@ public class DenunciaService {
                         .getContext()
                         .getAuthentication()
                         .getPrincipal();
-        
+
 
         AdministradorEntity adminLogueado = cred.getAdministrador();
 
@@ -236,8 +238,8 @@ public class DenunciaService {
         denuncia.setEstadoDenuncia(EstadoDenunciaE.Rechazada);
         denuncia.setNotaDelAdmin(mensaje);
         denunciaRepository.save(denuncia);
-        emailService.enviarDenunciaRechazadaDenunciante(denuncia.getDenunciante().getEmail());
-        emailService.enviarDenunciaRechazadaDenunciado(denuncia.getDenunciado().getEmail());
+        emailService.enviarDenunciaRechazadaDenunciante(denuncia.getDenunciante().getEmail(), denuncia.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
+        emailService.enviarDenunciaRechazadaDenunciado(denuncia.getDenunciado().getEmail(), denuncia.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
         return denunciaMapper.toResponse(denuncia);
     }
 
@@ -287,5 +289,5 @@ public class DenunciaService {
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
-    
+
 }

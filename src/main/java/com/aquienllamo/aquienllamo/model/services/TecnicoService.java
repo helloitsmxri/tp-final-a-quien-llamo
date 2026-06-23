@@ -90,6 +90,7 @@ public class TecnicoService {
 
         //guardar credenciales actualizadas
         credentialsRepository.save(credencial);
+        emailService.enviarBienvenida2(tecnicoGuardado.getUsuario().getEmail(), tecnicoGuardado.getUsuario().getNombre());
         return tecnicoMapper.toResponse(tecnicoGuardado);
     }
 
@@ -162,7 +163,7 @@ public class TecnicoService {
         tecnico.setEspecialidades(especialidadRepository.findAllByUuidIn(tecnicoDto.getUuidEspecialidades()));
 
         TecnicoEntity tecnicoGuardado = tecnicoRepository.save(tecnico);
-        emailService.enviarBienvenida(usuario.getEmail(), usuario.getNombre());
+        emailService.enviarBienvenida2(usuario.getEmail(), usuario.getNombre());
 
         return tecnicoMapper.toResponse(tecnicoGuardado);
     }

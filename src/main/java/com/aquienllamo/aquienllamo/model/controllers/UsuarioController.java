@@ -72,8 +72,8 @@ public class UsuarioController {
     @PatchMapping("/baja/{uuid}")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
-    public String darDeBaja(@PathVariable String uuid){
-        return usuarioService.darDeBajaUsuario(uuid);
+    public String darDeBaja(@PathVariable String uuid, @RequestParam String motivo){
+        return usuarioService.darDeBajaUsuario(uuid, motivo);
     }
 
     //lo podría hacer con request param

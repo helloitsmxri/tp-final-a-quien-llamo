@@ -271,12 +271,12 @@ public class UsuarioService {
 
         user.setFechaFinSuspension(LocalDate.now().plusMonths(1));
         usuarioRepository.save(user);
-        emailService.enviarSuspensionCuenta(user.getEmail(), motivo);
+        emailService.enviarAmonestacionCuenta(user.getEmail(), user.getNombre(), motivo);
 
         return "Se ha suspendido al usuario por un mes";
     }
 
-    public String darDeBajaUsuario(String uuid){
+    public String darDeBajaUsuario(String uuid, String motivo){
         UsuarioEntity user = usuarioRepository.findByUuid(uuid)
                 .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
 
@@ -292,6 +292,7 @@ public class UsuarioService {
         user.setFechaFinSuspension(null);
 
         usuarioRepository.save(user);
+        emailService.enviarSeCerroLaCuenta(user.getEmail(), user.getNombre(), motivo);
 
         return "Usuario dado de baja correctamente";
     }
