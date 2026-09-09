@@ -5,8 +5,8 @@ import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioUpdateDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioUpdateDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service // aclaración es servicio
 @RequiredArgsConstructor

@@ -2,8 +2,7 @@ package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
-import com.aquienllamo.aquienllamo.model.dtos.Request.PortfolioAdminDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioAdminDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.portfolio.PortfolioAdminDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.PortfolioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.PortfolioAlreadyReviewedEx;
 import com.aquienllamo.aquienllamo.model.exceptions.PortfolioNotFoundEx;

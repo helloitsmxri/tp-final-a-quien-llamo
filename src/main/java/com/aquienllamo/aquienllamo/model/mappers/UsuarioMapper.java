@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import org.springframework.stereotype.Component;

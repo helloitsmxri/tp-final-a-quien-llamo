@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.dtos.Response;
+package com.aquienllamo.aquienllamo.model.dtos.Response.habilidad;
 
 import lombok.*;
 

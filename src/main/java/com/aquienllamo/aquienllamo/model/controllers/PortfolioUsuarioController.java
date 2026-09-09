@@ -1,7 +1,7 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.PortfolioUsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioUsuarioDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.portfolio.PortfolioUsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.PortfolioUsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

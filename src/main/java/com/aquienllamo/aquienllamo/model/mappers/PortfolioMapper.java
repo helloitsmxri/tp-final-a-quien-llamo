@@ -1,8 +1,8 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.PortfolioUsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioAdminDTOResponse;
-import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioUsuarioDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.portfolio.PortfolioAdminDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.portfolio.PortfolioUsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.model.entities.PortfolioEntity;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;

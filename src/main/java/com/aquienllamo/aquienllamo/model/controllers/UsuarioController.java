@@ -1,16 +1,12 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
-import com.aquienllamo.aquienllamo.model.dtos.Request.DeleteUsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.LoginUsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioUpdateDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.DeleteUsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioUpdateDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
