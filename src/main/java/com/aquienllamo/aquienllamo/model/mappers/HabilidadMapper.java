@@ -1,8 +1,8 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.HabilidadDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadCreadaDTOResponse;
-import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.habilidad.HabilidadCreadaDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.habilidad.HabilidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.model.entities.HabilidadEntity;
 import org.springframework.stereotype.Component;

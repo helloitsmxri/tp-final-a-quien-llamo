@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.dtos.Response;
+package com.aquienllamo.aquienllamo.model.dtos.Response.portfolio;
 
 import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
 import lombok.*;

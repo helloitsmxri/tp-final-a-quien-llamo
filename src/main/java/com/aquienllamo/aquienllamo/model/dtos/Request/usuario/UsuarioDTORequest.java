@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.dtos.Request;
+package com.aquienllamo.aquienllamo.model.dtos.Request.usuario;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
