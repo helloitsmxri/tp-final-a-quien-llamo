@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @Table(name = "Administrador")
-public class AdministradorEntity {
+public class AdministradorEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_admin")

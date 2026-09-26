@@ -58,7 +58,7 @@ public class UsuarioController {
 
     // amonestar USUARIO
     @PatchMapping("/amonestar/{uuid}")
-    @PreAuthorize("hasRole('ADMINISTRADOR')") // para que no entre cualquiera
+    @PreAuthorize("hasRole('ADMINISTRADOR')") // para que no entre cualquiera que no sea administrador
     @ResponseStatus(HttpStatus.OK)
     public String amonestar(@PathVariable String uuid, @RequestParam String motivo){
         return usuarioService.amonestarUsuario(uuid, motivo);

@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Table(name = "Usuario")
-public class UsuarioEntity {
+public class UsuarioEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario") // Esto vincula el nombre de la DB con la variable de java
