@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/presupuestos")
+@RequestMapping("/aquienllamo/presupuestos")
 public class PresupuestoController {
 
     private final PresupuestoService presupuestoService;
