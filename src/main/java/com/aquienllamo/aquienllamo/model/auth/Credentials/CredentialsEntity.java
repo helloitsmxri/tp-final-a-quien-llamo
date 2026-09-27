@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.auth.Credentials;
 
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
+import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,10 +38,6 @@ public class CredentialsEntity implements UserDetails {
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", unique = true)
     private UsuarioEntity usuario;
 
-    @OneToOne
-    @JoinColumn(name = "id_admin", referencedColumnName = "id_admin", unique = true)
-    private AdministradorEntity administrador;
-
     @Builder.Default
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
@@ -66,4 +63,18 @@ public class CredentialsEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() { return Boolean.TRUE.equals(this.enabled); }
+
+    public void removeRole(RolesUser role) {
+        roles.removeIf(roleEntity -> roleEntity.getRole() == role);
+    }
+
+    public void addRole(RoleEntity role) {
+        roles.add(role);
+    }
+
+    public boolean hasRole(RolesUser role) {
+        return roles.stream()
+                .anyMatch(roleEntity -> roleEntity.getRole() == role);
+    }
+
 }

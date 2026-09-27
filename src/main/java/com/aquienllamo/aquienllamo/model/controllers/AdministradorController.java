@@ -31,4 +31,36 @@ public class AdministradorController {
     public String removeRolAdmin(@PathVariable String uuid){
         return administradorService.removeRolAdmin(uuid);
     }
+
+    // amonestar USUARIO
+    @PatchMapping("/amonestar/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')") // para que no entre cualquiera que no sea administrador
+    @ResponseStatus(HttpStatus.OK)
+    public String amonestar(@PathVariable String uuid, @RequestParam String motivo){
+        return administradorService.amonestarUsuario(uuid, motivo);
+    }
+
+    // dar de baja usuario
+    @PatchMapping("/baja/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public String darDeBaja(@PathVariable String uuid){
+        return administradorService.darDeBajaUsuario(uuid);
+    }
+
+    // quitar suspensión
+    @PatchMapping("/quitar-suspension/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public String quitarSuspension(@PathVariable String uuid){
+        return administradorService.quitarSuspension(uuid);
+    }
+
+    // quitar amonestación
+    @PatchMapping("/quitar-baja/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public String quitarBaja(@PathVariable String uuid){
+        return administradorService.quitarBaja(uuid);
+    }
 }
