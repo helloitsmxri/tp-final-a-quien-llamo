@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.model.dtos.Request.usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -44,7 +45,7 @@ public class UsuarioDTORequest {
 
     @NotNull(message = "Es necesario poner la fecha de nacimiento.")
     @Past(message = "La fecha de nacimiento no puede ser posterior a la actual.")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate fechaNacimiento;
 
     private MultipartFile foto; // es multipart NO BYTE porque multipart es de spring y sabe sacar bytes y tipos solito

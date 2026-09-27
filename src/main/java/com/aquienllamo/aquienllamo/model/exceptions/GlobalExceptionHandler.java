@@ -249,14 +249,19 @@ public class GlobalExceptionHandler {
 
     //500 INTERNAL SERVER ERROR - catch-all de seguridad
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex)
-    {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponseDTO.builder()
+    public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex) {
+
+        ex.printStackTrace();
+
+        ErrorResponseDTO error = ErrorResponseDTO.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .timestamp(LocalDateTime.now())
                 .mensaje(ex.getMessage())
-                .build());
+                .build();
 
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(error);
     }
 
     //Error DTO Request AUTH
