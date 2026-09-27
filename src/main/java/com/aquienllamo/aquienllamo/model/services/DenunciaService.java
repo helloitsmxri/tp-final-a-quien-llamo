@@ -7,7 +7,6 @@ import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository
 import com.aquienllamo.aquienllamo.model.details.UsuarioSecurity;
 import com.aquienllamo.aquienllamo.model.dtos.Request.DenunciaDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.DenunciaDTOResponse;
-import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
 import com.aquienllamo.aquienllamo.model.entities.ChatEntity;
 import com.aquienllamo.aquienllamo.model.entities.DenunciaEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
@@ -17,7 +16,6 @@ import com.aquienllamo.aquienllamo.model.repositories.AdministradorRepository;
 import com.aquienllamo.aquienllamo.model.repositories.ChatRepository;
 import com.aquienllamo.aquienllamo.model.repositories.DenunciaRepository;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;

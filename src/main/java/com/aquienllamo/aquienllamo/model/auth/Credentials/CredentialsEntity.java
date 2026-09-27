@@ -1,7 +1,6 @@
 package com.aquienllamo.aquienllamo.model.auth.Credentials;
 
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
-import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,60 +1,76 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+
 import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
-import com.aquienllamo.aquienllamo.model.auth.JWT.JwtService;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;
-import com.aquienllamo.aquienllamo.model.dtos.Request.AdministradorDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.AdministradorDTOResponse;
-import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
-import com.aquienllamo.aquienllamo.model.exceptions.RoleNotFoundEx;
-import com.aquienllamo.aquienllamo.model.mappers.AdministradorMapper;
-import com.aquienllamo.aquienllamo.model.repositories.AdministradorRepository;
+
+import com.aquienllamo.aquienllamo.model.dtos.Request.AsignRolDTORequest;
+import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
+import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
+import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
-@RequiredArgsConstructor // utilizo este tipo de constructor porque solo quiero inyectar las dependencias de tipo final
+@RequiredArgsConstructor
 @Transactional
 public class AdministradorService {
 
-        private final AdministradorRepository administradorRepository; // para hablar con la bdd
-        private final AdministradorMapper administradorMapper;
-        private final PasswordEncoder passwordEncoder; // para encriptar las claves.
+    private final UsuarioRepository usuarioRepository;
         private final CredentialsRepository credentialsRepository;
         private final RoleRepository roleRepository;
 
-        // Registrar administrador: encripta la clave antes de guardar y después lo guarda.
-        public AdministradorDTOResponse registrar(AdministradorDTORequest admin) {
-            String claveEncriptada = passwordEncoder.encode(admin.getClave());
-            admin.setClave(claveEncriptada);
 
-            AdministradorEntity administrador=administradorMapper.toEntity(admin);
-            administradorRepository.save(administrador);
+        public String asigneRol(AsignRolDTORequest request) {
 
-            RoleEntity rol= roleRepository.findByRole(RolesUser.ROLE_ADMINISTRADOR)
-                    .orElseThrow(() -> new RoleNotFoundEx("Rol ADMINISTRADOR no encontrado"));
+            UsuarioEntity user = usuarioRepository.findByUuid(request.getUuid())
+                    .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
 
-            CredentialsEntity credencial = CredentialsEntity.builder()
-                    .username(admin.getNombreUsuario())
-                    .clave(claveEncriptada)
-                    .enabled(true)
-                    .administrador(administrador)
-                    .roles(Set.of(rol))
-                    .build();
 
-            credentialsRepository.save(credencial);
+            RoleEntity newRole = roleRepository.findByRole(request.getRol())
+                    .orElseThrow(() -> new RuntimeException("No se encontro el rol seleccionado"));
 
-            return administradorMapper.toResponse(administrador);
+            if (newRole.equals(roleRepository.findByRole(RolesUser.ROLE_SUPERADMINISTRADOR))) {
+                throw new RuntimeException("No se puede cambiar al rol asignado");
+            }
+
+            CredentialsEntity cred = credentialsRepository.findByUsuario(user)
+                    .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+            if (cred.getRoles().contains(newRole)){
+                throw new RuntimeException("El usuario ya posee el rol asignado");
+            }
+
+            cred.getRoles().add(newRole);
+
+            // guardar credenciales
+            credentialsRepository.save(cred);
+
+            return "Rol asignado con exito";
         }
 
+        public String removeRolAdmin(String uuid){
+
+            UsuarioEntity user = usuarioRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+            CredentialsEntity cred = credentialsRepository.findByUsuario(user)
+                    .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
+
+            if(!cred.getRoles().contains(RolesUser.ROLE_SUPERADMINISTRADOR)){
+                throw new RuntimeException("El usuario no posee el rol Administrador");
+            }
+
+            cred.getRoles().remove(RolesUser.ROLE_ADMINISTRADOR);
+
+            // guardar credenciales
+            credentialsRepository.save(cred);
+
+            return "Rol eliminado con exito";
+        }
 
 }
