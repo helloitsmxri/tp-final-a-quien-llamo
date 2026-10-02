@@ -2,7 +2,7 @@ package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoDenunciaE;
-import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.model.details.UsuarioSecurity;
 import com.aquienllamo.aquienllamo.model.dtos.Request.DenunciaDTORequest;

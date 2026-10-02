@@ -1,7 +1,7 @@
 package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
-import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;

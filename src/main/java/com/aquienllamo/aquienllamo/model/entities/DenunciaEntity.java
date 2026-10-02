@@ -33,7 +33,7 @@ public class DenunciaEntity extends  BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "administrador_encargado")
-    private AdministradorEntity administrador;
+    private UsuarioEntity administrador;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_denunciante", nullable = false)

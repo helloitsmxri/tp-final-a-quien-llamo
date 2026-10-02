@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.auth.Credentials;
+package com.aquienllamo.aquienllamo.model.auth.credentials;
 
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;

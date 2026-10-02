@@ -52,9 +52,10 @@ public class CertificacionEntity extends BaseEntity{
     @Column(nullable = false, name = "imagen_certificado", columnDefinition = "MEDIUMBLOB")
     private byte[] imagenCertificado;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_admin_revisor", referencedColumnName = "id_admin")
-    private AdministradorEntity adminRevisor;
+    @JoinColumn(name = "id_admin_revisor", referencedColumnName = "id_usuario")
+    private UsuarioEntity adminRevisor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_verificacion")

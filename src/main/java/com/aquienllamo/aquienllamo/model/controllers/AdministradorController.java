@@ -24,9 +24,9 @@ public class AdministradorController {
         return administradorService.asigneRol(dto);
     }
 
-    // amonestar USUARIO
-    @PatchMapping("/remoRolAdmin")
-    @PreAuthorize("hasRole('ADMINISTRADOR')") // para que no entre cualquiera que no sea SuperAdministrador
+    // quitar rol a usuario
+    @PatchMapping("/removeRolAdmin")
+    @PreAuthorize("hasRole('SUPERADMINISTRADOR')") // para que no entre cualquiera que no sea SuperAdministrador
     @ResponseStatus(HttpStatus.OK)
     public String removeRolAdmin(@PathVariable String uuid){
         return administradorService.removeRolAdmin(uuid);

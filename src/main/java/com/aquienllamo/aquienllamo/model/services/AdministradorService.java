@@ -2,12 +2,13 @@ package com.aquienllamo.aquienllamo.model.services;
 
 
 import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
-import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;
 
+import com.aquienllamo.aquienllamo.model.auth.utils.SecurityUtils;
 import com.aquienllamo.aquienllamo.model.dtos.Request.AsignRolDTORequest;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
@@ -42,6 +43,13 @@ public class AdministradorService {
                 throw new RuntimeException("Imposible asignar el rol");
             }
 
+
+            CredentialsEntity usuarioAutenticado = SecurityUtils.getCurrentCredentials();
+
+            if (newRole.getRole() == RolesUser.ROLE_ADMINISTRADOR && !usuarioAutenticado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)) {
+                throw new RuntimeException("El usuario autenticado no tiene los permisos suficientes");
+            }
+
             CredentialsEntity cred = credentialsRepository.findByUsuario(user)
                     .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
 
@@ -59,18 +67,25 @@ public class AdministradorService {
 
         public String removeRolAdmin(String uuid){
 
+
             UsuarioEntity user = usuarioRepository.findByUuid(uuid)
                     .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
 
             CredentialsEntity cred = credentialsRepository.findByUsuario(user)
                     .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
 
-
             if (!cred.hasRole(RolesUser.ROLE_ADMINISTRADOR)) {
-                throw new RuntimeException("El usuario no posee el rol Superadministrador");
+                throw new RuntimeException("El usuario no posee el rol Administrador");
             }
 
-            cred.removeRole(RolesUser.ROLE_SUPERADMINISTRADOR);
+            CredentialsEntity usuarioAutenticado = SecurityUtils.getCurrentCredentials();
+
+
+            if (!usuarioAutenticado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)) {
+                throw new RuntimeException("El usuario autenticado no posee los permisos suficientes remover rol de administrador");
+            }
+
+            cred.removeRole(RolesUser.ROLE_ADMINISTRADOR);
 
             // guardar credenciales
             credentialsRepository.save(cred);
