@@ -1,10 +1,8 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
 import com.aquienllamo.aquienllamo.model.Enum.EstadoVerificacion;
-import com.aquienllamo.aquienllamo.model.dtos.Request.PortfolioAdminDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.PortfolioAdminDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.portfolio.PortfolioAdminDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.PortfolioAdminService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

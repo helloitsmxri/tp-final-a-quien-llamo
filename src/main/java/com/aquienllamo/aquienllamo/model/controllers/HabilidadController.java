@@ -1,8 +1,8 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.HabilidadDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadCreadaDTOResponse;
-import com.aquienllamo.aquienllamo.model.dtos.Response.HabilidadDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.habilidad.HabilidadCreadaDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.habilidad.HabilidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.HabilidadService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -33,7 +33,7 @@ public class PresupuestoMapper {
                 .precioEstimado(presupuesto.getPrecioEstimado())
                 .descripcionPresupuesto(presupuesto.getDescripcionPresupuesto())
                 .estado(presupuesto.getEstado())
-                .fechaRealizado(presupuesto.getFechaRealizado())
+                .fechaRealizado(presupuesto.getCreatedAt())
                 .build();
     }
 }

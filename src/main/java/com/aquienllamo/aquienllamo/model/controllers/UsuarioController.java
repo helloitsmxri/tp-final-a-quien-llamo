@@ -1,16 +1,12 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
-import com.aquienllamo.aquienllamo.model.dtos.Request.DeleteUsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.LoginUsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioUpdateDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.DeleteUsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioUpdateDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -60,21 +56,7 @@ public class UsuarioController {
         return usuarioService.getMyProfile(authentication.getName());
     }
 
-    // amonestar USUARIO
-    @PatchMapping("/amonestar/{uuid}")
-    @PreAuthorize("hasRole('ADMINISTRADOR')") // para que no entre cualquiera
-    @ResponseStatus(HttpStatus.OK)
-    public String amonestar(@PathVariable String uuid, @RequestParam String motivo){
-        return usuarioService.amonestarUsuario(uuid, motivo);
-    }
 
-    // dar de baja usuario
-    @PatchMapping("/baja/{uuid}")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @ResponseStatus(HttpStatus.OK)
-    public String darDeBaja(@PathVariable String uuid, @RequestParam String motivo){
-        return usuarioService.darDeBajaUsuario(uuid, motivo);
-    }
 
     //lo podría hacer con request param
     // encontrar usuario por documento
@@ -93,20 +75,6 @@ public class UsuarioController {
         return usuarioService.getByEmail(email);
     }
 
-    // quitar suspensión
-    @PatchMapping("/quitar-suspension/{uuid}")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @ResponseStatus(HttpStatus.OK)
-    public String quitarSuspension(@PathVariable String uuid){
-        return usuarioService.quitarSuspension(uuid);
-    }
 
-    // quitar amonestación
-    @PatchMapping("/quitar-baja/{uuid}")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @ResponseStatus(HttpStatus.OK)
-    public String quitarBaja(@PathVariable String uuid){
-        return usuarioService.quitarBaja(uuid);
-    }
 
 }

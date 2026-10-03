@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.dtos.Request;
+package com.aquienllamo.aquienllamo.model.dtos.Request.usuario;
 
 import lombok.Getter;
 import lombok.Setter;

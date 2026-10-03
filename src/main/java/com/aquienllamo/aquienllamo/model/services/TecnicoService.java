@@ -1,13 +1,13 @@
 package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
-import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.model.auth.repositories.RoleRepository;
-import com.aquienllamo.aquienllamo.model.dtos.Request.TecnicoDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.tecnico.TecnicoDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;

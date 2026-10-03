@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Denuncia")
-public class DenunciaEntity {
+public class DenunciaEntity extends  BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_denuncia")
@@ -33,7 +33,7 @@ public class DenunciaEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "administrador_encargado")
-    private AdministradorEntity administrador;
+    private UsuarioEntity administrador;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_denunciante", nullable = false)

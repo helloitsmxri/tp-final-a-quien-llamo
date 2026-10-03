@@ -1,7 +1,7 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
-import com.aquienllamo.aquienllamo.model.dtos.Request.TecnicoDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Request.TecnicoNuevoDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.tecnico.TecnicoDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.tecnico.TecnicoNuevoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.TecnicoService;
 import jakarta.annotation.security.PermitAll;

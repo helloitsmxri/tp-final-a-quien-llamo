@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
-import com.aquienllamo.aquienllamo.model.dtos.Request.TecnicoDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.tecnico.TecnicoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.TecnicoEntity;
 import org.springframework.stereotype.Component;

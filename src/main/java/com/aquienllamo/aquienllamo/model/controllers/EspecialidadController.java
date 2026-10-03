@@ -2,8 +2,8 @@ package com.aquienllamo.aquienllamo.model.controllers;
 
 import com.aquienllamo.aquienllamo.model.Enum.TipoValidacion;
 import com.aquienllamo.aquienllamo.model.dtos.Request.EspecialidadDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadCreadaDTOResponse;
-import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.especialidad.EspecialidadCreadaDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.especialidad.EspecialidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.EspecialidadService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

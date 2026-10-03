@@ -1,5 +1,6 @@
-package com.aquienllamo.aquienllamo.model.dtos.Request;
+package com.aquienllamo.aquienllamo.model.dtos.Request.tecnico;
 
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioDTORequest;
 import jakarta.validation.Valid;
 import lombok.*;
 

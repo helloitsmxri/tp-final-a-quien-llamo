@@ -2,22 +2,21 @@ package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoDenunciaE;
-import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.utils.SecurityUtils;
 import com.aquienllamo.aquienllamo.model.details.UsuarioSecurity;
 import com.aquienllamo.aquienllamo.model.dtos.Request.DenunciaDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.DenunciaDTOResponse;
-import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
 import com.aquienllamo.aquienllamo.model.entities.ChatEntity;
 import com.aquienllamo.aquienllamo.model.entities.DenunciaEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.DenunciaMapper;
-import com.aquienllamo.aquienllamo.model.repositories.AdministradorRepository;
 import com.aquienllamo.aquienllamo.model.repositories.ChatRepository;
 import com.aquienllamo.aquienllamo.model.repositories.DenunciaRepository;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
@@ -35,10 +34,8 @@ public class DenunciaService {
     private final DenunciaMapper denunciaMapper;
     private final UsuarioRepository usuarioRepository;
     private final ChatRepository chatRepository;
-    private final AdministradorRepository administradorRepository;
     private final EmailService emailService;
     private final CredentialsRepository credentialsRepository;
-
     //crear
     public DenunciaDTOResponse crearDenuncia(DenunciaDTORequest denuncia, String uuidChat){
         //obtener usuario logueado
@@ -144,8 +141,18 @@ public class DenunciaService {
             throw new DenunciaResueltaEx("No se puede asignar una denuncia ya resuelta.");
         }
 
-        AdministradorEntity admin=administradorRepository.findByUuid(uuidAdmin)
+        UsuarioEntity admin=usuarioRepository.findByUuid(uuidAdmin)
                 .orElseThrow(()-> new AdministradorNotFoundEx("No se encontro el administrador con ese uuid"));
+
+        CredentialsEntity credentialAdmin = credentialsRepository.findByUsuario(admin)
+                .orElseThrow(()-> new AdministradorNotFoundEx("No se encontro el administrador con ese uuid"));
+
+        if(!credentialAdmin.hasRole(RolesUser.ROLE_ADMINISTRADOR) || !credentialAdmin.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
+            throw new RuntimeException("No se le puede asignar la denuncia a un usuario que no tenga el rol administrador.");
+        }
+
+
+
 
         denuncia.setAdministrador(admin);
         denuncia.setEstadoDenuncia(EstadoDenunciaE.En_proceso);
@@ -181,20 +188,16 @@ public class DenunciaService {
             throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
         }
 
-        CredentialsEntity cred =
-                (CredentialsEntity) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        CredentialsEntity usuarioLogueado = SecurityUtils.getCurrentCredentials();
 
 
-        AdministradorEntity adminLogueado = cred.getAdministrador();
-
-        if (adminLogueado == null) {
+        if(!usuarioLogueado.hasRole(RolesUser.ROLE_ADMINISTRADOR) && !usuarioLogueado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
             throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
         }
 
-        if (!denuncia.getAdministrador().getUuid().equals(adminLogueado.getUuid())){
+        UsuarioEntity admin = SecurityUtils.getCurrentUser();
+
+        if (!denuncia.getAdministrador().getUuid().equals(admin.getUuid())){
             throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
         }
 
@@ -218,20 +221,17 @@ public class DenunciaService {
         if (denuncia.getAdministrador() == null) {
             throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
         }
-        CredentialsEntity cred =
-                (CredentialsEntity) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        CredentialsEntity usuarioLogueado = SecurityUtils.getCurrentCredentials();
 
 
-        AdministradorEntity adminLogueado = cred.getAdministrador();
-
-        if (adminLogueado == null) {
+        if(!usuarioLogueado.hasRole(RolesUser.ROLE_ADMINISTRADOR) && !usuarioLogueado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
             throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
         }
 
-        if (!denuncia.getAdministrador().getUuid().equals(adminLogueado.getUuid())){
+        UsuarioEntity admin = SecurityUtils.getCurrentUser();
+
+
+        if (!denuncia.getAdministrador().getUuid().equals(admin.getUuid())){
             throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
         }
 
@@ -275,11 +275,12 @@ public class DenunciaService {
                         .getPrincipal();
 
 
-        AdministradorEntity adminLogueado = cred.getAdministrador();
+        UsuarioEntity adminLogueado = cred.getUsuario();
 
-        if (adminLogueado == null) {
+        if (!cred.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR) && !cred.hasRole(RolesUser.ROLE_ADMINISTRADOR)) {
             throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
         }
+
         return denunciaRepository
                 .findByAdministradorUuidAndEstadoDenuncia(
                         adminLogueado.getUuid(),

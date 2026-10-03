@@ -1,10 +1,9 @@
 package com.aquienllamo.aquienllamo.model.mappers;
 
 import com.aquienllamo.aquienllamo.model.dtos.Request.EspecialidadDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadCreadaDTOResponse;
-import com.aquienllamo.aquienllamo.model.dtos.Response.EspecialidadDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.especialidad.EspecialidadCreadaDTOResponse;
+import com.aquienllamo.aquienllamo.model.dtos.Response.especialidad.EspecialidadDTOResponse;
 import com.aquienllamo.aquienllamo.model.entities.EspecialidadEntity;
-import com.aquienllamo.aquienllamo.model.entities.HabilidadEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

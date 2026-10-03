@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.model.dtos.Request;
+package com.aquienllamo.aquienllamo.model.dtos.Request.tecnico;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

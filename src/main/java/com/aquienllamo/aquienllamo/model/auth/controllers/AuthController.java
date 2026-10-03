@@ -7,7 +7,7 @@ import com.aquienllamo.aquienllamo.model.auth.securityDtos.RefreshTokenRequest;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ForgotPasswordDTORequest;
 import com.aquienllamo.aquienllamo.model.auth.securityDtos.request.ResetPasswordDTORequest;
 import com.aquienllamo.aquienllamo.model.auth.securityServices.AuthService;
-import com.aquienllamo.aquienllamo.model.dtos.Request.UsuarioDTORequest;
+import com.aquienllamo.aquienllamo.model.dtos.Request.usuario.UsuarioDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.UsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.model.services.UsuarioService;
 import jakarta.validation.Valid;

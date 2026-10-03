@@ -1,0 +1,1852 @@
+openapi: 3.0.3
+info:
+  title: API ¿A Quién Llamo?
+  version: 1.0.0
+  description: >
+    API destinada a la gestión de usuarios, técnicos, presupuestos y servicios.
+    El sistema permite que una persona pueda actuar como cliente o prestador
+    según la necesidad del momento.
+  contact: {}
+servers:
+  - url: 'http://localhost:8080'
+    description: SERVER LOCAL
+tags:
+  - name: Usuario
+    description: >-
+      Incluye la gestión del perfil del usuario: la creación de su perfil, la
+      visualización del mismo, la visualización de otros usuarios, la
+      amonestación, la baja de perfil, la "rehabilitación" (si así se quiere)
+      del perfil, es decir: quitar la suspensión y quitar la baja, entre otros.
+  - name: Presupuestos
+    description: >-
+      Gestión de presupuestos entre usuarios y técnicos, una vez que se
+      establece una conversación, el prestador/técnico puede iniciar un
+      presupuesto. Dentro de este, se gestionan los presupuestos como tal, la
+      visualización de los mismos y el estado (pendiente, aprobado, rechazado,
+      cancelado). 
+
+      También se tomaron "medidas de seguridad" (validaciones) para evitar que,
+      por ejemplo, un método aprobado pueda rechazarse de repente.
+  - name: Certificación
+    description: >-
+      Permite cargar al técnico sus títulos (crear), al administrador le permite
+      otras opciones tales como: filtrar, aprobar, rechazar, eliminar,
+      actualizar.
+  - name: Técnico
+    description: >-
+      Gestiona el registro, consulta, búsqueda, actualización y eliminación de
+      prestadores de servicios dentro de la plataforma. Un técnico puede
+      registrarse desde una cuenta de usuario existente o crearse directamente
+      junto con sus datos personales. Además, permite filtrar técnicos por
+      distintos criterios para facilitar la búsqueda de profesionales.
+  - name: Especialidad
+    description: >
+      Permite crear, consultar, modificar y eliminar especialidades dentro de la
+      plataforma. Las especialidades representan las áreas de trabajo en las que
+      un técnico se desempeña, y pueden requerir distintos tipos de validación:
+      por certificado, por portafolio o sin validación. Son utilizadas tanto
+      para clasificar a los técnicos como para facilitar la búsqueda por parte
+      de los usuarios.
+  - name: Habilidad
+    description: >-
+      Permite crear, consultar, modificar y eliminar habilidades dentro de la
+      plataforma. Las habilidades son competencias específicas que los técnicos
+      pueden tener asociadas a su perfil, y que los usuarios pueden utilizar
+      como criterio de búsqueda para encontrar el profesional más adecuado a su
+      necesidad.
+  - name: Denuncia
+    description: >-
+      Se manejan comportamientos inadecuados, reseñas falsas y otro tipo de
+      denuncias, todas administradas por el administrador del sistema, quien
+      gestiona la: aprobación, rechazo, eliminación de reseñas, filtrado, etc.
+  - name: Característica
+    description: >-
+      Permite crear, consultar, modificar, eliminar y buscar características
+      utilizadas dentro de la plataforma para clasificar o describir servicios
+      ofrecidos por los prestadores.
+  - name: Mensaje
+    description: >-
+      Gestión de mensajes dentro de un chat entre usuario y técnico. Permite
+      enviar mensajes de texto, archivos adjuntos (imágenes, documentos) o ambos
+      en simultáneo. Cada mensaje queda asociado a un chat y a un sender
+      identificado por UUID, con timestamp automático generado en la
+      persistencia. Expone endpoints para crear, modificar y listar mensajes.
+  - name: Chat
+    description: >-
+      Gestión de conversaciones entre un usuario y un técnico. Un chat vincula a
+      ambas partes y actúa como contenedor de mensajes y presupuestos. Cada
+      instancia se identifica con un UUID generado automáticamente al
+      persistirse. Expone endpoints para iniciar un chat, buscarlo por UUID y
+      listar todos los chats de un usuario o de un técnico.
+  - name: Ubicación
+    description: >-
+      Gestión de direcciones asociadas a un usuario. Almacena provincia, ciudad,
+      calle, número, piso y código postal. Un usuario puede tener múltiples
+      ubicaciones registradas, cada una identificada por UUID único. Expone
+      endpoints para crear, consultar por UUID, listar por usuario, actualizar y
+      eliminar una ubicación.
+  - name: Administrador
+    description: >-
+      Gestión de cuentas de administrador del sistema. Permite registrar nuevos
+      administradores y autenticarlos mediante nombre de usuario y clave
+      encriptada con BCrypt. Cada administrador se identifica con un UUID
+      generado automáticamente. Expone endpoints de registro y login.
+  - name: Trabajos
+    description: >-
+      Gestión de órdenes de trabajo entre usuarios y técnicos. Permite crear un
+      trabajo asignando un cliente y un técnico, consultar trabajos por UUID,
+      listar todos los trabajos o filtrarlos por estado (PENDIENTE, EN_PROCESO,
+      FINALIZADO, CANCELADO). También permite actualizar el estado de un trabajo
+      mediante PATCH. Se pueden listar los trabajos asociados a un cliente o a
+      un técnico específico mediante su UUID.
+  - name: Pagos
+    description: >-
+      Gestión de pagos realizados por los clientes hacia los técnicos una vez
+      finalizado un trabajo. Permite registrar un nuevo pago indicando el
+      trabajo, el monto y el método de pago (EFECTIVO, TRANSFERENCIA,
+      TARJETA_CREDITO, TARJETA_DEBITO). Expone endpoints para listar todos los
+      pagos, filtrarlos por estado (PENDIENTE, APROBADO, RECHAZADO, CANCELADO) o
+      por método de pago, consultar los pagos de un cliente o técnico
+      específico, y cancelar un pago existente.
+  - name: Rubros
+    description: >-
+      Mantenimiento del catálogo de rubros comerciales disponibles en la
+      plataforma. Permite listar todos los rubros disponibles para usuarios
+      autenticados, crear nuevos rubros y modificar los existentes. Las
+      operaciones de creación y modificación están restringidas al rol
+      ADMINISTRADOR. Cada rubro se identifica con un UUID generado
+      automáticamente.
+  - name: Rating
+    description: >-
+      Sistema de calificación y reseñas entre usuarios y técnicos. Permite a un
+      usuario dejar una calificación con puntaje de estrellas y comentario sobre
+      un trabajo finalizado, con la restricción de una sola reseña por trabajo.
+      Expone endpoints para crear una nueva reseña, consultar todas las reseñas
+      enviadas por un usuario específico y todas las reseñas recibidas por un
+      usuario o técnico, filtrando por UUID.
+  - name: Portfolio
+    description: >-
+      Gestión del portafolio de trabajos previos del técnico. Permite cargar
+      archivos o imágenes que respalden experiencia laboral, modificar su título
+      o descripción, eliminar elementos y visualizar el portafolio propio. Los
+      elementos cargados pasan por un proceso de moderación donde el
+      administrador puede aprobarlos o rechazarlos con un motivo. El estado de
+      moderación puede ser PENDIENTE, APROBADO o RECHAZADO.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UsuarioUpdateRequest:
+      type: object
+      properties:
+        nombre:
+          type: string
+        apellido:
+          type: string
+        email:
+          type: string
+        telefono:
+          type: string
+        sobreMi:
+          type: string
+        foto:
+          type: string
+          format: binary
+    DeleteUsuarioRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+    PresupuestoRequest:
+      type: object
+      required:
+        - precioEstimado
+        - descripcionPresupuesto
+      properties:
+        precioEstimado:
+          type: number
+          format: double
+        descripcionPresupuesto:
+          type: string
+    PresupuestoResponse:
+      type: object
+      properties:
+        uuid:
+          type: string
+        nombreTecnico:
+          type: string
+        apellidoTecnico:
+          type: string
+        nombreUsuario:
+          type: string
+        apellidoUsuario:
+          type: string
+        precioEstimado:
+          type: number
+        descripcionPresupuesto:
+          type: string
+        fechaRealizado:
+          type: string
+          format: date-time
+        estado:
+          type: string
+          enum:
+            - PENDIENTE
+            - ACEPTADO
+            - RECHAZADO
+            - CANCELADO
+    TecnicoDTOResponse:
+      type: object
+    TecnicoDTORequest:
+      type: object
+    UsuarioDTOResponse:
+      type: object
+      properties:
+        uuid:
+          type: string
+        nombre:
+          type: string
+        apellido:
+          type: string
+        email:
+          type: string
+        telefono:
+          type: string
+        sobreMi:
+          type: string
+        fotoBase64:
+          type: string
+        tipoImagen:
+          type: string
+        tipoUsuario:
+          type: string
+        fechaRegistro:
+          type: string
+          format: date-time
+        ultimaActividad:
+          type: string
+          format: date-time
+    UsuarioDTORequest:
+      type: object
+    EspecialiadCreadaDTOResponse:
+      type: object
+    EspecialidadDTOResponse:
+      type: object
+    EspecialidadDTORequest:
+      type: object
+    HabilidadDTOResponse:
+      type: object
+    HabilidadCreadaDTOResponse:
+      type: object
+    HabilidadDTORequest:
+      type: object
+    CaracteristicaDTOResponse:
+      type: object
+    CaracteristicaDTORequest:
+      type: object
+    DenunciaDTOResponse:
+      type: object
+    DenunciaDTORequest:
+      type: object
+    PagoDTORequest:
+      type: object
+    PagoDTOResponse:
+      type: object
+    PortfolioAdminDTORequest:
+      type: object
+    PortfolioUsuarioDTORequest:
+      type: object
+    PortfolioAdminDTOResponse:
+      type: object
+    PortfolioUsuarioDTOResponse:
+      type: object
+    RatingDTORequest:
+      type: object
+    RatingDTOResponse:
+      type: object
+    RubroDTORequest:
+      type: object
+    RubroDTOResponse:
+      type: object
+    TrabajoDTORequest:
+      type: object
+    TrabajoDTOResponse:
+      type: object
+    AdministradorDTORequest:
+      type: object
+    AdministradorDTOResponse:
+      type: object
+    ChatDTORequest:
+      type: object
+    ChatDTOResponse:
+      type: object
+    MensajeDTORequest:
+      type: object
+    MensajeDTOResponse:
+      type: object
+    UbicacionDTORequest:
+      type: object
+    UbicacionDTOResponse:
+      type: object
+    CertificacionDTOResponse:
+      type: object
+    CertificacionDTORequest:
+      type: object
+  links: {}
+  callbacks: {}
+security:
+  - bearerAuth: []
+paths:
+  '/aquienllamo/tecnicos/registrar/{uuidUsuario}':
+    post:
+      summary: Registrar una cuenta de usuario existente como técnico.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Usuario
+  ' /aquienllamo/tecnicos/registrar-nuevo':
+    post:
+      summary: Registrar un nuevo técnico junto con los datos de usuario.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Técnico
+  /aquienllamo/tecnicos:
+    get:
+      summary: Obtener listado completo de técnicos registrados.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Técnico
+        - Usuario
+  ' /aquienllamo/tecnicos/perfil/{uuid}':
+    get:
+      summary: Obtener el perfil detallado de un técnico por UUID.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Usuario
+        - Técnico
+  '/aquienllamo/tecnicos/habilidad/{uuidHabilidad}':
+    get:
+      summary: Buscar técnicos asociados a una habilidad determinada.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Técnico
+        - Usuarios
+  '/aquienllamo/tecnicos/especialidad/{uuidEspecialidad}':
+    get:
+      summary: Buscar técnicos asociados a una especialidad determinada.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Técnico
+        - Usuarios
+  '/aquienllamo/tecnicos/nombre/{nombre}':
+    get:
+      summary: Buscar técnicos por nombre.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Técnico
+        - Usuario
+  '/aquienllamo/tecnicos/rubro/{uuidRubro}':
+    get:
+      summary: Buscar técnicos pertenecientes a un rubro específico.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Técnico
+        - Usuario
+  /aquienllamo/tecnicos/buscar:
+    get:
+      summary: Realizar búsquedas avanzadas de técnicos mediante filtros opcionales.
+      description: ''
+      parameters:
+        - name: nombre
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: apellido
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: habilidad
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: especialidad
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: fecha
+          in: query
+          required: false
+          schema:
+            type: string
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Usuario
+        - Técnico
+  '/aquienllamo/tecnicos/actualizar-perfil/{uuid}':
+    put:
+      summary: Actualizar la información profesional de un técnico.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Técnico
+  '/aquienllamo/tecnicos/eliminar/{uuid}':
+    delete:
+      summary: Eliminar un técnico del sistema.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - 'Administrador  ''/aquienllamo/usuarios/perfil/{uuid}''': null
+    get:
+      tags:
+        - Usuario
+      summary: Obtener perfil de usuario por UUID
+      description: >
+        Permite consultar la información pública de un usuario utilizando su
+        UUID. Roles permitidos: administrador, usuario, técnico.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+  '/aquienllamo/usuarios/actualizar/{uuid}':
+    patch:
+      tags:
+        - Usuario
+      summary: Actualizar perfil de usuario
+      description: >
+        Permite modificar parcialmente los datos de un usuario. Usuario
+        propietario de la cuenta.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UsuarioUpdateRequest'
+      responses:
+        '200':
+          description: Perfil actualizado correctamente
+  '/aquienllamo/usuarios/eliminar/{uuid}':
+    delete:
+      tags:
+        - Usuario
+      summary: Eliminar cuenta de usuario
+      description: >
+        Elimina una cuenta de usuario previa validación de contraseña. Usuario
+        propietario de la cuenta.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUsuarioRequest'
+      responses:
+        '200':
+          description: Cuenta eliminada correctamente
+  /aquienllamo/usuarios/todos:
+    get:
+      tags:
+        - Usuario
+      summary: Listar todos los usuarios
+      description: >
+        Devuelve el listado completo de usuarios registrados. Roles permitidos:
+        administrador.
+      responses:
+        '200':
+          description: Lista de usuarios obtenida correctamente
+      parameters: []
+  /aquienllamo/usuarios/mi-perfil:
+    get:
+      tags:
+        - Usuario
+      summary: Obtener mi perfil
+      description: >
+        Devuelve los datos del usuario autenticado. Roles permitidos:
+        administrador, usuario, técnico.
+      responses:
+        '200':
+          description: Perfil obtenido correctamente
+      parameters: []
+  '/aquienllamo/usuarios/amonestar/{uuid}':
+    patch:
+      tags:
+        - Usuario
+      summary: Amonestar usuario
+      description: 'Registra una amonestación sobre un usuario indicando el motivo. '
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: motivo
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario amonestado correctamente
+  '/aquienllamo/usuarios/baja/{uuid}':
+    patch:
+      tags:
+        - Usuario
+      summary: Dar de baja usuario
+      description: |
+        Suspende o da de baja una cuenta de usuario.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario dado de baja correctamente
+  '/aquienllamo/usuarios/usuario/dni/{dni}':
+    get:
+      tags:
+        - Usuario
+      summary: Buscar usuario por DNI
+      description: |
+        Permite localizar un usuario mediante su documento.
+      parameters:
+        - name: dni
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+  '/aquienllamo/usuarios/usuario/email/{email}':
+    get:
+      tags:
+        - Usuario
+      summary: Buscar usuario por email
+      description: |
+        Permite localizar un usuario mediante su correo electrónico.
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+  '/aquienllamo/usuarios/quitar-suspension/{uuid}':
+    patch:
+      tags:
+        - Usuario
+      summary: Quitar suspensión
+      description: |
+        Elimina la suspensión aplicada a un usuario.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Suspensión removida correctamente
+  '/aquienllamo/usuarios/quitar-baja/{uuid}':
+    patch:
+      tags:
+        - Usuario
+      summary: Rehabilitar usuario
+      description: |
+        Revierte la baja de una cuenta y la habilita nuevamente. 
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Baja removida correctamente
+    '/presupuestos/chat/{uuidChat}':
+      post:
+        tags:
+          - Presupuestos
+        summary: Crear presupuesto
+        parameters:
+          - name: uuidChat
+            in: path
+            required: true
+            schema:
+              type: string
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresupuestoRequest'
+        responses:
+          '201':
+            description: Presupuesto creado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PresupuestoResponse'
+    '/presupuestos/{uuid}':
+      get:
+        tags:
+          - Presupuestos
+        summary: Obtener presupuesto por UUID
+        parameters:
+          - name: uuid
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Presupuesto encontrado
+    '/presupuestos/{uuid}/aceptar':
+      patch:
+        tags:
+          - Presupuestos
+        summary: Aceptar presupuesto
+        parameters:
+          - name: uuid
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          '204':
+            description: Presupuesto aceptado
+    '/presupuestos/{uuid}/rechazar':
+      patch:
+        tags:
+          - Presupuestos
+        summary: Rechazar presupuesto
+        parameters:
+          - name: uuid
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          '204':
+            description: Presupuesto rechazado
+    '/presupuestos/{uuid}/cancelar':
+      patch:
+        tags:
+          - Presupuestos
+        summary: Cancelar presupuesto
+        parameters:
+          - name: uuid
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          '204':
+            description: Presupuesto cancelado
+    /presupuestos/todos:
+      get:
+        tags:
+          - Presupuestos
+        summary: Listar todos los presupuestos
+        responses:
+          '200':
+            description: Lista de presupuestos
+    /presupuestos/buscar:
+      get:
+        tags:
+          - Presupuestos
+        summary: Buscar presupuestos por filtros
+        parameters:
+          - name: nombre
+            in: query
+            schema:
+              type: string
+          - name: apellido
+            in: query
+            schema:
+              type: string
+          - name: min
+            in: query
+            schema:
+              type: number
+          - name: max
+            in: query
+            schema:
+              type: number
+          - name: fecha
+            in: query
+            schema:
+              type: string
+              format: date
+        responses:
+          '200':
+            description: Resultados encontrados
+  '/presupuestos/chat/{uuidChat}':
+    post:
+      summary: Crear un nuevo presupuesto asociado a un chat existente.
+      description: 'Rol: TECNICO'
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  '/presupuestos/{uuid}':
+    get:
+      summary: Obtener la información detallada de un presupuesto mediante su UUID.
+      description: 'Rol: ADMINISTRADOR, USUARIO, TECNICO'
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  '/presupuestos/{uuid}/aceptar':
+    patch:
+      summary: Aceptar un presupuesto pendiente.
+      description: 'Rol: USUARIO.'
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  '/presupuestos/{uuid}/rechazar':
+    patch:
+      summary: Rechazar un presupuesto pendiente.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  '/presupuestos/{uuid}/cancelar':
+    patch:
+      summary: >-
+        Cancelar un presupuesto existente según las reglas de negocio
+        establecidas.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/todos:
+    get:
+      summary: Listar todos los presupuestos registrados en el sistema.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/buscar:
+    get:
+      summary: >-
+        Buscar presupuestos aplicando filtros opcionales como nombre, apellido,
+        rango de precios o fecha.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/mis-presupuestos:
+    x-temp:
+      summary: ''
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+    get:
+      summary: Obtener todos los presupuestos asociados al usuario autenticado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/mis-presupuestos/filtrar:
+    get:
+      summary: Filtrar los presupuestos del usuario por estado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/mis-presupuestos/buscar:
+    get:
+      summary: >-
+        Realizar una búsqueda avanzada sobre los presupuestos del usuario
+        autenticado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/mis-presupuestos-tecnico:
+    get:
+      summary: Obtener todos los presupuestos generados por el técnico autenticado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/mis-presupuestos-tecnico/filtrar:
+    get:
+      summary: Filtrar los presupuestos del técnico por estado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  /presupuestos/mis-presupuestos-tecnico/buscar:
+    get:
+      summary: >-
+        Realizar una búsqueda avanzada sobre los presupuestos del técnico
+        autenticado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Presupuestos
+  GET /aquienllamo/habilidades/listar:
+    get:
+      summary: Listar todas las habilidades
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Usuario
+        - Tecnico
+  '/aquienllamo/habilidades/{uuid}':
+    get:
+      summary: Listar habilidades por uuid.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Usuario
+        - Tecnico
+  /aquienllamo/habilidades/buscar?nombre=:
+    get:
+      summary: Buscar habilidades por nombre
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Usuario
+        - Tecnico
+  /aquienllamo/habilidades:
+    post:
+      summary: Crear habilidad
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/habilidades/actualizar/{uuid}':
+    put:
+      summary: Actualizar habilidad
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/habilidades/eliminar/{uuid}':
+    delete:
+      summary: Eliminar habilidad
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  /aquienllamo/especialidades/listar:
+    get:
+      summary: Listar todas las especialidades
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Adminsitrador
+        - Usuario
+        - Tecnico
+  '/aquiellamo/especialidades/{uuid}':
+    get:
+      summary: Buscar especialidad por uuid
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Tecnico
+        - Usuario
+  /aquienllamo/especialidades/buscar?nombre=:
+    get:
+      summary: Buscar especialidades por nombre
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Usuario
+        - Tecnico
+  /aquienllamo/especialidades/tipo-validacion?tipoValidacion=:
+    get:
+      summary: Filtrar por tipo de validacion.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+        - Usuario
+        - Tecnico
+  /aquienllamo/especialidades:
+    post:
+      summary: crear especialidad
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/especialidades/actualizar/{uuid}':
+    put:
+      summary: Actualizar especialidad
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/denuncias/crear/{uuidChat}':
+    post:
+      summary: Crear una nueva denuncia asociada a un chat existente.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  /aquienllamo/denuncias:
+    get:
+      summary: Obtener el listado completo de denuncias registradas.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+  '/aquienllamo/denuncias/{uuid}':
+    get:
+      summary: Obtener el detalle de una denuncia mediante su UUID.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  '/aquienllamo/denuncias/estado/{estado}':
+    get:
+      summary: Listar denuncias filtradas por estado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  '/aquienllamo/denuncias/eliminar/{uuid}':
+    delete:
+      summary: Eliminar una denuncia existente.
+      description: Sólo puede hacerlo un administrador.
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  /aquienllamo/denuncias/sin-asignar:
+    get:
+      summary: Obtener todas las denuncias que aún no tienen un administrador asignado.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  '/aquienllamo/denuncias/{uuid}/rechazar':
+    patch:
+      summary: Rechazar una denuncia y registrar un mensaje de resolución.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  '/aquienllamo/denuncias/{uuid}/aprobar':
+    patch:
+      summary: Aprobar una denuncia y reigstrar un mensaje de resolución.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  '/aquienllamo/denuncias/{uuidDenuncia}/asignar-administrador/{uuidAdmin}':
+    patch:
+      summary: Asignar un administrador responsable de una denuncia.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  /aquienllamo/denuncias/ordenar:
+    get:
+      summary: Obtener las denuncias ordenadas por fecha de creación.
+      description: 'Filtros: orden ascendente/descendente.'
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  /aquienllamo/denuncias/mis-denuncias:
+    get:
+      summary: Obtener las denuncias asignadas al administrador autenticado.
+      description: Tiene un filtrado opcional de estado.
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Denuncia
+  /aquienllamo/caracteristica/create:
+    get:
+      summary: Crea una característica.
+      description: >-
+        *Aclaración: una característica es un valor adjetivo (puntual,
+        impuntual, responsable, ordenado, etc).
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Caracteristica
+  '/aquienllamo/caracteristica/delete/{uuid}':
+    delete:
+      summary: Eliminar una característica.
+      description: >-
+        *Aclaración: una característica es un valor adjetivo (puntual,
+        impuntual, responsable, ordenado, etc).
+
+        Sólo puede hacerlo un admin.
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+  /aquienllamo/caracteristica/caracteristicas:
+    get:
+      summary: Lista todas las características disponibles.
+      description: >-
+        *Aclaración: una característica es un valor adjetivo (puntual,
+        impuntual, responsable, ordenado, etc).
+
+        Sólo puede hacerlo un admin.
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+  '/aquienllamo/caracteristica/update/{uuid}':
+    patch:
+      summary: Actualizar una característica.
+      description: >-
+        *Aclaración: una característica es un valor adjetivo (puntual,
+        impuntual, responsable, ordenado, etc).
+
+        Sólo puede hacerlo un admin.
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+  '/aquienllamo/caracteristica/{uuid}':
+    get:
+      summary: Encontrar una característica por uuid.
+      description: >-
+        *Aclaración: una característica es un valor adjetivo (puntual,
+        impuntual, responsable, ordenado, etc).
+
+        Sólo puede hacerlo un admin.
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+  /aquienllamo/caracteristica/buscar:
+    get:
+      summary: >-
+        Buscar a través de un filtrado una característica. Palabra parcial, o
+        tipo (positivo, negativo).
+      description: >-
+        *Aclaración: una característica es un valor adjetivo (puntual,
+        impuntual, responsable, ordenado, etc).
+
+        Sólo puede hacerlo un admin.
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+  /aquienllamo/pagos:
+    get:
+      summary: Listar todos los pagos
+      description: >-
+        Devuelve el registro completo de todos los pagos. Requiere rol
+        ADMINISTRADOR.
+      parameters: []
+      operationId: /aquienllamo/pagos
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Pago
+  /aquienllamo/mensajes/crear:
+    get:
+      summary: Crear Mensaje
+      description: Al enviar un mensaje este se crea y queda guardado
+      parameters: []
+      operationId: /aquienllamo/mensajes/crear
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Mensaje
+  /aquienllamo/mensajes/modificar:
+    patch:
+      summary: Modificar mensaje
+      description: un usuario puede modificar un mensaje enviado.
+      parameters: []
+      operationId: /aquienllamo/mensajes/modificar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Mensaje
+  /aquienllamo/mensajes/listar:
+    get:
+      summary: Listar todos los mensaje
+      description: Un usuario puede listar todos los mensajes que tiene en su cuenta
+      parameters: []
+      operationId: /aquienllamo/mensajes/listar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Mensaje
+  /aquienllamo/chats/iniciar-chat:
+    post:
+      summary: Iniciar chat
+      description: Un usuario inicia un chat con el técnico que desee
+      parameters: []
+      operationId: /aquienllamo/chats/iniciar-chat
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Chat
+  '/aquienllamo/chats/buscar-por-uuid/{uuid}':
+    get:
+      summary: Buscar por uuid
+      description: Un usuario puede buscar por el uuid un chat
+      parameters: []
+      operationId: '/aquienllamo/chats/buscar-por-uuid/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Chat
+  '/aquienllamo/chats/listar-chats-por-usuario/{uuid}':
+    get:
+      summary: Listar chats por usuario
+      description: Un usuario puede listar los chats que tiene
+      parameters: []
+      operationId: '/aquienllamo/chats/listar-chats-por-usuario/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Chat
+  '/aquienllamo/chats/listar-chats-por-tecnico/{uuid}':
+    get:
+      summary: Listar chat por tecnico
+      description: Un usuario puede listar sus chats por el técnico que desee
+      parameters: []
+      operationId: '/aquienllamo/chats/listar-chats-por-tecnico/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Chat
+  '/aquienllamo/ubicaciones/crear/{uuidUsuario}':
+    post:
+      summary: Crear ubicación
+      description: Un usuario puede crear una ubicación
+      parameters: []
+      operationId: '/aquienllamo/ubicaciones/crear/{uuidUsuario}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Ubicacion
+  '/aquienllamo/ubicaciones/usuario/{uuidUsuario}':
+    get:
+      summary: Ver ubicaciones de usuario
+      description: >-
+        Un usuario puede ver ubicaciones segun el uuid del usuario
+        correspondiente
+      parameters: []
+      operationId: '/aquienllamo/ubicaciones/usuario/{uuidUsuario}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Ubicacion
+  '/aquienllamo/ubicaciones/{uuid}':
+    get:
+      summary: Listar ubicación por uuid
+      description: Un usuario puede ver las ubicaciones segun el uuid que indique
+      parameters: []
+      operationId: '/aquienllamo/ubicaciones/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - ubicaciones
+  '/aquienllamo/ubicaciones/actualizar/{uuid}':
+    put:
+      summary: Actualizar ubicacion
+      description: Un usuario puede actualizar la ubicación que desee según el uuid
+      parameters: []
+      operationId: '/aquienllamo/ubicaciones/actualizar/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Ubicacion
+  '/aquienllamo/ubicaciones/eliminar/{uuid}':
+    delete:
+      summary: Eliminar ubicación
+      description: El usuario puede eliminar una ubicación que desee según el uuid indicado
+      parameters: []
+      operationId: '/aquienllamo/ubicaciones/eliminar/{uuid}'
+      responses:
+        default:
+          description: Default response
+  /aquienllamo/administradores/registrar:
+    post:
+      summary: Registrar administrador
+      description: El administrador puede registrarse
+      parameters: []
+      operationId: /aquienllamo/administradores/registrar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  'http://localhost:8080/auth/login':
+    post:
+      summary: Logear administrador
+      description: Un administrador puede entrar a su cuenta registrada
+      parameters: []
+      operationId: 'http://localhost:8080/auth/login'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/http://localhost:8080/auth/logout':
+    post:
+      summary: Logout administrador
+      description: >-
+        Un administrador puede salir en su cuenta y que no quede inicializada su
+        sesión
+      parameters: []
+      operationId: '/http://localhost:8080/auth/logout'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/especialidades/eliminar/{uuid}':
+    delete:
+      summary: Eliminar especialidad
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  /aquienllamo/trabajos:
+    get:
+      summary: Listar todos los trabajos
+      description: Devuelve el listado completo de trabajos. Requiere rol ADMINISTRADOR.
+      parameters: []
+      operationId: /aquienllamo/trabajos
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Trabajo
+  '/aquienllamo/trabajos/{uuid}':
+    get:
+      summary: Obtener un trabajo por UUID
+      description: Retorna los datos completos de un trabajo específico.
+      parameters: []
+      operationId: '/aquienllamo/trabajos/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Trabajo
+  '/aquienllamo/trabajos/{uuid}/estado':
+    patch:
+      summary: Cambiar el estado de un trabajo
+      description: >-
+        Actualiza el estado de un trabajo. Permitido para roles TECNICO o
+        ADMINISTRADOR.
+      parameters: []
+      operationId: '/aquienllamo/trabajos/{uuid}/estado'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Trabajo
+  '/aquienllamo/trabajos/listarTrabajos/{estadoTrabajo}':
+    get:
+      summary: Listar trabajos por estado
+      description: Filtra los trabajos según el estado indicado en el path.
+      parameters: []
+      operationId: '/aquienllamo/trabajos/listarTrabajos/{estadoTrabajo}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Trabajo
+  '/aquienllamo/trabajos/cliente/{uuid}':
+    get:
+      summary: Listar trabajos de un cliente
+      description: Devuelve todos los trabajos asociados a un cliente específico.
+      parameters: []
+      operationId: '/aquienllamo/trabajos/cliente/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Trabajo
+  '/aquienllamo/trabajos/tecnico/{uuid}':
+    get:
+      summary: Listar trabajos de un técnico
+      description: Devuelve todos los trabajos asignados a un técnico específico.
+      parameters: []
+      operationId: '/aquienllamo/trabajos/tecnico/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Trabajo
+  /aquienllamo/pagos/metodoPago:
+    get:
+      summary: Filtrar pagos por método de pago
+      description: >-
+        Devuelve los pagos filtrados según el método utilizado (EFECTIVO,
+        TRANSFERENCIA, TARJETA_CREDITO, TARJETA_DEBITO).
+      parameters: []
+      operationId: /aquienllamo/pagos/metodoPago
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Pago
+  /aquienllamo/pagos/estado:
+    get:
+      summary: Filtrar pagos por estado
+      description: >-
+        Devuelve los pagos filtrados según su estado (PENDIENTE, APROBADO,
+        RECHAZADO, CANCELADO).
+      parameters: []
+      operationId: /aquienllamo/pagos/estado
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Pago
+  '/aquienllamo/pagos/cliente/{uuid}':
+    get:
+      summary: Listar pagos de un cliente
+      description: Devuelve el historial de pagos realizados por un cliente específico.
+      parameters: []
+      operationId: '/aquienllamo/pagos/cliente/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Pago
+  '/aquienllamo/pagos/tecnico/{uuid}':
+    get:
+      summary: Listar pagos recibidos por un técnico
+      description: Devuelve el historial de pagos recibidos por un técnico específico.
+      parameters: []
+      operationId: '/aquienllamo/pagos/tecnico/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Pago
+  '/aquienllamo/pagos/{uuid}/cancelar''':
+    patch:
+      summary: Cancelar un pago
+      description: >-
+        Marca un pago como CANCELADO. Solo puede cancelarse si el estado actual
+        es PENDIENTE.
+      parameters: []
+      operationId: '/aquienllamo/pagos/{uuid}/cancelar'''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Pago
+  /aquienllamo/rubros:
+    get:
+      summary: Listar todos los rubros
+      description: Devuelve el catálogo completo de rubros. Requiere usuario autenticado.
+      parameters: []
+      operationId: /aquienllamo/rubros
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Rubro
+  '/aquienllamo/rubros/{uuid}':
+    put:
+      summary: Modificar un rubro existente
+      description: >-
+        Reemplaza completamente los datos de un rubro. Solo permitido para el
+        rol ADMINISTRADOR.
+      parameters: []
+      operationId: '/aquienllamo/rubros/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Rubro
+  /aquienllamo/ratings:
+    post:
+      summary: Crear una nueva reseña
+      description: >-
+        Permite a un usuario dejar una calificación y comentario sobre un
+        trabajo finalizado. Solo puede calificarse una vez por trabajo.
+      parameters: []
+      operationId: /aquienllamo/ratings
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Rating
+  '/aquienllamo/ratings/remitidas/{uuid}':
+    get:
+      summary: Listar reseñas enviadas por un usuario
+      description: >-
+        Devuelve todas las calificaciones que un usuario específico ha dejado a
+        otros.
+      parameters: []
+      operationId: '/aquienllamo/ratings/remitidas/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Rating
+  '/aquienllamo/ratings/recibidas/{uuid}':
+    get:
+      summary: Listar reseñas recibidas por un usuario
+      description: >-
+        Devuelve todas las calificaciones que un usuario o técnico específico ha
+        recibido.
+      parameters: []
+      operationId: '/aquienllamo/ratings/recibidas/{uuid}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Rating
+  /aquienllamo/portafolio/cargar:
+    post:
+      summary: Cargar archivo al portafolio
+      description: >-
+        Permite a un técnico autenticado subir imágenes o archivos que respalden
+        sus trabajos previos.
+      parameters: []
+      operationId: /aquienllamo/portafolio/cargar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Portfolio
+        - Usuario
+  /aquienllamo/portafolio/eliminar:
+    delete:
+      summary: Eliminar elemento del portafolio
+      description: >-
+        Permite al técnico autenticado borrar un archivo específico de su
+        portafolio.
+      parameters: []
+      operationId: /aquienllamo/portafolio/eliminar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Portfolio
+        - Usuario
+  /aquienllamo/portafolio/modificar:
+    put:
+      summary: Modificar descripción del portafolio
+      description: >-
+        Permite al técnico autenticado actualizar el título o descripción de un
+        elemento de su portafolio.
+      parameters: []
+      operationId: /aquienllamo/portafolio/modificar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Portfolio
+        - Usuario
+  /aquienllamo/portafolio/visualizar:
+    get:
+      summary: Ver mi propio portafolio
+      description: >-
+        Devuelve el portafolio completo del técnico autenticado con todos sus
+        elementos y estado de moderación.
+      parameters: []
+      operationId: /aquienllamo/portafolio/visualizar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Portfolio
+        - Usuario
+  /aquienllamo/portafolio/admin/listar-pendientes:
+    get:
+      summary: Listar portafolios pendientes de moderación
+      description: >-
+        Muestra todos los elementos de portafolio en estado PENDIENTE que
+        requieren aprobación.
+      parameters: []
+      operationId: /aquienllamo/portafolio/admin/listar-pendientes
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Portfolio
+        - Administrador
+  /aquienllamo/portafolio/admin/aprobar:
+    post:
+      summary: Aprobar portafolio de un técnico
+      description: >-
+        Cambia el estado del portafolio a APROBADO, haciéndolo visible
+        públicamente en el perfil del técnico.
+      parameters: []
+      operationId: /aquienllamo/portafolio/admin/aprobar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Portfolio
+        - Administrador
+  /aquienllamo/portafolio/admin/rechazar:
+    post:
+      summary: Rechazar portafolio de un técnico
+      description: >-
+        Cambia el estado del portafolio a RECHAZADO e indica el motivo para que
+        el técnico pueda corregirlo.
+      parameters: []
+      operationId: /aquienllamo/portafolio/admin/rechazar
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Portfolio
+        - Administrador
+  /aquienllamo/certificaciones:
+    get:
+      summary: Listar todas las certificaciones
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/certificaciones/{uuid}':
+    get:
+      summary: Buscar certificación por UUID
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/certificaciones/tecnico/{uuidTecnico}':
+    post:
+      summary: Crear certificación para un técnico
+      description: ''
+      parameters: []
+      operationId: '/aquienllamo/certificaciones/tecnico/{uuidTecnico}'
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Tecnico
+    get:
+      summary: Listar certificaciones de un técnico.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Tecnico
+        - Administrador
+  '/aquienllamo/certificaciones/actualizar/{uuid}':
+    put:
+      summary: Actualizar una certificación existente
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/certificaciones/eliminar/{uuid}':
+    delete:
+      summary: Eliminar una certificación.
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/certificaciones/estado/{estado}':
+    get:
+      summary: Filtrar certificaciones por estado
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/certificaciones/aprobar/{uuid}':
+    patch:
+      summary: Aprobar una certificación
+      description: ''
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
+  '/aquienllamo/certificaciones/rechazar/{uuid}?motivo=':
+    patch:
+      summary: ''
+      description: Rechazar una certificación indicando el motivo
+      parameters: []
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      tags:
+        - Administrador
