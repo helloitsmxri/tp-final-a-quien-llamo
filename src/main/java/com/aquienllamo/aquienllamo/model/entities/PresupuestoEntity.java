@@ -47,19 +47,6 @@ public class PresupuestoEntity extends BaseEntity {
     private String descripcionPresupuesto;
 
 
-    @Column(name = "fecha_realizado", nullable = false, updatable = false)
-    private LocalDateTime fechaRealizado;
-
-    @PrePersist
-    public void prePersist() {
-        if (this.uuid == null) {
-            this.uuid = UUID.randomUUID().toString();
-        }
-        if (this.fechaRealizado == null) {
-            this.fechaRealizado = LocalDateTime.now();
-        }
-    }
-
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
     private EstadoPresupuestoE estado;

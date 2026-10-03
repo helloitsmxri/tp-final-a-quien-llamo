@@ -29,9 +29,6 @@ public class UsuarioEntity extends BaseEntity {
         if (this.uuid == null) {
             this.uuid = UUID.randomUUID().toString();
         }
-        if (this.fechaRegistro == null) {
-            this.fechaRegistro = LocalDateTime.now();
-        }
     }
 
     @Column(name = "tipo_imagen", nullable = false, length = 50)
@@ -61,9 +58,6 @@ public class UsuarioEntity extends BaseEntity {
 
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
-
-    @Column(name = "fecha_registro", nullable = false, updatable = false)
-    private LocalDateTime fechaRegistro;
 
     @Column(name = "ultima_actividad", nullable = false, updatable = true)
     private LocalDateTime ultimaActividad;
