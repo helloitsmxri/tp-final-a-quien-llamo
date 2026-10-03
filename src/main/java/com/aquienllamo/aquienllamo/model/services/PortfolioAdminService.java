@@ -85,7 +85,7 @@ public class PortfolioAdminService {
         portfolio.setEstadoVerificacion(EstadoVerificacion.Aprobado);
         portfolio.setNotasAdmin(notas);
         repository.save(portfolio);
-        emailService.enviarPortafolioAprobado(portfolio.getTecnico().getUsuario().getEmail());
+        emailService.enviarPortafolioAprobado(portfolio.getTecnico().getUsuario().getEmail(), "http://localhost:8080/aquienllamo/portafolios/admin/" + portfolio.getUuid());
         return PortfolioMapper.toResponseAdmin(portfolio);
 
     }
@@ -101,7 +101,7 @@ public class PortfolioAdminService {
         portfolio.setEstadoVerificacion(EstadoVerificacion.Rechazado);
         portfolio.setNotasAdmin(notas);
         repository.save(portfolio);
-        emailService.enviarPortafolioRechazado(portfolio.getTecnico().getUsuario().getEmail());
+        emailService.enviarPortafolioRechazado(portfolio.getTecnico().getUsuario().getEmail(), portfolio.getTecnico().getUsuario().getNombre(), "http://localhost:8080/aquienllamo/portafolios/admin/" + portfolio.getUuid());
         return PortfolioMapper.toResponseAdmin(portfolio);
     }
 

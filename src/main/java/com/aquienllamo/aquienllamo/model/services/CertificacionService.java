@@ -107,7 +107,7 @@ public class CertificacionService {
 
         certificacionRepository.save(certificacion);
 
-        emailService.enviarCertificacionAprobada(certificacion.getTecnico().getUsuario().getEmail());
+        emailService.enviarCertificacionAprobada(certificacion.getTecnico().getUsuario().getEmail(), "http://localhost:8080/aquienllamo/certificaciones/" + certificacion.getUuid());
         return certificacionMapper.toResponse(certificacion);
     }
 
