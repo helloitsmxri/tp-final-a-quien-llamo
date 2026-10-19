@@ -43,6 +43,19 @@ public class EmailService {
         );
     }
 
+    public void enviarSuspensionCuenta(String email, String motivo){
+        enviarEmail(
+                email,
+                "Suspensión de cuenta",
+                """
+                        Tu cuenta ha sido suspendida.
+                        Motivo:
+                         %s
+                         Si considerás que se trata de un error, contactá al soporte.
+                        """.formatted(motivo)
+        );
+    }
+
     public void enviarBienvenida2(String email, String nombre){
         enviarEmail(email,"¿List@ para empezar a trabajar juntos?",
                 """
