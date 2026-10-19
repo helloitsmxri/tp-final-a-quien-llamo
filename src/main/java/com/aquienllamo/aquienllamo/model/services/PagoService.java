@@ -41,8 +41,11 @@ public class PagoService {
         TrabajoEntity trabajo = trabajoRepository.findByUuid(request.getUuidTrabajo())
                 .orElseThrow(()-> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe."));
 
-        if(!trabajo.getPresupuesto().getEstado().equals(EstadoPresupuestoE.Aceptado)){
-            throw new TrabajoNotAcceptedEx("ERROR: El trabajo que intenta pagar no esta aprobado.");
+        if(trabajo.getPresupuesto() == null || trabajo.getPresupuesto().getEstado() == null){
+            throw new TrabajoNotAcceptedEx("ERROR: El trabajo no posee un presupuesto o estado valido.");
+        }
+        if(!EstadoPresupuestoE.Aceptado.equals(trabajo.getPresupuesto().getEstado())){
+            throw new TrabajoNotAcceptedEx("Error: El trabajo que intenta pagar no esta aprobado.");
         }
 
         PagoEntity pago = PagoMapper.toEntity(request, trabajo);
