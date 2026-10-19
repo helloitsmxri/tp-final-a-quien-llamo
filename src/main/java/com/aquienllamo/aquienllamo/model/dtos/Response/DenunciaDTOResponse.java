@@ -1,7 +1,6 @@
 package com.aquienllamo.aquienllamo.model.dtos.Response;
 
 import com.aquienllamo.aquienllamo.model.Enum.EstadoDenunciaE;
-import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;

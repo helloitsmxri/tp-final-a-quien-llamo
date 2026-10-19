@@ -1,5 +1,5 @@
 package com.aquienllamo.aquienllamo.model.exceptions;
-
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> userNotFoundEx(UserNotFoundEx ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> userFoundEx(UserFoundEx ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UbicacionNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> ubicacionNotFoundEx(UbicacionNotFoundEx ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TrabajoNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> trabajoNotFoundEx(TrabajoNotFoundEx ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TrabajoAlreadyExistsEx.class)
     public ResponseEntity<ErrorResponseDTO> trabajoAlreadyExistsEx(TrabajoAlreadyExistsEx ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> tecnicoAlreadyExistsEx(TecnicoAlreadyExistsEx ex)
     {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> habilidadAlreadyExistsEx(HabilidadAlreadyExistsEx ex)
     {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> tecnicoNotFoundEx(TecnicoNotFoundEx ex)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> rubroAlreadyExistsEx(RubroAlreadyExistsEx ex)
     {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> presupuestoNotFoundEx(PresupuestoNotFoundEx ex)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -109,7 +109,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> minorFoundEx(MinorFoundEx ex)
     {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> invalidPasswordEx(InvalidPasswordEx ex)
     {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponseDTO.builder()
-                .status(401)
+                .status(HttpStatus.UNAUTHORIZED.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -129,7 +129,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> imageDataTypeNotFoundEx(ImageDataTypeNotFoundEx ex)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -138,7 +138,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> habilidadNotFoundEx(HabilidadNotFoundEx ex)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -148,7 +148,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> especialidadNotFoundEx(EspecialidadNotFoundEx ex)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -158,7 +158,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> especialidadAlreadyExistsEx(EspecialidadAlreadyExistsEx ex)
     {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -168,7 +168,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> duplicateCuitEx(DuplicateCuitEx ex)
     {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.builder()
-                .status(409)
+                .status(HttpStatus.CONFLICT.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -178,7 +178,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDTO> chatNotFoundEx(ChatNotFoundEx ex)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -187,7 +187,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CertificacionNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> certificacionNotFoundEx(CertificacionNotFoundEx ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -196,7 +196,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AdministradorNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> administradorNotFoundEx(AdministradorNotFoundEx ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                .status(404)
+                .status(HttpStatus.NOT_FOUND.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -205,7 +205,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AdminAsignadoDenunciaEx.class)
     public ResponseEntity<ErrorResponseDTO> adminAsignadoDenunciaEx(AdminAsignadoDenunciaEx ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseDTO.builder()
-                .status(400)
+                .status(HttpStatus.BAD_REQUEST.value())
                 .mensaje(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build());
@@ -214,7 +214,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DenunciaResueltaEx.class)
     public ResponseEntity<ErrorResponseDTO> denunciaResueltaEx(DenunciaResueltaEx ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseDTO.builder()
-                        .status(400)
+                        .status(HttpStatus.BAD_REQUEST.value())
                         .mensaje(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .build());
@@ -223,7 +223,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CertificacionEstadoInvalidoEx.class)
     public ResponseEntity<ErrorResponseDTO> certificacionEstadoInvalidoEx(CertificacionEstadoInvalidoEx ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseDTO.builder()
-                        .status(400)
+                        .status(HttpStatus.BAD_REQUEST.value())
                         .mensaje(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .build());
@@ -232,7 +232,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RoleNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> roleNotFoundEx(RoleNotFoundEx ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                        .status(404)
+                        .status(HttpStatus.NOT_FOUND.value())
                         .mensaje(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .build());
@@ -241,7 +241,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CredentialsNotFoundEx.class)
     public ResponseEntity<ErrorResponseDTO> credentialsNotFoundEx(CredentialsNotFoundEx ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
-                        .status(404)
+                        .status(HttpStatus.NOT_FOUND.value())
                         .mensaje(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .build());
@@ -249,13 +249,38 @@ public class GlobalExceptionHandler {
 
     //500 INTERNAL SERVER ERROR - catch-all de seguridad
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex)
-    {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponseDTO.builder()
-                .status(500)
+    public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex) {
+
+        ex.printStackTrace();
+
+        ErrorResponseDTO error = ErrorResponseDTO.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .timestamp(LocalDateTime.now())
                 .mensaje(ex.getMessage())
-                .build());
+                .build();
 
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(error);
+    }
+
+    //Error DTO Request AUTH
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDTO> handleValidationException(
+            MethodArgumentNotValidException ex
+    ) {
+        String mensaje = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getDefaultMessage())
+                .findFirst()
+                .orElse("Error de validación.");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponseDTO.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .mensaje(mensaje)
+                        .timestamp(LocalDateTime.now())
+                        .build());
     }
 }

@@ -15,7 +15,7 @@ import java.util.UUID;
 @ToString
 @Builder
 @Table(name = "Caracteristica")
-public class CaracteristicaEntity {
+public class CaracteristicaEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

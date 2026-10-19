@@ -2,22 +2,21 @@ package com.aquienllamo.aquienllamo.model.services;
 
 import com.aquienllamo.aquienllamo.model.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoDenunciaE;
-import com.aquienllamo.aquienllamo.model.auth.Credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.utils.SecurityUtils;
 import com.aquienllamo.aquienllamo.model.details.UsuarioSecurity;
 import com.aquienllamo.aquienllamo.model.dtos.Request.DenunciaDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.DenunciaDTOResponse;
-import com.aquienllamo.aquienllamo.model.entities.AdministradorEntity;
 import com.aquienllamo.aquienllamo.model.entities.ChatEntity;
 import com.aquienllamo.aquienllamo.model.entities.DenunciaEntity;
 import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
 import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.DenunciaMapper;
-import com.aquienllamo.aquienllamo.model.repositories.AdministradorRepository;
 import com.aquienllamo.aquienllamo.model.repositories.ChatRepository;
 import com.aquienllamo.aquienllamo.model.repositories.DenunciaRepository;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
@@ -35,27 +34,26 @@ public class DenunciaService {
     private final DenunciaMapper denunciaMapper;
     private final UsuarioRepository usuarioRepository;
     private final ChatRepository chatRepository;
-    private final AdministradorRepository administradorRepository;
     private final EmailService emailService;
     private final CredentialsRepository credentialsRepository;
-
     //crear
     public DenunciaDTOResponse crearDenuncia(DenunciaDTORequest denuncia, String uuidChat){
         //obtener usuario logueado
-        UsuarioSecurity usuarioLogueado=(UsuarioSecurity) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+        CredentialsEntity cred =
+                (CredentialsEntity) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
 
-        UsuarioEntity denunciante=usuarioRepository.findByUuid(usuarioLogueado.getUuid())
-                .orElseThrow(()-> new UserNotFoundEx("no se encontro el usuario con ese uuid"));
+        UsuarioEntity denunciante = cred.getUsuario();
 
         //obtener el chat y sacar el denunciado
         ChatEntity chat=chatRepository.findByUuidChat(uuidChat)
                 .orElseThrow(()-> new ChatNotFoundEx("el chat con ese uuid no se encontro"));
 
         UsuarioEntity denunciado;
-        if (chat.getUsuario().getUuid().equals(usuarioLogueado.getUuid())) {
+
+        if (chat.getUsuario().getUuid().equals(denunciante.getUuid())) {
             denunciado=chat.getTecnico().getUsuario();
         }else {
             denunciado=chat.getUsuario();
@@ -74,11 +72,11 @@ public class DenunciaService {
                 throw new ImageDataTypeNotFoundEx("Error al procesar la foto");
             }
         }
-
-        emailService.enviarDenunciaAprobadaDenunciante(denunciante.getEmail());
-        emailService.enviarDenunciaAprobadaDenunciado(denunciado.getEmail());
-        emailService.enviarDenunciaAdmin("aquienllamoinfo@gmail.com", nueva.getUuid());
+        
         denunciaRepository.save(nueva);
+        emailService.enviarDenunciaAdmin("aquienllamoinfo@gmail.com", nueva.getUuid());
+        emailService.enviarSeCreoDenunciaDenunciante(denunciante.getEmail(), denunciante.getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + nueva.getUuid());
+        emailService.enviarSeCreoDenunciaDenunciado(denunciado.getEmail(), denunciado.getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + nueva.getUuid());
         return denunciaMapper.toResponse(nueva);
     }
 
@@ -143,11 +141,24 @@ public class DenunciaService {
             throw new DenunciaResueltaEx("No se puede asignar una denuncia ya resuelta.");
         }
 
-        AdministradorEntity admin=administradorRepository.findByUuid(uuidAdmin)
+        UsuarioEntity admin=usuarioRepository.findByUuid(uuidAdmin)
                 .orElseThrow(()-> new AdministradorNotFoundEx("No se encontro el administrador con ese uuid"));
+
+        CredentialsEntity credentialAdmin = credentialsRepository.findByUsuario(admin)
+                .orElseThrow(()-> new AdministradorNotFoundEx("No se encontro el administrador con ese uuid"));
+
+        if(!credentialAdmin.hasRole(RolesUser.ROLE_ADMINISTRADOR) || !credentialAdmin.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
+            throw new RuntimeException("No se le puede asignar la denuncia a un usuario que no tenga el rol administrador.");
+        }
+
+
+
 
         denuncia.setAdministrador(admin);
         denuncia.setEstadoDenuncia(EstadoDenunciaE.En_proceso);
+        DenunciaEntity denunciaGuardada=denunciaRepository.save(denuncia);
+        emailService.enviarSeAsignoUnAdmin(denunciaGuardada.getDenunciante().getEmail(), denunciaGuardada.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denunciaGuardada.getUuid());
+        emailService.enviarSeAsignoUnAdmin2(denunciaGuardada.getDenunciado().getEmail(), denunciaGuardada.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denunciaGuardada.getUuid());
         return denunciaMapper.toResponse(denunciaRepository.save(denuncia));
     }
 
@@ -177,30 +188,24 @@ public class DenunciaService {
             throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
         }
 
-        UsuarioSecurity usuarioLogueado =
-                (UsuarioSecurity) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        CredentialsEntity usuarioLogueado = SecurityUtils.getCurrentCredentials();
 
-        CredentialsEntity cred = credentialsRepository.findByUsername(usuarioLogueado.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Credencial no encontrada"));
 
-        AdministradorEntity adminLogueado = cred.getAdministrador();
-
-        if (adminLogueado == null) {
+        if(!usuarioLogueado.hasRole(RolesUser.ROLE_ADMINISTRADOR) && !usuarioLogueado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
             throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
         }
 
-        if (!denuncia.getAdministrador().getUuid().equals(adminLogueado.getUuid())){
+        UsuarioEntity admin = SecurityUtils.getCurrentUser();
+
+        if (!denuncia.getAdministrador().getUuid().equals(admin.getUuid())){
             throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
         }
 
         denuncia.setEstadoDenuncia(EstadoDenunciaE.Aprobada);
         denuncia.setNotaDelAdmin(mensaje);
         denunciaRepository.save(denuncia);
-        emailService.enviarDenunciaAprobadaDenunciante(denuncia.getDenunciante().getEmail());
-        emailService.enviarDenunciaAprobadaDenunciado(denuncia.getDenunciado().getEmail());
+        emailService.enviarDenunciaAprobadaDenunciante(denuncia.getDenunciante().getEmail(), denuncia.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
+        emailService.enviarDenunciaAprobadaDenunciado(denuncia.getDenunciado().getEmail(),  denuncia.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
         return denunciaMapper.toResponse(denuncia);
     }
 
@@ -216,31 +221,25 @@ public class DenunciaService {
         if (denuncia.getAdministrador() == null) {
             throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
         }
-        UsuarioSecurity usuarioLogueado =
-                (UsuarioSecurity) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        CredentialsEntity usuarioLogueado = SecurityUtils.getCurrentCredentials();
 
-        CredentialsEntity cred = credentialsRepository
-                .findByUsername(usuarioLogueado.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Credencial no encontrada"));
 
-        AdministradorEntity adminLogueado = cred.getAdministrador();
-
-        if (adminLogueado == null) {
+        if(!usuarioLogueado.hasRole(RolesUser.ROLE_ADMINISTRADOR) && !usuarioLogueado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
             throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
         }
 
-        if (!denuncia.getAdministrador().getUuid().equals(adminLogueado.getUuid())){
+        UsuarioEntity admin = SecurityUtils.getCurrentUser();
+
+
+        if (!denuncia.getAdministrador().getUuid().equals(admin.getUuid())){
             throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
         }
 
         denuncia.setEstadoDenuncia(EstadoDenunciaE.Rechazada);
         denuncia.setNotaDelAdmin(mensaje);
         denunciaRepository.save(denuncia);
-        emailService.enviarDenunciaRechazadaDenunciante(denuncia.getDenunciante().getEmail());
-        emailService.enviarDenunciaRechazadaDenunciado(denuncia.getDenunciado().getEmail());
+        emailService.enviarDenunciaRechazadaDenunciante(denuncia.getDenunciante().getEmail(), denuncia.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
+        emailService.enviarDenunciaRechazadaDenunciado(denuncia.getDenunciado().getEmail(), denuncia.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
         return denunciaMapper.toResponse(denuncia);
     }
 
@@ -269,21 +268,19 @@ public class DenunciaService {
 
     public List<DenunciaDTOResponse> misDenuncias(EstadoDenunciaE estado){
 
-        UsuarioSecurity usuarioLogueado =
-                (UsuarioSecurity) SecurityContextHolder
+        CredentialsEntity cred =
+                (CredentialsEntity) SecurityContextHolder
                         .getContext()
                         .getAuthentication()
                         .getPrincipal();
 
-        CredentialsEntity cred = credentialsRepository
-                .findByUsername(usuarioLogueado.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Credencial no encontrada"));
 
-        AdministradorEntity adminLogueado = cred.getAdministrador();
+        UsuarioEntity adminLogueado = cred.getUsuario();
 
-        if (adminLogueado == null) {
+        if (!cred.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR) && !cred.hasRole(RolesUser.ROLE_ADMINISTRADOR)) {
             throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
         }
+
         return denunciaRepository
                 .findByAdministradorUuidAndEstadoDenuncia(
                         adminLogueado.getUuid(),
@@ -293,5 +290,5 @@ public class DenunciaService {
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
-    
+
 }
