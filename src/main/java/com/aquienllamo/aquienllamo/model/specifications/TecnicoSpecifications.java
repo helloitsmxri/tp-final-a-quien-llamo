@@ -39,6 +39,6 @@ public class TecnicoSpecifications {
     public static Specification<TecnicoEntity> porFechaRegistro(LocalDateTime fecha) {
         return (entity, query, criteriaBuilder) -> fecha == null
                 ? criteriaBuilder.conjunction()
-                : criteriaBuilder.greaterThanOrEqualTo(entity.get("usuario").get("fechaRegistro"), fecha);
+                : criteriaBuilder.greaterThanOrEqualTo(entity.get("usuario").get("createdAt"), fecha);
     }
 }

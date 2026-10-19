@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @Table(name = "Presupuesto")
-public class PresupuestoEntity {
+public class PresupuestoEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_presupuesto;
@@ -46,19 +46,6 @@ public class PresupuestoEntity {
     @Column(name = "descripcion_presupuesto", columnDefinition = "TEXT", nullable = false)
     private String descripcionPresupuesto;
 
-
-    @Column(name = "fecha_realizado", nullable = false, updatable = false)
-    private LocalDateTime fechaRealizado;
-
-    @PrePersist
-    public void prePersist() {
-        if (this.uuid == null) {
-            this.uuid = UUID.randomUUID().toString();
-        }
-        if (this.fechaRealizado == null) {
-            this.fechaRealizado = LocalDateTime.now();
-        }
-    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)

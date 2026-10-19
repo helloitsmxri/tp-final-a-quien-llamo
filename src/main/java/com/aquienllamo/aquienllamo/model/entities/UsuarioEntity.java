@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Table(name = "Usuario")
-public class UsuarioEntity {
+public class UsuarioEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario") // Esto vincula el nombre de la DB con la variable de java
@@ -58,9 +58,6 @@ public class UsuarioEntity {
 
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
-
-    @Column(name = "fecha_registro", nullable = false, insertable = false, updatable = false)
-    private LocalDateTime fechaRegistro;
 
     @Column(name = "ultima_actividad", nullable = false, updatable = true)
     private LocalDateTime ultimaActividad;

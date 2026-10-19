@@ -53,7 +53,7 @@ public class PresupuestoSpecifications {
     public static PredicateSpecification<PresupuestoEntity> presupuestoDeTalFecha(LocalDate fecha){
         return (entity, criteriaBuilder) -> fecha == null
                 ? criteriaBuilder.conjunction()
-                : criteriaBuilder.greaterThanOrEqualTo(entity.get("fechaRealizado"), fecha);
+                : criteriaBuilder.greaterThanOrEqualTo(entity.get("createdAt"), fecha);
     }
 
     public static PredicateSpecification<PresupuestoEntity> presupuestoDeUsuario(

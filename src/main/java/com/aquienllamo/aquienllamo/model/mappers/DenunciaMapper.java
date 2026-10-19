@@ -16,7 +16,7 @@ public class DenunciaMapper {
                 .uuid(denuncia.getUuid())
                 .nombreAdministrador(
                         denuncia.getAdministrador() != null
-                                ? denuncia.getAdministrador().getNombreUsuario()
+                                ? denuncia.getAdministrador().getNombre()
                                 : null
                 )
                 .nombreDenunciante(denuncia.getDenunciante().getNombre())

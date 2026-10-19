@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Table(name = "Ubicacion")
-public class UbicacionEntity {
+public class UbicacionEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "id_ubicacion")

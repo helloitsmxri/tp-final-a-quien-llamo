@@ -49,7 +49,7 @@ public class UsuarioMapper {
                 .sobreMi(user.getSobreMi())
                 .fotoBase64(fotoBase64)
                 .tipoImagen(user.getTipoImagen())
-                .fechaRegistro(user.getFechaRegistro())
+                .fechaRegistro(user.getCreatedAt())
                 .ultimaActividad(user.getUltimaActividad())
                 .build();
     }
