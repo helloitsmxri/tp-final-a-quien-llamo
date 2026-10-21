@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.model.entities;
 
-import com.aquienllamo.aquienllamo.model.Enum.Estado;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPago;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,6 +44,6 @@ public class PagoEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
-    private Estado estadoPago;
+    private EstadoPago estadoPago;
 
 }

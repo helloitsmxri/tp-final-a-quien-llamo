@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
-import com.aquienllamo.aquienllamo.model.Enum.Estado;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPago;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PagoDTOResponse;
@@ -36,7 +36,7 @@ public class PagoController {
 
     //listar pagos por estado
     @GetMapping("/estado")
-    public ResponseEntity<List<PagoDTOResponse>> listarPorEstado (@RequestParam Estado estado) {
+    public ResponseEntity<List<PagoDTOResponse>> listarPorEstado (@RequestParam EstadoPago estado) {
         return ResponseEntity.ok().body(pagoService.listarPorEstado(estado));
     }
 

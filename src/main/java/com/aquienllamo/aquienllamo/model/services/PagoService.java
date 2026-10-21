@@ -3,7 +3,7 @@ package com.aquienllamo.aquienllamo.model.services;
 import com.aquienllamo.aquienllamo.model.APIs.MercadoPago.MercadoPagoService;
 import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUResponseDTO;
 import com.aquienllamo.aquienllamo.model.APIs.PayU.PayUService;
-import com.aquienllamo.aquienllamo.model.Enum.Estado;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPago;
 import com.aquienllamo.aquienllamo.model.Enum.EstadoPresupuestoE;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
@@ -54,23 +54,23 @@ public class PagoService {
             case Credito, Debito ->{
                 PayUResponseDTO respuesta = payUService.procesarPago(request, pago.getUuid());
                 if("APPROVED".equals(respuesta.getState())){
-                    pago.setEstadoPago(Estado.Confirmado);
+                    pago.setEstadoPago(EstadoPago.Confirmado);
                 }else{
-                    pago.setEstadoPago(Estado.Rechazado);
+                    pago.setEstadoPago(EstadoPago.Rechazado);
                 }
             }
             case Transferencia -> {
                 Payment respuesta = mercadoPagoService.procesarTransferencia(request);
 
                 if ("approved".equals(respuesta.getStatus())){
-                    pago.setEstadoPago(Estado.Confirmado);
+                    pago.setEstadoPago(EstadoPago.Confirmado);
                 }else {
-                    pago.setEstadoPago(Estado.Pendiente_de_revision);
+                    pago.setEstadoPago(EstadoPago.Pendiente_de_revision);
                 }
             }
 
             case Efectivo -> {
-                pago.setEstadoPago(Estado.Pendiente_de_revision);
+                pago.setEstadoPago(EstadoPago.Pendiente_de_revision);
             }
         }
 
@@ -87,7 +87,7 @@ public class PagoService {
     }
 
     //listar pagos segun un estado
-    public List<PagoDTOResponse> listarPorEstado (Estado estado){
+    public List<PagoDTOResponse> listarPorEstado (EstadoPago estado){
         return pagoRepository.findAllByEstadoPago(estado)
                 .stream()
                 .map(PagoMapper::toResponse)
@@ -133,11 +133,11 @@ public class PagoService {
     public PagoDTOResponse cancelarPago (String uuid){
         PagoEntity pago = pagoRepository.findByUuid(uuid)
                 .orElseThrow(()-> new PagoNotFoundEx("ERROR: El pago ingresado no existe."));
-        if(!pago.getEstadoPago().equals(Estado.Pendiente_de_revision)){
+        if(!pago.getEstadoPago().equals(EstadoPago.Pendiente_de_revision)){
             throw new PaymentCannotBeCancelledException("ERROR: Solo se pueden cancelar pagos pendientes.");
         }
 
-        pago.setEstadoPago(Estado.Cancelado);
+        pago.setEstadoPago(EstadoPago.Cancelado);
         return PagoMapper.toResponse(pagoRepository.save(pago));
 
     }
