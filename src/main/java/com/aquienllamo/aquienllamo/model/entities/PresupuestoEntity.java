@@ -25,6 +25,12 @@ public class PresupuestoEntity extends BaseEntity {
 
     @Column(name = "uuid", nullable = false, unique = true)
     private String uuid;
+    @PrePersist
+    public void generarUUID(){
+        if(this.uuid == null){
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
