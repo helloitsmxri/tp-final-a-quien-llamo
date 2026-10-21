@@ -39,8 +39,8 @@ public class PagoEntity extends BaseEntity {
     @Column(name = "metodo_pago",nullable = false)
     private MetodoDePago metodoDePago;
 
-    @Column(name = "fecha_pago", nullable = false, insertable = false, updatable = false)
-    private LocalDateTime fechaPago;
+    @Column(name = "fecha_pago", nullable = false)
+    private LocalDateTime fechaPago = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")

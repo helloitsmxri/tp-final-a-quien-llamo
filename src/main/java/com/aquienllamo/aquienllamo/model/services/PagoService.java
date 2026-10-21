@@ -50,6 +50,9 @@ public class PagoService {
 
         PagoEntity pago = PagoMapper.toEntity(request, trabajo);
 
+        if(pago.getFechaPago() == null){
+            pago.setFechaPago(java.time.LocalDateTime.now());
+        }
         switch (request.getMetodoDePago()){
             case Credito, Debito ->{
                 PayUResponseDTO respuesta = payUService.procesarPago(request, pago.getUuid());
