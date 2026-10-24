@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,61 +38,70 @@ public class PayUService {
     }
 
     @SuppressWarnings("unchecked")
-    private PayUResponseDTO mapearRespuesta (Map response){
+    private PayUResponseDTO mapearRespuesta(Map response) {
         PayUResponseDTO dto = new PayUResponseDTO();
+        if (response == null) return dto;
+
         dto.setCode((String) response.get("code"));
 
-        if(response.containsKey("transactionResponse")){
+        // Validamos que exista la clave Y que su valor no sea null
+        if (response.containsKey("transactionResponse") && response.get("transactionResponse") != null) {
             Map<String, Object> transactionResponse = (Map<String, Object>) response.get("transactionResponse");
+
             dto.setTransactionId((String) transactionResponse.get("transactionId"));
             dto.setOrderId((String) transactionResponse.get("orderId"));
             dto.setState((String) transactionResponse.get("state"));
             dto.setResponseCode((String) transactionResponse.get("responseCode"));
             dto.setResponseMessage((String) transactionResponse.get("responseMessage"));
+        } else if (response.containsKey("error")) {
+            // Opcional: captura de errores directos de PayU si los envía
+            dto.setResponseMessage((String) response.get("error"));
         }
+
         return dto;
     }
 
-    public PayUResponseDTO procesarPago(PagoDTORequest request,String referenceCode){
+    public PayUResponseDTO procesarPago(PagoDTORequest request, String referenceCode) {
 
-        String firma = generarFirma(referenceCode, request.getMonto().toString(),  request.getCurrency());
+        String montoStr = request.getMonto() != null ? request.getMonto().toString() : "0";
+        String firma = generarFirma(referenceCode, montoStr, Objects.requireNonNullElse(request.getCurrency(), "ARS"));
 
         Map<String, Object> body = Map.of(
                 "language", "es",
                 "command", "SUBMIT_TRANSACTION",
                 "merchant", Map.of(
-                        "apiKey", payUProperties.getApiKey(),
-                        "apiLogin", payUProperties.getApiLogin()
+                        "apiKey", Objects.requireNonNullElse(payUProperties.getApiKey(), ""),
+                        "apiLogin", Objects.requireNonNullElse(payUProperties.getApiLogin(), "")
                 ),
                 "transaction", Map.of(
                         "order", Map.of(
-                                "accountId", payUProperties.getAccountId(),
-                                "referenceCode", referenceCode,
-                                "description", "Pago trabajo " + request.getUuidTrabajo(),
+                                "accountId", Objects.requireNonNullElse(payUProperties.getAccountId(), ""),
+                                "referenceCode", Objects.requireNonNullElse(referenceCode, ""),
+                                "description", "Pago trabajo " + Objects.requireNonNullElse(request.getUuidTrabajo(), ""),
                                 "language", "es",
                                 "signature", firma,
                                 "additionalValues", Map.of(
                                         "TX_VALUE", Map.of(
-                                                "value", request.getMonto(),
-                                                "currency", request.getCurrency()
+                                                "value", Objects.requireNonNullElse(request.getMonto(), 0),
+                                                "currency", Objects.requireNonNullElse(request.getCurrency(), "ARS")
                                         )
                                 ),
                                 "buyer", Map.of(
-                                        "fullName", request.getBuyerFullName(),
-                                        "emailAddress", request.getBuyerEmail(),
-                                        "contactPhone", request.getBuyerPhone(),
-                                        "dniNumber", request.getBuyerDNI()
+                                        "fullName", Objects.requireNonNullElse(request.getBuyerFullName(), ""),
+                                        "emailAddress", Objects.requireNonNullElse(request.getBuyerEmail(), ""),
+                                        "contactPhone", Objects.requireNonNullElse(request.getBuyerPhone(), ""),
+                                        "dniNumber", Objects.requireNonNullElse(request.getBuyerDNI(), "")
                                 )
                         ),
                         "type", "AUTHORIZATION_AND_CAPTURE",
-                        "paymentMethod", request.getFranquicia(),
+                        "paymentMethod", Objects.requireNonNullElse(request.getFranquicia(), ""),
                         "paymentCountry", "AR",
-                        "deviceSessionId", referenceCode,
+                        "deviceSessionId", Objects.requireNonNullElse(referenceCode, ""),
                         "creditCard", Map.of(
-                                "number", request.getNumeroTarjeta(),
-                                "securityCode", request.getCvv(),
-                                "expirationDate", request.getVencimientoTarjeta(),
-                                "name", request.getFranquicia()
+                                "number", Objects.requireNonNullElse(request.getNumeroTarjeta(), ""),
+                                "securityCode", Objects.requireNonNullElse(request.getCvv(), ""),
+                                "expirationDate", Objects.requireNonNullElse(request.getVencimientoTarjeta(), ""),
+                                "name", Objects.requireNonNullElse(request.getFranquicia(), "")
                         )
                 ),
                 "test", true
