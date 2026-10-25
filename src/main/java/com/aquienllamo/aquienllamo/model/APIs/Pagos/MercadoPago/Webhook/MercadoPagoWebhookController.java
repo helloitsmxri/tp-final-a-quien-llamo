@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/webhooks/mercado-pago")
 @RequiredArgsConstructor
@@ -17,6 +15,7 @@ public class MercadoPagoWebhookController {
 
     private final MercadoPagoWebhookValidator webhookValidator;
     private final PagoService pagoService;
+
 
     @PostMapping
     public ResponseEntity<Void> recibirNotificacion(
@@ -26,22 +25,15 @@ public class MercadoPagoWebhookController {
             @RequestParam(name = "type", required = false)
             String type,
 
-            @RequestHeader(
-                    name = "x-signature",
-                    required = false
-            )
+            @RequestHeader(name = "x-signature", required = false)
             String xSignature,
 
-            @RequestHeader(
-                    name = "x-request-id",
-                    required = false
-            )
-            String xRequestId,
+            @RequestHeader(name = "x-request-id", required = false)
+            String xRequestId) {
 
-            @RequestBody(required = false)
-            Map<String, Object> body) {
-
-        if (!"order".equalsIgnoreCase(type) || dataId == null) {
+        if (!"order".equalsIgnoreCase(type)
+                || dataId == null
+                || dataId.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -52,8 +44,7 @@ public class MercadoPagoWebhookController {
         );
 
         if (!firmaValida) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         try {
@@ -61,8 +52,8 @@ public class MercadoPagoWebhookController {
             return ResponseEntity.ok().build();
 
         } catch (com.aquienllamo.aquienllamo.model.exceptions.PagoNotFoundEx e) {
-            // La orden puede no estar registrada localmente.
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
     }
+
 }
