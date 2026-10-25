@@ -13,13 +13,10 @@ import java.util.List;
 @Builder
 public class RatingDTORequest {
 
-    @NotBlank(message = "Este campo no debe quedar vacio.")
-    private String uuidRemitente;
+    @NotBlank(message = "El campo trabajo no debe estar vacio.")
+    private String uuidTrabajo;
 
-    @NotBlank(message = "Este campo no debe quedar vacio.")
-    private String uuidDestinatario; //a quien le manda la reseña
-
-    @NotNull(message = "Este campo no debe quedar vacio.")
+    @NotNull(message = "El campo valoracion no debe estar vacio.")
     @Min(value = 1, message = "La valoracion minima es 1")
     @Max(value = 5, message = "La valoracion maxima es 5")
     private Integer valoracion;

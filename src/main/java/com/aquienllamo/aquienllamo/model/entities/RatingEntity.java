@@ -1,3 +1,4 @@
+
 package com.aquienllamo.aquienllamo.model.entities;
 
 import jakarta.persistence.*;
@@ -13,7 +14,18 @@ import java.util.UUID;
 @Setter
 @Builder
 @ToString
-@Table(name = "Rating")
+@Table(
+        name = "Rating",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_rating_remitente_trabajo",
+                        columnNames = {
+                                "id_usuario_remitente",
+                                "id_trabajo"
+                        }
+                )
+        }
+)
 public class RatingEntity extends BaseEntity {
 
     @Id
@@ -24,8 +36,8 @@ public class RatingEntity extends BaseEntity {
     private String uuid;
 
     @PrePersist
-    public void generarUUID(){
-        if(this.uuid == null){
+    public void generarUUID() {
+        if (this.uuid == null) {
             this.uuid = UUID.randomUUID().toString();
         }
     }
@@ -37,6 +49,10 @@ public class RatingEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "id_usuario_destinatario", nullable = false)
     private UsuarioEntity usuarioDestinatario;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_trabajo", nullable = false)
+    private TrabajoEntity trabajo;
 
     @Column(name = "valoracion", nullable = false)
     private Integer valoracion;
@@ -51,10 +67,12 @@ public class RatingEntity extends BaseEntity {
     @Column(name = "foto", columnDefinition = "MEDIUMBLOB")
     private byte[] foto;
 
-    //tabla intermedia de RATING Y CARACTERISTICAS
+    // Tabla intermedia de Rating y Caracteristicas
     @ManyToMany
-    @JoinTable(name = "Rating_Caracteristica",
-    joinColumns = @JoinColumn(name = "id_rating"),
-    inverseJoinColumns = @JoinColumn(name = "id_caracteristica"))
+    @JoinTable(
+            name = "Rating_Caracteristica",
+            joinColumns = @JoinColumn(name = "id_rating"),
+            inverseJoinColumns = @JoinColumn(name = "id_caracteristica")
+    )
     private List<CaracteristicaEntity> caracteristicas;
 }

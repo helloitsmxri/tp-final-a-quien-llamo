@@ -34,7 +34,6 @@ public class TrabajoEntity extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "id_presupuesto")
     private PresupuestoEntity presupuesto;
-    //presupuestoRepository.findByUuid(dto.getUuidPresupuesto())
 
     @Column(name = "descripcion_trabajo", nullable = false, columnDefinition = "TEXT")
     private String descripcionTrabajo;
