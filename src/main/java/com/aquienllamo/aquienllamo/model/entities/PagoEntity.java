@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.math.BigDecimal;
 
 @Entity
 @AllArgsConstructor
@@ -35,12 +36,19 @@ public class PagoEntity extends BaseEntity {
     @JoinColumn(name = "id_trabajo")
     private TrabajoEntity trabajo;
 
+    @Column(name = "monto", nullable = false, precision = 10, scale = 2)
+    private BigDecimal monto;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "metodo_pago",nullable = false)
     private MetodoDePago metodoDePago;
 
+    @Builder.Default
     @Column(name = "fecha_pago", nullable = false)
     private LocalDateTime fechaPago = LocalDateTime.now();
+
+    @Column(name = "mercado_pago_order_id", unique = true, nullable = true)
+    private String mercadoPagoOrderId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")

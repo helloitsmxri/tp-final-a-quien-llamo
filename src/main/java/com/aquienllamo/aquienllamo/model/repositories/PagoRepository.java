@@ -29,4 +29,7 @@ public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
     //lo mismo pero para tecnico
     @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.presupuesto.tecnico.uuid = :uuid")
     List<PagoEntity> findAllByTecnico(@Param("uuid") String uuid);
+
+    Optional<PagoEntity> findByMercadoPagoOrderId(String mercadoPagoOrderId);
+
 }
