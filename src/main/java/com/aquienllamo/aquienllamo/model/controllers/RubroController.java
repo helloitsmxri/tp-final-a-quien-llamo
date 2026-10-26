@@ -43,28 +43,25 @@ public class RubroController {
 
     //obtener todos los rubros
     @GetMapping
-    @PreAuthorize("isAuthenticated()") //cualquier usuario logueado puede ver los rubros disponibles
+    //cualquier usuario logueado puede ver los rubros disponibles
     public ResponseEntity<List<RubroDTOResponse>> getAllRubros(){
         return ResponseEntity.ok().body(rubroService.getAllRubros());
     }
 
     //busco rubro por uuid
     @GetMapping("/{uuid}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RubroDTOResponse> getRubroByUuid(@Valid @PathVariable String uuid){
         return ResponseEntity.ok().body(rubroService.getRubroByUuid(uuid));
     }
 
     //buscar nombre exacto de rubro
     @GetMapping("/nombre/{nombre}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RubroDTOResponse> getRubroByNombre(@PathVariable String nombre){
         return ResponseEntity.ok().body(rubroService.getRubroByNombre(nombre));
     }
 
     //buscar un rubro, puede ser por el nombre entero o por parte del nombre ej tec = tecnico
     @GetMapping("/buscar")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<RubroDTOResponse>> findRubros(@RequestParam String nombre){
         return ResponseEntity.ok().body(rubroService.findRubroContaining(nombre));
     }

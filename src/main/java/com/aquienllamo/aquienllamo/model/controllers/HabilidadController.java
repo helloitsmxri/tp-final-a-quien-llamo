@@ -19,7 +19,7 @@ import java.util.List;
 public class HabilidadController {
     private final HabilidadService habilidadService;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
+
     @GetMapping("/listar")
     public ResponseEntity<List<HabilidadDTOResponse>> listarHabilidades(){
         return ResponseEntity.ok(habilidadService.listarHabilidades());
@@ -44,7 +44,7 @@ public class HabilidadController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
+
     @GetMapping("/{uuid}")
     public ResponseEntity<HabilidadDTOResponse> buscarPorUuid(@PathVariable String uuid){
         return ResponseEntity.ok(habilidadService.buscarPorUuid(uuid));

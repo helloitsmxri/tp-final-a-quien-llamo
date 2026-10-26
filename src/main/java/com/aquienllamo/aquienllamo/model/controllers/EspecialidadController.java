@@ -28,14 +28,14 @@ public class EspecialidadController {
     }
 
     //listar todas las especialidades
-    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMINISTRADOR')")
+
     @GetMapping("/listar")
     public ResponseEntity<List<EspecialidadDTOResponse>> getAllEspecialidades() {
         return ResponseEntity.ok(especialidadService.getAllEspecialidades());
     }
 
     //buscar especialidad por uuid
-    @PreAuthorize("hasAnyRole('USUARIO','TECNICO','ADMINISTRADOR')")
+
     @GetMapping("/{uuid}")
     public ResponseEntity<EspecialidadDTOResponse> getEspecialidadByUuid(@PathVariable String uuid) {
         return ResponseEntity.ok(especialidadService.getEspecialidadByUuid(uuid));
