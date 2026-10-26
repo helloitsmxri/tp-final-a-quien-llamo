@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.model.dtos.Response;
 
-import com.aquienllamo.aquienllamo.model.Enum.Estado;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPago;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import lombok.*;
 
@@ -22,6 +22,10 @@ public class PagoDTOResponse {
 
     private LocalDateTime fechaPago;
 
-    private Estado estadoPago;
+    private EstadoPago estadoPago;
+
+    private String checkoutUrl;
+
+    private String mercadoPagoOrderId;
 
 }

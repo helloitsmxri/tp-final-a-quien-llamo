@@ -247,6 +247,15 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(CompletedWorkRequiredException.class)
+    public ResponseEntity<ErrorResponseDTO> CompletedWorkRequiredException(CompletedWorkRequiredException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponseDTO.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .mensaje(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build());
+    }
+
     //500 INTERNAL SERVER ERROR - catch-all de seguridad
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleUnexpected(Exception ex) {

@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.model.repositories;
 
-import com.aquienllamo.aquienllamo.model.Enum.Estado;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPago;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.entities.PagoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +18,7 @@ public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
     List<PagoEntity> findAllByMetodoDePago(MetodoDePago metodoDePago);
 
     //listar pagos segun el estado
-    List<PagoEntity> findAllByEstadoPago(Estado estado);
+    List<PagoEntity> findAllByEstadoPago(EstadoPago estado);
 
     Optional<PagoEntity> findByUuid(String uuid);
 
@@ -29,4 +29,7 @@ public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
     //lo mismo pero para tecnico
     @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.presupuesto.tecnico.uuid = :uuid")
     List<PagoEntity> findAllByTecnico(@Param("uuid") String uuid);
+
+    Optional<PagoEntity> findByMercadoPagoOrderId(String mercadoPagoOrderId);
+
 }

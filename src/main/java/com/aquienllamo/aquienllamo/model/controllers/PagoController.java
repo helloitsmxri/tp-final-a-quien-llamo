@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.model.controllers;
 
-import com.aquienllamo.aquienllamo.model.Enum.Estado;
+import com.aquienllamo.aquienllamo.model.APIs.Pagos.MercadoPago.MercadoPagoOrderStatusResponse;
+import com.aquienllamo.aquienllamo.model.Enum.EstadoPago;
 import com.aquienllamo.aquienllamo.model.Enum.MetodoDePago;
 import com.aquienllamo.aquienllamo.model.dtos.Request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.PagoDTOResponse;
@@ -12,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.aquienllamo.aquienllamo.model.APIs.Pagos.MercadoPago.MercadoPagoService;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.List;
 
 @RestController
@@ -20,6 +24,16 @@ import java.util.List;
 public class PagoController {
 
     private final PagoService pagoService;
+    private final MercadoPagoService mercadoPagoService;
+
+    @GetMapping("/mercado-pago/orden/{orderId}")
+    public ResponseEntity<MercadoPagoOrderStatusResponse> consultarOrden(
+            @PathVariable String orderId) {
+
+        return ResponseEntity.ok(
+                mercadoPagoService.consultarOrden(orderId)
+        );
+    }
 
     //crear pago
     @PostMapping
@@ -36,7 +50,7 @@ public class PagoController {
 
     //listar pagos por estado
     @GetMapping("/estado")
-    public ResponseEntity<List<PagoDTOResponse>> listarPorEstado (@RequestParam Estado estado) {
+    public ResponseEntity<List<PagoDTOResponse>> listarPorEstado (@RequestParam EstadoPago estado) {
         return ResponseEntity.ok().body(pagoService.listarPorEstado(estado));
     }
 

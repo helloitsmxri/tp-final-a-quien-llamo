@@ -1,14 +1,14 @@
 package com.aquienllamo.aquienllamo.model.services;
 
+import com.aquienllamo.aquienllamo.model.Enum.EstadoTrabajo;
+import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
+import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.model.auth.securityServices.AuthService;
+import com.aquienllamo.aquienllamo.model.auth.utils.SecurityUtils;
 import com.aquienllamo.aquienllamo.model.dtos.Request.RatingDTORequest;
 import com.aquienllamo.aquienllamo.model.dtos.Response.RatingDTOResponse;
-import com.aquienllamo.aquienllamo.model.entities.CaracteristicaEntity;
-import com.aquienllamo.aquienllamo.model.entities.RatingEntity;
-import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
-import com.aquienllamo.aquienllamo.model.exceptions.CompletedWorkRequiredEx;
-import com.aquienllamo.aquienllamo.model.exceptions.RatingAlreadyExistsEx;
-import com.aquienllamo.aquienllamo.model.exceptions.SelfReviewNotAllowedException;
-import com.aquienllamo.aquienllamo.model.exceptions.UserNotFoundEx;
+import com.aquienllamo.aquienllamo.model.entities.*;
+import com.aquienllamo.aquienllamo.model.exceptions.*;
 import com.aquienllamo.aquienllamo.model.mappers.RatingMapper;
 import com.aquienllamo.aquienllamo.model.repositories.CaracteristicaRepository;
 import com.aquienllamo.aquienllamo.model.repositories.RatingRepository;
@@ -29,46 +29,110 @@ public class RatingService {
     private final UsuarioRepository usuarioRepository;
     private final CaracteristicaRepository caracteristicaRepository;
     private final TrabajoRepository trabajoRepository;
+    private final CredentialsRepository credentialsRepository;
 
-    //crear una rating
-    public RatingDTOResponse crearRating (RatingDTORequest request){
-        UsuarioEntity remitente = usuarioRepository.findByUuid(request.getUuidRemitente())
-                .orElseThrow(()-> new UserNotFoundEx("ERROR: El remitente no existe."));
+    public RatingDTOResponse crearRating(RatingDTORequest request) {
 
-        UsuarioEntity destinatario = usuarioRepository.findByUuid(request.getUuidDestinatario())
-                .orElseThrow(()-> new UserNotFoundEx("ERROR: El destinatario no existe."));
+        // 1. Obtener el remitente autenticado
+        UsuarioEntity remitente = SecurityUtils.getCurrentUser();
 
-        //que no se reseñe a si mismo
-        if(remitente.getUuid().equals(destinatario.getUuid())){
-            throw new SelfReviewNotAllowedException("ERROR: No podes reseñarte a vos mismo.");
+        // 2. Buscar el trabajo
+        TrabajoEntity trabajo = trabajoRepository
+                .findByUuid(request.getUuidTrabajo())
+                .orElseThrow(() ->
+                        new RuntimeException("El trabajo no existe."));
+
+        // 3. Verificar que el trabajo esté finalizado
+        if (trabajo.getEstadoTrabajo() != EstadoTrabajo.Finalizado) {
+            throw new CompletedWorkRequiredException(
+                    "Solo se puede reseñar un trabajo finalizado.");
         }
 
-        if(ratingRepository.existsByUsuarioRemitenteAndUsuarioDestinatario(remitente, destinatario)){
-            throw new RatingAlreadyExistsEx("ERROR: Ya has realizado una reseña a este usuario.");
+        // 4. Verificar que el trabajo tenga un presupuesto
+        PresupuestoEntity presupuesto = trabajo.getPresupuesto();
+
+        if (presupuesto == null) {
+            throw new RuntimeException(
+                    "El trabajo no tiene un presupuesto asociado.");
         }
 
-        //verifica que haya un trabajo finalizado entre ambos usuarios
-        if(!trabajoRepository.existsTrabajoFinalizadoEntreUsuarios(remitente.getUuid(), destinatario.getUuid())){
-            throw new CompletedWorkRequiredEx("ERROR: Solo se puede reseñar cuando el trabajo este finalizado.");
+        // 5. Obtener al cliente y al técnico del trabajo
+        UsuarioEntity cliente = presupuesto.getUsuario();
+
+        if (presupuesto.getTecnico() == null) {
+            throw new RuntimeException(
+                    "El trabajo no tiene un técnico asociado.");
         }
 
-        //Recorre cada UUID de la lista y busca la característica correspondiente con el findByUuid
-        List<CaracteristicaEntity> caracteristicas = request.getUuidCaracteristicas()
-                .stream()
-                .map(uuid -> caracteristicaRepository.findByUuid(uuid)
-                        .orElseThrow(()-> new UserNotFoundEx("ERROR: La caracteristica no existe.")))
-                .toList();
+        UsuarioEntity tecnico = presupuesto.getTecnico().getUsuario();
 
-        return RatingMapper.toResponse(ratingRepository.save(
-                RatingMapper.toEntity(request,caracteristicas,remitente,destinatario)));
+        if (cliente == null || tecnico == null) {
+            throw new RuntimeException(
+                    "No se encontraron los participantes del trabajo.");
+        }
 
+        // 6. Determinar el destinatario según quién realiza la reseña
+        UsuarioEntity destinatario;
+
+        if (remitente.getUuid().equals(cliente.getUuid())) {
+
+            // El cliente reseña al técnico
+            destinatario = tecnico;
+
+        } else if (remitente.getUuid().equals(tecnico.getUuid())) {
+
+            // El técnico reseña al cliente
+            destinatario = cliente;
+
+        } else {
+
+            // El usuario autenticado no participa del trabajo
+            throw new RuntimeException(
+                    "Solo los participantes del trabajo pueden realizar reseñas.");
+        }
+
+        // 7. Verificar que no exista una reseña previa
+        // del mismo remitente para este trabajo
+        if (ratingRepository.existsByUsuarioRemitenteAndTrabajo(
+                remitente, trabajo)) {
+
+            throw new RatingAlreadyExistsEx(
+                    "Ya has realizado una reseña para este trabajo.");
+        }
+
+        // 8. Buscar las características por UUID
+        List<CaracteristicaEntity> caracteristicas =
+                request.getUuidCaracteristicas()
+                        .stream()
+                        .map(uuid -> caracteristicaRepository.findByUuid(uuid)
+                                .orElseThrow(() ->
+                                        new RuntimeException(
+                                                "La característica no existe: "
+                                                        + uuid)))
+                        .toList();
+
+        // 9. Crear la entidad Rating
+        RatingEntity rating = RatingMapper.toEntity(
+                request,
+                caracteristicas,
+                remitente,
+                destinatario
+        );
+
+        // 10. Asociar la reseña al trabajo
+        rating.setTrabajo(trabajo);
+
+        // 11. Guardar y devolver la respuesta
+        return RatingMapper.toResponse(
+                ratingRepository.save(rating)
+        );
     }
 
 
     //listar reseñas que realizo un usuario
     public List<RatingDTOResponse> listarRatingRemitente (String uuid){
         UsuarioEntity remitente = usuarioRepository.findByUuid(uuid)
-                .orElseThrow(()-> new UserNotFoundEx("ERROR: El usuario no existe."));
+                .orElseThrow(()-> new UserNotFoundEx("El usuario no existe."));
         return ratingRepository.findAllByUsuarioRemitente(remitente)
                 .stream()
                 .map(RatingMapper::toResponse)
@@ -81,7 +145,7 @@ public class RatingService {
     //listar reseñas que recibio un usuario
     public List<RatingDTOResponse> listarRatingDestinatario(String uuid){
         UsuarioEntity destinatario = usuarioRepository.findByUuid(uuid)
-                .orElseThrow(()-> new UserNotFoundEx("ERROR: El usuario no existe."));
+                .orElseThrow(()-> new UserNotFoundEx("El usuario no existe."));
         return ratingRepository.findAllByUsuarioDestinatario(destinatario)
                 .stream()
                 .map(RatingMapper::toResponse)

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 
-public enum Estado {
+public enum EstadoPago {
     Confirmado,
     Rechazado,
     Cancelado,

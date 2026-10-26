@@ -85,6 +85,9 @@ public class SecurityConfig {
                                         "/aquienllamo/habilidades/**"
                                 ).permitAll()
 
+                        //Webhook de MERCADO PAGO
+                        .requestMatchers("/webhooks/mercado-pago").permitAll()
+
                         // Rutas protegidas
                         .requestMatchers("/aquienllamo/usuarios/todos")
                         .hasRole("ADMINISTRADOR")
