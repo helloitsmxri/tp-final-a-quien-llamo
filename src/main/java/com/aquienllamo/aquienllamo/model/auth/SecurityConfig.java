@@ -69,6 +69,21 @@ public class SecurityConfig {
                                 "/aquienllamo/administradores/registrar",
                                 "/aquienllamo/tecnicos/registrar-nuevo"
                         ).permitAll()
+                                // Rutas públicas
+                                .requestMatchers(
+                                        "/auth/**",
+                                        "/aquienllamo/usuarios/sign-up",
+                                        "/aquienllamo/usuarios/login",
+                                        "/aquienllamo/administradores/registrar",
+                                        "/aquienllamo/tecnicos/registrar-nuevo"
+                                ).permitAll()
+
+// Catálogo para el registro de técnicos (solo lectura)
+                                .requestMatchers(HttpMethod.GET,
+                                        "/aquienllamo/rubros/**",
+                                        "/aquienllamo/especialidades/**",
+                                        "/aquienllamo/habilidades/**"
+                                ).permitAll()
 
                         //Webhook de MERCADO PAGO
                         .requestMatchers("/webhooks/mercado-pago").permitAll()
@@ -111,6 +126,8 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
 
 
     @Bean
