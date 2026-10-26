@@ -48,32 +48,24 @@ public class PagoService {
         TrabajoEntity trabajo = trabajoRepository
                 .findByUuid(request.getUuidTrabajo())
                 .orElseThrow(() ->
-                        new TrabajoNotFoundEx(
-                                "ERROR: El trabajo ingresado no existe."
-                        )
+                        new TrabajoNotFoundEx("El trabajo ingresado no existe.")
                 );
 
         if (trabajo.getPresupuesto() == null
                 || trabajo.getPresupuesto().getEstado() == null) {
-            throw new TrabajoNotAcceptedEx(
-                    "ERROR: El trabajo no posee un presupuesto o estado válido."
-            );
+            throw new TrabajoNotAcceptedEx("El trabajo no posee un presupuesto o estado válido.");
         }
 
         if (!EstadoPresupuestoE.Aceptado.equals(
                 trabajo.getPresupuesto().getEstado())) {
-            throw new TrabajoNotAcceptedEx(
-                    "ERROR: El trabajo que intenta pagar no está aprobado."
-            );
+            throw new TrabajoNotAcceptedEx("El trabajo que intenta pagar no está aprobado.");
         }
 
         // Obtener el importe oficial desde el presupuesto persistido.
         BigDecimal monto = trabajo.getPresupuesto().getPrecioEstimado();
 
         if (monto == null || monto.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(
-                    "ERROR: El presupuesto no posee un importe válido."
-            );
+            throw new IllegalArgumentException("El presupuesto no posee un importe válido.");
         }
 
         // Crear el pago con el importe calculado en el backend.
@@ -88,11 +80,7 @@ public class PagoService {
         pago = pagoRepository.saveAndFlush(pago);
 
         // Procesar el pago con la estrategia correspondiente.
-        ResultadoProcesamientoPago resultado = estrategia.procesar(
-                request,
-                pago,
-                monto
-        );
+        ResultadoProcesamientoPago resultado = estrategia.procesar(request, pago, monto);
 
         // Actualizar el estado devuelto por la estrategia.
         pago.setEstadoPago(resultado.getEstadoPago());
@@ -100,10 +88,7 @@ public class PagoService {
         // Persistir los cambios.
         pago = pagoRepository.save(pago);
 
-        return PagoMapper.toResponse(
-                pago,
-                resultado.getCheckoutUrl()
-        );
+        return PagoMapper.toResponse(pago, resultado.getCheckoutUrl());
     }
 
 
@@ -112,9 +97,7 @@ public class PagoService {
 
         PagoEntity pago = pagoRepository.findByUuid(uuidPago)
                 .orElseThrow(() ->
-                        new PagoNotFoundEx(
-                                "ERROR: El pago ingresado no existe."
-                        )
+                        new PagoNotFoundEx("El pago ingresado no existe.")
                 );
 
         // No modificar estados definitivos.
@@ -179,9 +162,7 @@ public class PagoService {
 
         usuarioRepository.findByUuid(uuid)
                 .orElseThrow(() ->
-                        new UserNotFoundEx(
-                                "ERROR: El usuario ingresado no existe."
-                        )
+                        new UserNotFoundEx("El usuario ingresado no existe.")
                 );
 
         return pagoRepository.findAllByCliente(uuid)
@@ -197,9 +178,7 @@ public class PagoService {
 
         tecnicoRepository.findByUuid(uuid)
                 .orElseThrow(() ->
-                        new TecnicoNotFoundEx(
-                                "ERROR: El técnico ingresado no existe."
-                        )
+                        new TecnicoNotFoundEx("El técnico ingresado no existe.")
                 );
 
         return pagoRepository.findAllByTecnico(uuid)
@@ -214,9 +193,7 @@ public class PagoService {
 
         PagoEntity pago = pagoRepository.findByUuid(uuid)
                 .orElseThrow(() ->
-                        new PagoNotFoundEx(
-                                "ERROR: El pago ingresado no existe."
-                        )
+                        new PagoNotFoundEx("El pago ingresado no existe.")
                 );
 
         return PagoMapper.toResponse(pago);
@@ -227,17 +204,12 @@ public class PagoService {
     public PagoDTOResponse cancelarPago(String uuid) {
 
         PagoEntity pago = pagoRepository.findByUuid(uuid)
-                .orElseThrow(() ->
-                        new PagoNotFoundEx(
-                                "ERROR: El pago ingresado no existe."
-                        )
+                .orElseThrow(() -> new PagoNotFoundEx("El pago ingresado no existe.")
                 );
 
         if (!pago.getEstadoPago().equals(
                 EstadoPago.Pendiente_de_revision)) {
-            throw new PaymentCannotBeCancelledException(
-                    "ERROR: Solo se pueden cancelar pagos pendientes."
-            );
+            throw new PaymentCannotBeCancelledException("Solo se pueden cancelar pagos pendientes.");
         }
 
         pago.setEstadoPago(EstadoPago.Cancelado);
@@ -250,7 +222,6 @@ public class PagoService {
 
     // Verificar que el usuario de la URL sea el usuario autenticado.
     public boolean perteneceAlUsuario(String uuid, String email) {
-
         return usuarioRepository.findByUuid(uuid)
                 .map(usuario -> usuario.getEmail().equals(email))
                 .orElse(false);
@@ -274,13 +245,26 @@ public class PagoService {
 
         PagoEntity pago = pagoRepository
                 .findByMercadoPagoOrderId(orderId)
-                .orElseThrow(() ->
-                        new PagoNotFoundEx(
-                                "No existe un pago asociado a esta orden."
-                        )
+                .orElseThrow(() -> new PagoNotFoundEx("No existe un pago asociado a esta orden.")
                 );
-
         // Reutiliza la lógica existente de consulta y actualización.
         sincronizarEstado(pago.getUuid());
     }
+
+    // Buscar un pago por UUID.
+    public PagoDTOResponse buscarPagoPorUuid(String uuid) {
+        PagoEntity pago = pagoRepository.findByUuid(uuid)
+                .orElseThrow(() -> new PagoNotFoundEx("El pago ingresado no existe."));
+        return PagoMapper.toResponse(pago);
+    }
+
+    // Buscar un pago por ID de orden de Mercado Pago.
+    public PagoDTOResponse buscarPagoPorMercadoPagoOrderId(String mercadoPagoOrderId) {
+
+        PagoEntity pago = pagoRepository
+                .findByMercadoPagoOrderId(mercadoPagoOrderId)
+                .orElseThrow(() -> new PagoNotFoundEx("No existe un pago asociado a esta orden de Mercado Pago."));
+        return PagoMapper.toResponse(pago);
+    }
+
 }
