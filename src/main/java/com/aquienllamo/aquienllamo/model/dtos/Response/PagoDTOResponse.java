@@ -24,4 +24,8 @@ public class PagoDTOResponse {
 
     private EstadoPago estadoPago;
 
+    private String checkoutUrl;
+
+    private String mercadoPagoOrderId;
+
 }
