@@ -67,16 +67,10 @@ public class SecurityConfig {
                                 "/aquienllamo/usuarios/sign-up",
                                 "/aquienllamo/usuarios/login",
                                 "/aquienllamo/administradores/registrar",
-                                "/aquienllamo/tecnicos/registrar-nuevo"
+                                "/aquienllamo/tecnicos/registrar-nuevo",
+                                "/maps/**",
+                                "/aquienllamo/ubicaciones/**"
                         ).permitAll()
-                                // Rutas públicas
-                                .requestMatchers(
-                                        "/auth/**",
-                                        "/aquienllamo/usuarios/sign-up",
-                                        "/aquienllamo/usuarios/login",
-                                        "/aquienllamo/administradores/registrar",
-                                        "/aquienllamo/tecnicos/registrar-nuevo"
-                                ).permitAll()
 
 // Catálogo para el registro de técnicos (solo lectura)
                                 .requestMatchers(HttpMethod.GET,
