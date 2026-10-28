@@ -27,12 +27,22 @@ public class PagoController {
     private final MercadoPagoService mercadoPagoService;
 
     @GetMapping("/mercado-pago/orden/{orderId}")
-    public ResponseEntity<MercadoPagoOrderStatusResponse> consultarOrden(
-            @PathVariable String orderId) {
+    public ResponseEntity<MercadoPagoOrderStatusResponse> consultarOrden(@PathVariable String orderId) {
+        return ResponseEntity.ok(mercadoPagoService.consultarOrden(orderId));
+    }
 
-        return ResponseEntity.ok(
-                mercadoPagoService.consultarOrden(orderId)
-        );
+    // Buscar un pago por UUID.
+    @GetMapping("/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or @pagoService.pagoPerteneceAlUsuario(#uuid, authentication.name)")
+    public ResponseEntity<PagoDTOResponse> buscarPagoPorUuid(@PathVariable String uuid) {
+        return ResponseEntity.ok(pagoService.buscarPagoPorUuid(uuid));
+    }
+
+    // Buscar un pago por ID de orden de Mercado Pago.
+    @GetMapping("/mercado-pago/orden/{mercadoPagoOrderId}/pago")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<PagoDTOResponse> buscarPagoPorMercadoPagoOrderId(@PathVariable String mercadoPagoOrderId) {
+        return ResponseEntity.ok(pagoService.buscarPagoPorMercadoPagoOrderId(mercadoPagoOrderId));
     }
 
     //crear pago

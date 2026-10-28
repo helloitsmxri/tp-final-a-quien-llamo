@@ -100,9 +100,7 @@ public class MercadoPagoService implements ProveedorPago {
     public MercadoPagoOrderStatusResponse consultarOrden(String orderId) {
 
         if (orderId == null || orderId.isBlank()) {
-            throw new IllegalArgumentException(
-                    "El ID de la orden es obligatorio."
-            );
+            throw new IllegalArgumentException("El ID de la orden es obligatorio.");
         }
 
         MercadoPagoOrderStatusResponse respuesta = crearCliente()
