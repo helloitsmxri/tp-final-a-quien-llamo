@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-
+// REGISTRO DE UN USUARIO
 // es lo que le pido al usuario.
 @Getter
 @Setter

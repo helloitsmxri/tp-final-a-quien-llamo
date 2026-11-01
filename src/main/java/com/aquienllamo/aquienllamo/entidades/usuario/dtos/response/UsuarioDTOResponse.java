@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
+// INFORMACIÓN GENERAL DEL USUARIO
 public class UsuarioDTOResponse {
     // El ID es fundamental para el manejo en el Front
     private String uuid;

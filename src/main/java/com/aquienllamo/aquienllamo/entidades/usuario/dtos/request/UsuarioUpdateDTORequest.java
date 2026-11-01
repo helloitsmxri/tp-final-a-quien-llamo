@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
+// ACTUALIZACIÓN DEL PERFIL DEL USUARIO
 public class UsuarioUpdateDTORequest {
 
     private String nombre;
