@@ -24,6 +24,7 @@ import com.aquienllamo.aquienllamo.entidades.ubicacion.exceptions.UbicacionNotFo
 import com.aquienllamo.aquienllamo.entidades.usuario.exceptions.DuplicateCuitEx;
 import com.aquienllamo.aquienllamo.entidades.usuario.exceptions.UserFoundEx;
 import com.aquienllamo.aquienllamo.entidades.usuario.exceptions.UserNotFoundEx;
+import com.aquienllamo.aquienllamo.model.exceptions.CompletedWorkRequiredException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
