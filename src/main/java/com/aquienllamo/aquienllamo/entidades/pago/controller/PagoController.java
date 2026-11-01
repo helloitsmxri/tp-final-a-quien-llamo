@@ -1,0 +1,92 @@
+package com.aquienllamo.aquienllamo.entidades.pago.controller;
+
+import com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago.MercadoPagoOrderStatusResponse;
+import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
+import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
+import com.aquienllamo.aquienllamo.entidades.pago.service.PagoService;
+import com.aquienllamo.aquienllamo.entidades.pago.dto.request.PagoDTORequest;
+import com.aquienllamo.aquienllamo.entidades.pago.dto.response.PagoDTOResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago.MercadoPagoService;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/aquienllamo/pagos")
+@RequiredArgsConstructor
+public class PagoController {
+
+    private final PagoService pagoService;
+    private final MercadoPagoService mercadoPagoService;
+
+    @GetMapping("/mercado-pago/orden/{orderId}")
+    public ResponseEntity<MercadoPagoOrderStatusResponse> consultarOrden(@PathVariable String orderId) {
+        return ResponseEntity.ok(mercadoPagoService.consultarOrden(orderId));
+    }
+
+    // Buscar un pago por UUID.
+    @GetMapping("/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or @pagoService.pagoPerteneceAlUsuario(#uuid, authentication.name)")
+    public ResponseEntity<PagoDTOResponse> buscarPagoPorUuid(@PathVariable String uuid) {
+        return ResponseEntity.ok(pagoService.buscarPagoPorUuid(uuid));
+    }
+
+    // Buscar un pago por ID de orden de Mercado Pago.
+    @GetMapping("/mercado-pago/orden/{mercadoPagoOrderId}/pago")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<PagoDTOResponse> buscarPagoPorMercadoPagoOrderId(@PathVariable String mercadoPagoOrderId) {
+        return ResponseEntity.ok(pagoService.buscarPagoPorMercadoPagoOrderId(mercadoPagoOrderId));
+    }
+
+    //crear pago
+    @PostMapping
+    @PreAuthorize("hasRole('USUARIO')")
+    public ResponseEntity<PagoDTOResponse> crearPago (@Valid @RequestBody PagoDTORequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(pagoService.crearPago(request));
+    }
+
+    //listar pagos por metodo de pago
+    @GetMapping("/metodoPago")
+    public ResponseEntity<List<PagoDTOResponse>> listarPorMetodoDePago (@RequestParam MetodoDePago metodoDePago){
+        return ResponseEntity.ok().body(pagoService.listarPorMetodoDePago(metodoDePago));
+    }
+
+    //listar pagos por estado
+    @GetMapping("/estado")
+    public ResponseEntity<List<PagoDTOResponse>> listarPorEstado (@RequestParam EstadoPago estado) {
+        return ResponseEntity.ok().body(pagoService.listarPorEstado(estado));
+    }
+
+    //listar todos los pagos
+    @GetMapping
+    public ResponseEntity<List<PagoDTOResponse>> listarPagos (){
+        return ResponseEntity.ok().body(pagoService.listarPagos());
+    }
+
+    //listar pagos hechos por cliente
+    @GetMapping("/cliente/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or @pagoService.perteneceAlUsuario(#uuid, authentication.name)") //garantiza que cada cliente solo pueda ver los pagos suyos
+    public ResponseEntity<List<PagoDTOResponse>> listarPagoCliente (@PathVariable String uuid){
+        return ResponseEntity.ok().body(pagoService.listarPagosPorClienteUuid(uuid));
+    }
+
+    //listar pagos recibidos por tecnico
+    @GetMapping("/tecnico/{uuid}")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or @pagoService.perteneceAlUsuario(#uuid, authentication.name)")
+    public ResponseEntity<List<PagoDTOResponse>> listarPagoTecnico (@PathVariable String uuid){
+        return ResponseEntity.ok().body(pagoService.listarPagosRecibidosPorTecnico(uuid));
+    }
+
+    @PatchMapping("/{uuid}/cancelar")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or @pagoService.pagoPerteneceAlUsuario(#uuid, authentication.name)")
+    public ResponseEntity<PagoDTOResponse> cancelarPago (@PathVariable String uuid){
+        return ResponseEntity.ok(pagoService.cancelarPago(uuid));
+    }
+}

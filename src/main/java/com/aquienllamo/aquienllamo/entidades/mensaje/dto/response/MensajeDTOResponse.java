@@ -1,0 +1,21 @@
+package com.aquienllamo.aquienllamo.entidades.mensaje.dto.response;
+
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
+public class MensajeDTOResponse {
+
+    private String uuidMensaje;
+    private String mensaje;
+    private LocalDateTime fechaMensaje;
+    private String nombreSender;
+    private String archivo;
+    private String tipoArchivo;
+}
