@@ -1,0 +1,16 @@
+package com.aquienllamo.aquienllamo.auth.repositories;
+
+import com.aquienllamo.aquienllamo.auth.permissions.RoleEntity;
+import com.aquienllamo.aquienllamo.auth.permissions.RolesUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface RoleRepository extends JpaRepository<RoleEntity, Integer> {
+    boolean existsByRole(RolesUser role);
+
+    Optional<RoleEntity> findByRole(RolesUser role);
+
+}

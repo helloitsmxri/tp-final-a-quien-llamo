@@ -1,0 +1,60 @@
+package com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago.Webhook;
+
+
+import com.aquienllamo.aquienllamo.entidades.pago.exceptions.PagoNotFoundEx;
+import com.aquienllamo.aquienllamo.entidades.pago.service.PagoService;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/webhooks/mercado-pago")
+@RequiredArgsConstructor
+public class MercadoPagoWebhookController {
+
+    private final MercadoPagoWebhookValidator webhookValidator;
+    private final PagoService pagoService;
+
+
+    @PostMapping
+    public ResponseEntity<Void> recibirNotificacion(
+            @RequestParam(name = "data.id", required = false)
+            String dataId,
+
+            @RequestParam(name = "type", required = false)
+            String type,
+
+            @RequestHeader(name = "x-signature", required = false)
+            String xSignature,
+
+            @RequestHeader(name = "x-request-id", required = false)
+            String xRequestId) {
+
+        if (!"order".equalsIgnoreCase(type)
+                || dataId == null
+                || dataId.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean firmaValida = webhookValidator.validarFirma(
+                xSignature,
+                xRequestId,
+                dataId
+        );
+
+        if (!firmaValida) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        try {
+            pagoService.procesarWebhookMercadoPago(dataId);
+            return ResponseEntity.ok().build();
+
+        } catch (PagoNotFoundEx e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+}

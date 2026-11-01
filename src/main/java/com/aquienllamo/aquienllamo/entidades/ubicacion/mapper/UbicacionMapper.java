@@ -1,0 +1,50 @@
+package com.aquienllamo.aquienllamo.entidades.ubicacion.mapper;
+
+import com.aquienllamo.aquienllamo.entidades.ubicacion.dto.request.UbicacionDTORequest;
+import com.aquienllamo.aquienllamo.entidades.ubicacion.dto.response.UbicacionDTOResponse;
+import com.aquienllamo.aquienllamo.entidades.ubicacion.entity.UbicacionEntity;
+import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
+import org.springframework.stereotype.Component;
+
+@Component // le dice a Spring que esa clase es un bean.
+public class UbicacionMapper {
+
+    public UbicacionDTOResponse toResponse(UbicacionEntity ubicacion)
+    {
+        if(ubicacion == null)
+        {
+            return null;
+        }
+        return UbicacionDTOResponse.builder() //patron builder
+                .uuid(ubicacion.getUuid())
+                .codigoPostal(ubicacion.getCodigoPostal())
+                .provincia(ubicacion.getProvincia())
+                .ciudad(ubicacion.getCiudad())
+                .calle(ubicacion.getCalle())
+                .numero(ubicacion.getNumero())
+                .piso(ubicacion.getPiso())
+                .numeroPiso(ubicacion.getNumeroPiso())
+                .build();
+    }
+
+    public UbicacionEntity toEntity(UbicacionDTORequest dto, UsuarioEntity usuario)
+    {
+        if(dto == null)
+        {
+            return null;
+        }
+        return UbicacionEntity.builder()
+                .codigoPostal(dto.getCodigoPostal())
+                .provincia(dto.getProvincia())
+                .ciudad(dto.getCiudad())
+                .calle(dto.getCalle())
+                .numero(dto.getNumero())
+                .piso(dto.getPiso())
+                .numeroPiso(dto.getNumeroPiso())
+                .usuario(usuario)
+                .build();
+    }
+
+
+
+}

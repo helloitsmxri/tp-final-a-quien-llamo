@@ -1,0 +1,53 @@
+package com.aquienllamo.aquienllamo.entidades.habilidad.entity;
+
+import com.aquienllamo.aquienllamo.common.BaseEntity;
+import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
+import com.aquienllamo.aquienllamo.entidades.especialidad.entity.EspecialidadEntity;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "Habilidad")
+public class HabilidadEntity extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_habilidad")
+    private Integer idHabilidad;
+
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
+    @PrePersist
+    public void generarUUID() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
+
+    @Column(length = 50, name = "nombre_habilidad")
+    private String nombreHabilidad;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+            name = "Habilidad_Especialidad",
+            joinColumns = @JoinColumn(name = "id_habilidad"),
+            inverseJoinColumns = @JoinColumn(name = "id_especialidad")
+    )
+    private List<EspecialidadEntity> especialidades = new ArrayList<>();
+
+    @Builder.Default
+    @ManyToMany(mappedBy = "habilidades")
+    private List<TecnicoEntity> tecnicos = new ArrayList<>();
+
+}

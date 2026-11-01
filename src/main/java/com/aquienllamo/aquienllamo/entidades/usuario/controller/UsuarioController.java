@@ -1,0 +1,80 @@
+package com.aquienllamo.aquienllamo.entidades.usuario.controller;
+
+import com.aquienllamo.aquienllamo.entidades.usuario.service.UsuarioService;
+import com.aquienllamo.aquienllamo.entidades.usuario.dtos.request.DeleteUsuarioDTORequest;
+import com.aquienllamo.aquienllamo.entidades.usuario.dtos.request.UsuarioUpdateDTORequest;
+import com.aquienllamo.aquienllamo.entidades.usuario.dtos.response.UsuarioDTOResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/aquienllamo/usuarios")
+
+public class UsuarioController {
+    private final UsuarioService usuarioService;
+    // iniciar sesión lo moví a AUTH CONTROLLER!!!!!!!!!!
+    // buscar el perfil a través del uuid
+    @GetMapping("/perfil/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse buscar(@PathVariable String uuid){
+        return usuarioService.getByUuid(uuid);
+    }
+
+    // actualizar el perfil
+    @PatchMapping("/actualizar/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse actualizar(@PathVariable String uuid, @ModelAttribute UsuarioUpdateDTORequest dto){
+        return usuarioService.update(uuid, dto);
+    }
+
+    // eliminar la cuenta x el momento dejo deleteusuariodtorequest así confirman su clave.
+    @DeleteMapping("/eliminar/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public String borrar(@PathVariable String uuid, @Valid @RequestBody DeleteUsuarioDTORequest dto){
+        return usuarioService.deleteUser(uuid, dto.getPassword());
+    }
+
+    // listar todos users para admins
+    @GetMapping("/todos")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UsuarioDTOResponse> listarTodos() {
+        return usuarioService.getAllUsers();
+    }
+
+    // ver MI perfil
+    @GetMapping("/mi-perfil")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse miPerfil( Authentication authentication){
+        return usuarioService.getMyProfile(authentication.getName());
+    }
+
+
+
+    //lo podría hacer con request param
+    // encontrar usuario por documento
+    @GetMapping("/usuario/dni/{dni}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse mostrarPorDocumento(@PathVariable String dni){
+        return usuarioService.getByDni(dni);
+    }
+
+    // encontrar usuario por email
+    @GetMapping("/usuario/email/{email}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDTOResponse mostrarPorCorreo(@PathVariable String email){
+        return usuarioService.getByEmail(email);
+    }
+
+
+
+}

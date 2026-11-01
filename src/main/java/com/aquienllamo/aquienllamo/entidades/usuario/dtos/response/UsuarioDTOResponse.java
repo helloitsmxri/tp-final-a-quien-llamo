@@ -1,0 +1,34 @@
+package com.aquienllamo.aquienllamo.entidades.usuario.dtos.response;
+
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+// lo q devuelvo al usuario o lo q el service
+// devuelve al front.
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+public class UsuarioDTOResponse {
+    // El ID es fundamental para el manejo en el Front
+    private String uuid;
+
+    private String nombre;
+    private String apellido;
+    private String email;
+    private String telefono;
+    private String sobreMi;
+
+    // byte puede dar errores, creo que el frontend usa base64, por lo q conviene un texto
+    private String fotoBase64;
+    private String tipoImagen;
+
+    //nuevo cambio:
+    private String tipoUsuario;
+
+    private LocalDateTime fechaRegistro;
+    private LocalDateTime ultimaActividad;
+}
