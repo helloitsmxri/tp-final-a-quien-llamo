@@ -1,19 +1,21 @@
-package com.aquienllamo.aquienllamo.model.services;
-
-import com.aquienllamo.aquienllamo.model.Enum.EstadoTrabajo;
-import com.aquienllamo.aquienllamo.model.auth.credentials.CredentialsEntity;
-import com.aquienllamo.aquienllamo.model.auth.repositories.CredentialsRepository;
-import com.aquienllamo.aquienllamo.model.auth.securityServices.AuthService;
-import com.aquienllamo.aquienllamo.model.auth.utils.SecurityUtils;
-import com.aquienllamo.aquienllamo.model.dtos.Request.RatingDTORequest;
-import com.aquienllamo.aquienllamo.model.dtos.Response.RatingDTOResponse;
-import com.aquienllamo.aquienllamo.model.entities.*;
-import com.aquienllamo.aquienllamo.model.exceptions.*;
-import com.aquienllamo.aquienllamo.model.mappers.RatingMapper;
-import com.aquienllamo.aquienllamo.model.repositories.CaracteristicaRepository;
-import com.aquienllamo.aquienllamo.model.repositories.RatingRepository;
-import com.aquienllamo.aquienllamo.model.repositories.TrabajoRepository;
-import com.aquienllamo.aquienllamo.model.repositories.UsuarioRepository;
+package com.aquienllamo.aquienllamo.entidades.rating.service;
+import com.aquienllamo.aquienllamo.entidades.caracteristica.entity.CaracteristicaEntity;
+import com.aquienllamo.aquienllamo.entidades.presupuesto.entity.PresupuestoEntity;
+import com.aquienllamo.aquienllamo.entidades.rating.dto.request.RatingDTORequest;
+import com.aquienllamo.aquienllamo.entidades.rating.dto.response.RatingDTOResponse;
+import com.aquienllamo.aquienllamo.entidades.rating.entity.RatingEntity;
+import com.aquienllamo.aquienllamo.entidades.rating.exceptions.RatingAlreadyExistsEx;
+import com.aquienllamo.aquienllamo.entidades.rating.mapper.RatingMapper;
+import com.aquienllamo.aquienllamo.entidades.rating.repository.*;
+import com.aquienllamo.aquienllamo.auth.repositories.CredentialsRepository;
+import com.aquienllamo.aquienllamo.entidades.caracteristica.repository.CaracteristicaRepository;
+import com.aquienllamo.aquienllamo.entidades.trabajo.entity.TrabajoEntity;
+import com.aquienllamo.aquienllamo.entidades.trabajo.enums.EstadoTrabajo;
+import com.aquienllamo.aquienllamo.entidades.trabajo.repository.TrabajoRepository;
+import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
+import com.aquienllamo.aquienllamo.entidades.usuario.exceptions.UserNotFoundEx;
+import com.aquienllamo.aquienllamo.entidades.usuario.repository.UsuarioRepository;
+import com.aquienllamo.aquienllamo.util.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,7 @@ public class RatingService {
 
         // 3. Verificar que el trabajo esté finalizado
         if (trabajo.getEstadoTrabajo() != EstadoTrabajo.Finalizado) {
-            throw new CompletedWorkRequiredException(
+            throw new com.aquienllamo.aquienllamo.model.exceptions.CompletedWorkRequiredException(
                     "Solo se puede reseñar un trabajo finalizado.");
         }
 

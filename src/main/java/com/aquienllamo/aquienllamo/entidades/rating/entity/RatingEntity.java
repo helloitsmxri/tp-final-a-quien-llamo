@@ -1,6 +1,10 @@
 
-package com.aquienllamo.aquienllamo.model.entities;
+package com.aquienllamo.aquienllamo.entidades.rating.entity;
 
+import com.aquienllamo.aquienllamo.common.BaseEntity;
+import com.aquienllamo.aquienllamo.entidades.caracteristica.entity.CaracteristicaEntity;
+import com.aquienllamo.aquienllamo.entidades.trabajo.entity.TrabajoEntity;
+import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

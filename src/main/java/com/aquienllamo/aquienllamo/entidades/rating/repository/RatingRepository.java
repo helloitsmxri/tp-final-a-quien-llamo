@@ -1,9 +1,8 @@
-package com.aquienllamo.aquienllamo.model.repositories;
+package com.aquienllamo.aquienllamo.entidades.rating.repository;
 
-
-import com.aquienllamo.aquienllamo.model.entities.RatingEntity;
-import com.aquienllamo.aquienllamo.model.entities.TrabajoEntity;
-import com.aquienllamo.aquienllamo.model.entities.UsuarioEntity;
+import com.aquienllamo.aquienllamo.entidades.rating.entity.RatingEntity;
+import com.aquienllamo.aquienllamo.entidades.trabajo.entity.TrabajoEntity;
+import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
