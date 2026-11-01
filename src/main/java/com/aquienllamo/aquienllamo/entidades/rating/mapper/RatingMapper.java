@@ -14,6 +14,7 @@ public class RatingMapper {
 
     public static RatingDTOResponse toResponse (RatingEntity entity){
         return RatingDTOResponse.builder()
+                .uuidRemitente(entity.getUsuarioRemitente().getUuid())
                 .nombreRemitente(entity.getUsuarioRemitente().getNombre())
                 .nombreDestinatario(entity.getUsuarioDestinatario().getNombre())
                 .valoracion(entity.getValoracion())
