@@ -44,7 +44,7 @@ public class UsuarioDTORequest {
 
     @NotNull(message = "Es necesario poner la fecha de nacimiento.")
     @Past(message = "La fecha de nacimiento no puede ser posterior a la actual.")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaNacimiento;
 
     private MultipartFile foto; // es multipart NO BYTE porque multipart es de spring y sabe sacar bytes y tipos solito
