@@ -21,8 +21,7 @@ public class TecnicoDTORequest {
     @Size(min = 10, message = "La descripción debe tener al menos 10 caracteres.")
     private String descripcionTrabajo;
 
-    @NotBlank(message = "Los proyectos son obligatorios.")
-    @Size(min = 10, max = 5000, message = "Los proyectos deben tener entre 10 y 5000 caracteres.")
+    @Size(max = 5000, message = "Los proyectos deben tener entre 10 y 5000 caracteres.")
     private String proyectos;
 
     @NotEmpty(message = "Debe seleccionar al menos una habilidad.")
