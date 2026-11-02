@@ -5,6 +5,7 @@ import com.aquienllamo.aquienllamo.entidades.chat.entity.ChatEntity;
 import com.aquienllamo.aquienllamo.entidades.chat.repository.ChatRepository;
 import com.aquienllamo.aquienllamo.entidades.mensaje.repository.MensajeRepository;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.enums.EstadoPresupuestoE;
+import com.aquienllamo.aquienllamo.entidades.presupuesto.enums.TipoPresupuestoE;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.specs.PresupuestoSpecifications;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.dto.request.PresupuestoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.dto.response.PresupuestoDTOResponse;
@@ -347,4 +348,21 @@ public class PresupuestoService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> obtenerMisPresupuestos(
+            String email,
+            TipoPresupuestoE tipo) {
+
+        List<PresupuestoEntity> presupuestos;
+
+        if (tipo == TipoPresupuestoE.CREADOS) {
+            presupuestos = presupuestoRepository.findByTecnico_Usuario_Email(email);
+        } else {
+            presupuestos = presupuestoRepository.findByUsuario_Email(email);
+        }
+
+        return presupuestos.stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
 }

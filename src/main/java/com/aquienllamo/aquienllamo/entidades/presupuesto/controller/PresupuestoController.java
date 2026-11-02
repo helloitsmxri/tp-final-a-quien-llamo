@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.entidades.presupuesto.controller;
 
 import com.aquienllamo.aquienllamo.entidades.presupuesto.enums.EstadoPresupuestoE;
+import com.aquienllamo.aquienllamo.entidades.presupuesto.enums.TipoPresupuestoE;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.service.PresupuestoService;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.dto.request.PresupuestoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.dto.response.PresupuestoDTOResponse;
@@ -204,5 +205,17 @@ public class PresupuestoController {
         String emailTech = authentication.getName();
 
         presupuestoService.modificarPresupuesto(uuid, dto, emailTech);
+    }
+
+    @GetMapping("/mis-presupuestos")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> obtenerMisPresupuestos(
+            @RequestParam TipoPresupuestoE tipo,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+
+        return presupuestoService.obtenerMisPresupuestos(email, tipo);
     }
 }

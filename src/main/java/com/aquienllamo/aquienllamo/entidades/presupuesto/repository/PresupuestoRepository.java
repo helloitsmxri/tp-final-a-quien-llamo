@@ -36,6 +36,12 @@ public interface PresupuestoRepository extends JpaRepository<PresupuestoEntity, 
 
     List<PresupuestoEntity> findByChat_UuidChat(String uuidChat);
 
+    // busca los presupuestos recibidos como técnico
+    List<PresupuestoEntity> findByTecnico_Usuario_Email(String email);
+
+    // busca los presupuestos recibidos como cliente
+    List<PresupuestoEntity> findByUsuario_Email(String email);
+
     // Ver si existe
     boolean existsByUuid(String uuid);
 }
