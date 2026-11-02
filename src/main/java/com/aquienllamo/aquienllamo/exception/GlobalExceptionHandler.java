@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.exception;
-import com.aquienllamo.aquienllamo.administrador.AdminAsignadoDenunciaEx;
-import com.aquienllamo.aquienllamo.administrador.AdministradorNotFoundEx;
+import com.aquienllamo.aquienllamo.administrador.exceptions.AdminAsignadoDenunciaEx;
+import com.aquienllamo.aquienllamo.administrador.exceptions.AdministradorNotFoundEx;
 import com.aquienllamo.aquienllamo.auth.CredentialsNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.certificacion.exceptions.CertificacionEstadoInvalidoEx;
 import com.aquienllamo.aquienllamo.entidades.certificacion.exceptions.CertificacionNotFoundEx;

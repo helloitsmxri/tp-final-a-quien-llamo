@@ -1,7 +1,7 @@
 package com.aquienllamo.aquienllamo.entidades.portfolio.service;
 
 import com.aquienllamo.aquienllamo.APIs.GoogleGmail.EmailService;
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioAdminDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.entity.PortfolioEntity;
 import com.aquienllamo.aquienllamo.entidades.portfolio.exceptions.PortfolioAlreadyReviewedEx;

@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.administrador;
+package com.aquienllamo.aquienllamo.administrador.dto.request;
 
 import com.aquienllamo.aquienllamo.auth.permissions.RolesUser;
 import jakarta.validation.constraints.NotBlank;

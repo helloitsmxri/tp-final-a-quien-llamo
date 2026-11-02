@@ -1,8 +1,8 @@
 package com.aquienllamo.aquienllamo.entidades.denuncia.service;
 
 import com.aquienllamo.aquienllamo.APIs.GoogleGmail.EmailService;
-import com.aquienllamo.aquienllamo.administrador.AdminAsignadoDenunciaEx;
-import com.aquienllamo.aquienllamo.administrador.AdministradorNotFoundEx;
+import com.aquienllamo.aquienllamo.administrador.exceptions.AdminAsignadoDenunciaEx;
+import com.aquienllamo.aquienllamo.administrador.exceptions.AdministradorNotFoundEx;
 import com.aquienllamo.aquienllamo.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.auth.repositories.CredentialsRepository;

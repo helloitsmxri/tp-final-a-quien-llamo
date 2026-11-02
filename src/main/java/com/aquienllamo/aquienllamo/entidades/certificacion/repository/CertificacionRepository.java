@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.certificacion.repository;
 
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.certificacion.entity.CertificacionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

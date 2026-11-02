@@ -1,4 +1,4 @@
-package com.aquienllamo.aquienllamo.administrador;
+package com.aquienllamo.aquienllamo.administrador.dto.response;
 
 import lombok.*;
 

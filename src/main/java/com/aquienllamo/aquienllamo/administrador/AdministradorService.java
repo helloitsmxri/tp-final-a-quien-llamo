@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.administrador;
 
 
 import com.aquienllamo.aquienllamo.APIs.GoogleGmail.EmailService;
+import com.aquienllamo.aquienllamo.administrador.dto.request.AsignRolDTORequest;
 import com.aquienllamo.aquienllamo.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.auth.permissions.RolesUser;

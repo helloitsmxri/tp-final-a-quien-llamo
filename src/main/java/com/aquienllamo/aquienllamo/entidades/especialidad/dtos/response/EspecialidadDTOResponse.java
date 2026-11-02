@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.especialidad.dtos.response;
 
-import com.aquienllamo.aquienllamo.administrador.TipoValidacion;
+import com.aquienllamo.aquienllamo.administrador.enums.TipoValidacion;
 import lombok.*;
 
 import java.util.List;

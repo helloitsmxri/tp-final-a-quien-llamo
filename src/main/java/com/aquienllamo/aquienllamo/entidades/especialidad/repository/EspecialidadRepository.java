@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.especialidad.repository;
 
-import com.aquienllamo.aquienllamo.administrador.TipoValidacion;
+import com.aquienllamo.aquienllamo.administrador.enums.TipoValidacion;
 import com.aquienllamo.aquienllamo.entidades.especialidad.entity.EspecialidadEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

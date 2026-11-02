@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.especialidad.controller;
 
-import com.aquienllamo.aquienllamo.administrador.TipoValidacion;
+import com.aquienllamo.aquienllamo.administrador.enums.TipoValidacion;
 import com.aquienllamo.aquienllamo.entidades.especialidad.service.EspecialidadService;
 import com.aquienllamo.aquienllamo.entidades.especialidad.dtos.request.EspecialidadDTORequest;
 import com.aquienllamo.aquienllamo.entidades.especialidad.dtos.response.EspecialidadCreadaDTOResponse;

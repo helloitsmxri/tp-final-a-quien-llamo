@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.especialidad.dtos.request;
 
-import com.aquienllamo.aquienllamo.administrador.TipoValidacion;
+import com.aquienllamo.aquienllamo.administrador.enums.TipoValidacion;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

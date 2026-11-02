@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.portfolio.dto.response;
 
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import lombok.*;
 
 import java.time.LocalDateTime;

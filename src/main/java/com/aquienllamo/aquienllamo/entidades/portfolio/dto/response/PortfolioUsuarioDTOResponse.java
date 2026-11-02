@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.portfolio.dto.response;
 
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import lombok.*;
 
 //Existe un DTO por caso de uso / tipo de usuario, el usuario solo debe ver si esta

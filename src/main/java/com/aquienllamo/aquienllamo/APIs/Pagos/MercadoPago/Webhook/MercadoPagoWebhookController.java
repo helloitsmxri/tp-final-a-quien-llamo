@@ -1,13 +1,15 @@
 package com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago.Webhook;
 
 
-import com.aquienllamo.aquienllamo.entidades.pago.exceptions.PagoNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.pago.service.PagoService;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/webhooks/mercado-pago")
@@ -17,44 +19,64 @@ public class MercadoPagoWebhookController {
     private final MercadoPagoWebhookValidator webhookValidator;
     private final PagoService pagoService;
 
-
     @PostMapping
     public ResponseEntity<Void> recibirNotificacion(
-            @RequestParam(name = "data.id", required = false)
-            String dataId,
+            @RequestParam Map<String, String> params,
+            @RequestHeader(name = "x-signature", required = false) String xSignature,
+            @RequestHeader(name = "x-request-id", required = false) String xRequestId
+    ) {
 
-            @RequestParam(name = "type", required = false)
-            String type,
+        // Formato actual
+        String dataId = params.get("data.id");
+        String type = params.get("type");
 
-            @RequestHeader(name = "x-signature", required = false)
-            String xSignature,
+        System.out.println("Data ID: " + dataId);
+        System.out.println("Type: " + type);
+        System.out.println("Signature presente: " + (xSignature != null));
+        System.out.println("Request ID presente: " + (xRequestId != null));
 
-            @RequestHeader(name = "x-request-id", required = false)
-            String xRequestId) {
+        // Compatibilidad con la URL de prueba
+        if (dataId == null) {
+            dataId = params.get("id");
+        }
 
-        if (!"order".equalsIgnoreCase(type)
-                || dataId == null
-                || dataId.isBlank()) {
+        if (type == null) {
+            type = params.get("topic");
+        }
+
+        if (dataId == null || dataId.isBlank()
+                || type == null || type.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
-        boolean firmaValida = webhookValidator.validarFirma(
-                xSignature,
-                xRequestId,
-                dataId
-        );
-
-        if (!firmaValida) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        // Validar firma
+        if (!webhookValidator.validarFirma(
+                xSignature, xRequestId, dataId)) {
+            return ResponseEntity.status(401).build();
         }
 
         try {
-            pagoService.procesarWebhookMercadoPago(dataId);
+
+            switch (type.toLowerCase()) {
+
+                case "payment":
+                    // Procesar notificación de pago
+                    pagoService.procesarWebhookMercadoPago(dataId);
+                    break;
+
+                case "order":
+                    // Procesar notificación de orden
+                    pagoService.procesarWebhookMercadoPago(dataId);
+                    break;
+
+                default:
+                    return ResponseEntity.ok().build();
+            }
+
             return ResponseEntity.ok().build();
 
-        } catch (PagoNotFoundEx e) {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
-
 }

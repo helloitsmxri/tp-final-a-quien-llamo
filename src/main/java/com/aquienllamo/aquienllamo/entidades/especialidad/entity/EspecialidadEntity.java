@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.especialidad.entity;
 
-import com.aquienllamo.aquienllamo.administrador.TipoValidacion;
+import com.aquienllamo.aquienllamo.administrador.enums.TipoValidacion;
 import com.aquienllamo.aquienllamo.common.BaseEntity;
 import com.aquienllamo.aquienllamo.entidades.habilidad.entity.HabilidadEntity;
 import com.aquienllamo.aquienllamo.entidades.rubro.entity.RubroEntity;

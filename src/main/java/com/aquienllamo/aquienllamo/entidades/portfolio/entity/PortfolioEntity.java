@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.portfolio.entity;
 
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.common.BaseEntity;
 import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
 import com.aquienllamo.aquienllamo.entidades.especialidad.entity.EspecialidadEntity;

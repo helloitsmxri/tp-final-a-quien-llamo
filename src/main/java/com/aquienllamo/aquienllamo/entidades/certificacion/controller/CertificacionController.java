@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.certificacion.controller;
 
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.certificacion.service.CertificacionService;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTORequest;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.response.CertificacionDTOResponse;

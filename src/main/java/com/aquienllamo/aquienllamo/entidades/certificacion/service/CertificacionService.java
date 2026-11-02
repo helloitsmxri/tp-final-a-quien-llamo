@@ -1,7 +1,7 @@
 package com.aquienllamo.aquienllamo.entidades.certificacion.service;
 
 import com.aquienllamo.aquienllamo.APIs.GoogleGmail.EmailService;
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.certificacion.mapper.CertificacionMapper;
 import com.aquienllamo.aquienllamo.entidades.certificacion.repository.CertificacionRepository;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTORequest;

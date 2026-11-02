@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.portfolio.controller;
 
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioAdminDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.service.PortfolioAdminService;
 import lombok.RequiredArgsConstructor;

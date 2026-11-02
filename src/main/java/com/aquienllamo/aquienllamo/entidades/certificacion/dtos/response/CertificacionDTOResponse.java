@@ -1,6 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.certificacion.dtos.response;
 
-import com.aquienllamo.aquienllamo.administrador.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import lombok.*;
 
 import java.time.LocalDate;
