@@ -290,4 +290,61 @@ public class PresupuestoService {
                 .toList();
     }
 
+    // Modificar presupuesto
+    public void modificarPresupuesto(
+            String uuid,
+            PresupuestoDTORequest dto,
+            String emailTech) {
+
+        // Buscar el presupuesto
+        PresupuestoEntity presupuesto = presupuestoRepository.findByUuid(uuid)
+                .orElseThrow(() ->
+                        new PresupuestoNotFoundEx("No se encontró el presupuesto"));
+
+        // Verificar que el técnico sea quien lo creó
+        if (!presupuesto.getTecnico().getUsuario().getEmail().equals(emailTech)) {
+            throw new RuntimeException("No puede modificar un presupuesto que no sea suyo.");
+        }
+
+        // Verificar que siga pendiente
+        if (presupuesto.getEstado() != EstadoPresupuestoE.Pendiente) {
+            throw new RuntimeException("Solo se pueden modificar presupuestos pendientes.");
+        }
+
+        // Actualizar los datos
+        presupuesto.setPrecioEstimado(dto.getPrecioEstimado());
+        presupuesto.setDescripcionPresupuesto(dto.getDescripcionPresupuesto());
+
+        presupuestoRepository.save(presupuesto);
+    }
+
+    // Obtener presupuestos de un chat
+    @Transactional(readOnly = true)
+    public List<PresupuestoDTOResponse> obtenerPresupuestosChat(
+            String uuidChat,
+            String email) {
+
+        // Buscar el chat
+        ChatEntity chat = chatRepository.findByUuidChat(uuidChat)
+                .orElseThrow(() -> new RuntimeException("No se encontró el chat"));
+
+        // Verificar que participe del chat
+        boolean esUsuario = chat.getUsuario().getEmail().equals(email);
+
+        boolean esTecnico = chat.getTecnico()
+                .getUsuario()
+                .getEmail()
+                .equals(email);
+
+        if (!esUsuario && !esTecnico) {
+            throw new RuntimeException("No tiene permiso para consultar los presupuestos de este chat.");
+        }
+
+        // Obtener presupuestos
+        return presupuestoRepository.findByChat_UuidChat(uuidChat)
+                .stream()
+                .map(presupuestoMapper::toResponse)
+                .toList();
+    }
+
 }

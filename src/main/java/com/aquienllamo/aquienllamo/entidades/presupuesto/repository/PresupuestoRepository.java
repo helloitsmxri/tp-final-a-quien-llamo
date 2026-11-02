@@ -8,17 +8,34 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PresupuestoRepository extends JpaRepository<PresupuestoEntity, Integer>, JpaSpecificationExecutor<PresupuestoEntity> {
     // ya hace solo el save, delete, update, find by id!!
-    // obtener por uuid el presupuesto
+    // Obtener por UUID
     Optional<PresupuestoEntity> findByUuid(String uuid);
-    Optional<PresupuestoEntity> findByUsuario(UsuarioEntity user);
-    Optional<PresupuestoEntity> findByTecnico(TecnicoEntity tech);
-    Optional<PresupuestoEntity> findByTecnicoAndEstado(TecnicoEntity tech, EstadoPresupuestoE estado);
-    Optional<PresupuestoEntity> findByUsuarioAndEstado(UsuarioEntity user, EstadoPresupuestoE estado);
-    // ver si existe el presupuesto
+
+    // Obtener presupuestos de un usuario
+    List<PresupuestoEntity> findByUsuario(UsuarioEntity user);
+
+    // Obtener presupuestos de un técnico
+    List<PresupuestoEntity> findByTecnico(TecnicoEntity tech);
+
+    // Obtener presupuestos de un técnico según estado
+    List<PresupuestoEntity> findByTecnicoAndEstado(TecnicoEntity tech, EstadoPresupuestoE estado);
+
+    // Obtener presupuestos de un usuario según estado
+    List<PresupuestoEntity> findByUsuarioAndEstado(UsuarioEntity user, EstadoPresupuestoE estado);
+
+    // Obtener presupuestos de un chat
+    // esto se puede hacer xq spring data jpa permite recorrer la relación
+    // haciendo presupuesto entity, private chat entity, y dentro de
+    // chat entity va string uuidchat
+
+    List<PresupuestoEntity> findByChat_UuidChat(String uuidChat);
+
+    // Ver si existe
     boolean existsByUuid(String uuid);
 }

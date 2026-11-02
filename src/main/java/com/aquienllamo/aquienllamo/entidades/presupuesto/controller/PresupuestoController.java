@@ -178,4 +178,31 @@ public class PresupuestoController {
 
         return presupuestoService.buscarMisPresupuestosTecnico(auth.getName(), estado, min, max, fecha);
     }
+
+    // Obtener presupuestos de un chat
+    @GetMapping("/chat/{uuidChat}")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PresupuestoDTOResponse> obtenerPresupuestosChat(
+            @PathVariable String uuidChat,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+
+        return presupuestoService.obtenerPresupuestosChat(uuidChat, email);
+    }
+
+    // Modificar presupuesto
+    @PutMapping("/{uuid}")
+    @PreAuthorize("hasRole('TECNICO')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void modificarPresupuesto(
+            @PathVariable String uuid,
+            @Valid @RequestBody PresupuestoDTORequest dto,
+            Authentication authentication) {
+
+        String emailTech = authentication.getName();
+
+        presupuestoService.modificarPresupuesto(uuid, dto, emailTech);
+    }
 }
