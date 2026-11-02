@@ -157,8 +157,8 @@ public class PresupuestoService {
             throw new RuntimeException("No puede cancelar un presupuesto que no sea suyo.");
         }
 
-        if (presupuesto.getEstado() == EstadoPresupuestoE.Aceptado){
-            throw new RuntimeException("No se puede cancelar un presupuesto que ya ha sido aceptado.");
+        if (presupuesto.getEstado() != EstadoPresupuestoE.Pendiente){
+            throw new RuntimeException("Sólo se pueden cancelar presupuestos pendientes.");
         }
 
         presupuesto.setEstado(EstadoPresupuestoE.Cancelado);
