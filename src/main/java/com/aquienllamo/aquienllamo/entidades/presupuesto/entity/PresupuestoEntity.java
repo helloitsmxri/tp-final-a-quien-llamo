@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -47,12 +49,37 @@ public class PresupuestoEntity extends BaseEntity {
     @ToString.Exclude
     private TecnicoEntity tecnico;
 
+    @Column(name = "nombre_proyecto", nullable = false, length = 120)
+    private String nombreProyecto;
+
+    @Column(name = "observaciones", columnDefinition = "TEXT")
+    private String observaciones;
+
+    @Column(name = "subtotal", precision = 10, scale = 2, nullable = false)
+    private BigDecimal subtotal;
+
+    @Column(name = "descuento_porcentaje", precision = 5, scale = 2, nullable = false)
+    private BigDecimal descuentoPorcentaje;
+
+    @Column(name = "monto_descuento", precision = 10, scale = 2, nullable = false)
+    private BigDecimal montoDescuento;
+
+    // Conservamos este atributo: representa el precio final.
     @Column(name = "precio_estimado", precision = 10, scale = 2, nullable = false)
     private BigDecimal precioEstimado;
 
-    @Column(name = "descripcion_presupuesto", columnDefinition = "TEXT", nullable = false)
+    // Lo conservamos temporalmente por compatibilidad con los presupuestos anteriores.
+    @Column(name = "descripcion_presupuesto", columnDefinition = "TEXT")
     private String descripcionPresupuesto;
 
+    @OneToMany(
+            mappedBy = "presupuesto",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    @ToString.Exclude
+    private List<PresupuestoDetalleEntity> detalles = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)

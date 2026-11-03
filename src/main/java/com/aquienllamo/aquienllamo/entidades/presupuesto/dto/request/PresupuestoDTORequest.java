@@ -1,11 +1,12 @@
 package com.aquienllamo.aquienllamo.entidades.presupuesto.dto.request;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.aquienllamo.aquienllamo.entidades.presupuesto.dto.response.PresupuestoDetalleDTOResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,11 +14,20 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class PresupuestoDTORequest {
+    @NotBlank(message = "El nombre del proyecto es obligatorio")
+    @Size(max = 120, message = "El nombre no puede superar los 120 caracteres")
+    private String nombreProyecto;
 
-    @NotNull (message = "Es necesario ingresar un precio para el presupuesto")
-    @DecimalMin(value = "0.01", message = "El precio debe ser mayor a cero")
-    private BigDecimal precioEstimado;
+    @Size(max = 2000, message = "Las observaciones no pueden superar los 2000 caracteres")
+    private String observaciones;
 
-    @NotBlank(message = "Es necesario describir el trabajo a realizar")
-    private String descripcionPresupuesto;
+    @NotNull(message = "Es necesario ingresar el descuento")
+    @DecimalMin(value = "0.00", message = "El descuento no puede ser negativo")
+    @DecimalMax(value = "100.00", message = "El descuento no puede superar el 100%")
+    @Digits(integer = 3, fraction = 2, message = "El porcentaje no tiene un formato válido")
+    private BigDecimal descuentoPorcentaje;
+
+    @NotEmpty(message = "El presupuesto debe tener al menos un concepto")
+    @Valid
+    private List<PresupuestoDetalleDTORequest> detalles;
 }
