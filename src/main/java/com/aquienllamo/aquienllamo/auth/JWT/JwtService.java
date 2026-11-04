@@ -1,5 +1,7 @@
 package com.aquienllamo.aquienllamo.auth.JWT;
 
+import com.aquienllamo.aquienllamo.auth.details.UsuarioSecurity;
+import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -38,6 +40,10 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         claims.put("roles", roles);
+        if (userDetails instanceof UsuarioSecurity usuarioSecurity) {
+            claims.put("uuid", usuarioSecurity.getUuid());
+        }
+
         return buildToken(claims, userDetails, jwtExpiration);
     }
 
