@@ -7,6 +7,7 @@ import com.aquienllamo.aquienllamo.entidades.tecnico.service.TecnicoService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,6 +36,15 @@ public class TecnicoController {
     @PostMapping(value = "/registrar-nuevo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TecnicoDTOResponse> registrarTecnicoNuevo(@Valid @ModelAttribute TecnicoNuevoDTORequest dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.registrarTecnicoNuevo(dto.getUsuario(), dto.getTecnico()));
+    }
+
+    // Ver MI perfil de técnico (lo busca por el email del token)
+    @PreAuthorize("hasRole('TECNICO')")
+    @GetMapping("/mi-perfil")
+    public ResponseEntity<TecnicoDTOResponse> miPerfil(Authentication authentication) {
+        return ResponseEntity.ok(
+                tecnicoService.getMiPerfil(authentication.getName())
+        );
     }
 
     //listar todos los tecnicos

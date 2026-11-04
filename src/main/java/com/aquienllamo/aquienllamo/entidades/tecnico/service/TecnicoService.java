@@ -295,6 +295,15 @@ public class TecnicoService {
         tecnicoRepository.delete(tecnico);
     }
 
+    // buscar MI perfil de técnico por el email del usuario logueado
+    public TecnicoDTOResponse getMiPerfil(String email){
+        return tecnicoMapper.toResponse(
+                tecnicoRepository.findByUsuarioEmail(email)
+                        .orElseThrow(()-> new TecnicoNotFoundEx("el usuario logueado no es un técnico."))
+        );
+    }
+
+
     /*
     //listar tecnicos ordenados por fecha de registros del mas nuevo al mas viejo
     public List<TecnicoDTOResponse> getTecnicosOrderByFechaRegistroDesc(){
