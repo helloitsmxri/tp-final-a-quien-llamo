@@ -21,6 +21,8 @@ public class CertificacionMapper {
                 .uuid(certificacion.getUuid())
                 .nombreTecnico(certificacion.getTecnico().getUsuario().getNombre())
                 .apellidoTecnico(certificacion.getTecnico().getUsuario().getApellido())
+                .uuidEspecialidad(certificacion.getEspecialidad() != null ? certificacion.getEspecialidad().getUuid() : null)
+                .nombreEspecialidad(certificacion.getEspecialidad() != null ? certificacion.getEspecialidad().getNombreEspecialidad() : null)
                 .numMatricula(certificacion.getNumMatricula())
                 .enteOtorgador(certificacion.getEnteOtorgador())
                 .fechaVencimiento(certificacion.getFechaVencimiento())

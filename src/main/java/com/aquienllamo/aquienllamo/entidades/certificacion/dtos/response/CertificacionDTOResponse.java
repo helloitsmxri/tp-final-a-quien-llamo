@@ -18,6 +18,10 @@ public class CertificacionDTOResponse {
     private String nombreTecnico;
     private String apellidoTecnico;
 
+    // Especialidad que respalda la certificación (null en las cargadas antes de este cambio)
+    private String uuidEspecialidad;
+    private String nombreEspecialidad;
+
     // Datos de la certificación
     private String numMatricula;
     private String enteOtorgador;

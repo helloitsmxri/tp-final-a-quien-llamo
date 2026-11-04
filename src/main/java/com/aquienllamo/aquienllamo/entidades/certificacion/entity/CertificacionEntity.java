@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.entidades.certificacion.entity;
 
 import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.common.BaseEntity;
+import com.aquienllamo.aquienllamo.entidades.especialidad.entity.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
 import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
 import jakarta.persistence.*;
@@ -66,4 +67,8 @@ public class CertificacionEntity extends BaseEntity {
 
     @Column(name = "notas_admin", columnDefinition = "TEXT")
     private String notasAdmin;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_especialidad")
+    private EspecialidadEntity especialidad;
 }

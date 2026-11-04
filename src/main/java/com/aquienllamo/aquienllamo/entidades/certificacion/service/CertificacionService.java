@@ -9,6 +9,9 @@ import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.response.Certifi
 import com.aquienllamo.aquienllamo.entidades.certificacion.entity.CertificacionEntity;
 import com.aquienllamo.aquienllamo.entidades.certificacion.exceptions.CertificacionEstadoInvalidoEx;
 import com.aquienllamo.aquienllamo.entidades.certificacion.exceptions.CertificacionNotFoundEx;
+import com.aquienllamo.aquienllamo.entidades.especialidad.entity.EspecialidadEntity;
+import com.aquienllamo.aquienllamo.entidades.especialidad.exceptions.EspecialidadNotFoundEx;
+import com.aquienllamo.aquienllamo.entidades.especialidad.repository.EspecialidadRepository;
 import com.aquienllamo.aquienllamo.exception.generales.ImageDataTypeNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
 import com.aquienllamo.aquienllamo.entidades.tecnico.repository.TecnicoRepository;
@@ -28,6 +31,7 @@ public class CertificacionService {
     private final CertificacionRepository certificacionRepository;
     private final CertificacionMapper certificacionMapper;
     private final TecnicoRepository tecnicoRepository;
+    private final EspecialidadRepository especialidadRepository;
     private final EmailService emailService;
 
     //crear certificacion
@@ -39,9 +43,22 @@ public class CertificacionService {
         nueva.setEstadoVerificacion(EstadoVerificacion.Pendiente);
         nueva.setNotasAdmin(null);
         nueva.setTecnico(tecnico);
+        nueva.setEspecialidad(buscarEspecialidad(certificacion.getUuidEspecialidad(), true));
         nueva.setImagenCertificado(extraerBytes(certificacion.getImagenCertificado()));
         nueva.setTipoImagen(certificacion.getImagenCertificado().getContentType());
         return certificacionMapper.toResponse(certificacionRepository.save(nueva));
+    }
+
+    //busca la especialidad por uuid; si es obligatoria y no viene, o no existe, falla
+    private EspecialidadEntity buscarEspecialidad(String uuidEspecialidad, boolean obligatoria){
+        if (uuidEspecialidad == null || uuidEspecialidad.isBlank()){
+            if (obligatoria){
+                throw new EspecialidadNotFoundEx("La especialidad de la certificación es obligatoria.");
+            }
+            return null;
+        }
+        return especialidadRepository.findByUuid(uuidEspecialidad)
+                .orElseThrow(() -> new EspecialidadNotFoundEx("La especialidad indicada no existe."));
     }
 
     //metodo helper que convierte el MultipartFile a byte[]
@@ -67,6 +84,12 @@ public class CertificacionService {
         nueva.setNumMatricula(certificacion.getNumMatricula());
         nueva.setEnteOtorgador(certificacion.getEnteOtorgador());
         nueva.setFechaVencimiento(certificacion.getFechaVencimiento());
+
+        // si no viene especialidad se conserva la que ya tenía
+        EspecialidadEntity especialidad = buscarEspecialidad(certificacion.getUuidEspecialidad(), false);
+        if (especialidad != null) {
+            nueva.setEspecialidad(especialidad);
+        }
 
         if (certificacion.getImagenCertificado()!=null && !certificacion.getImagenCertificado().isEmpty()){
             nueva.setImagenCertificado(extraerBytes(certificacion.getImagenCertificado()));

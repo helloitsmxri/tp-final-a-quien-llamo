@@ -15,6 +15,9 @@ import java.time.LocalDate;
 @Builder
 public class CertificacionDTORequest {
 
+    // se valida en el service (al crear es obligatoria; al actualizar es opcional)
+    private String uuidEspecialidad;
+
     @NotBlank(message = "El número de matrícula es obligatorio.")
     @Size(max = 100, message = "El número de matrícula no puede superar los 100 caracteres.")
     private String numMatricula;
