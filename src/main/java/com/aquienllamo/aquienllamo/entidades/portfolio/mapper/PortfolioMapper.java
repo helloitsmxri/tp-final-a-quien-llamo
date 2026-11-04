@@ -43,9 +43,15 @@ public class PortfolioMapper {
     //portafolio de usuario
     public static PortfolioUsuarioDTOResponse toResponseUsuario (PortfolioEntity entity){
         return PortfolioUsuarioDTOResponse.builder()
+                .uuid(entity.getUuid())
+                .nombreEspecialidad(entity.getEspecialidad().getNombreEspecialidad())
+                .notasAspirante(entity.getNotasAspirante())
+                .enlaceExterno(entity.getEnlaceExterno())
+                .tipoArchivo(entity.getTipoArchivo())
                 .estadoVerificacion(entity.getEstadoVerificacion())
                 .notasAdmin(entity.getNotasAdmin())
+                .fechaEntrega(entity.getFechaEntrega())
                 .build();
     }
-    
+
 }

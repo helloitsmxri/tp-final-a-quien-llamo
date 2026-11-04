@@ -52,10 +52,7 @@ public class PortfolioUsuarioService {
 
         List<PortfolioEntity> portfolio = portfolioRepository.findAllByTecnicoUuid(uuidTecnico);
 
-        if(portfolio.isEmpty()){
-            throw new PortfolioNotFoundEx("ERROR: No posee portfolios cargados.");
-        }
-
+        // sin portfolios no es un error: se devuelve una lista vacía
         return portfolio.stream()
                 .map(PortfolioMapper::toResponseUsuario)
                 .toList();
