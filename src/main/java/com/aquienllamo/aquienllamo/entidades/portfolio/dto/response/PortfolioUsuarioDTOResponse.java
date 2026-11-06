@@ -22,6 +22,7 @@ public class PortfolioUsuarioDTOResponse {
     private String notasAspirante;
     private String enlaceExterno;
     private String tipoArchivo;
+    private String archivoAdjunto;
 
     private EstadoVerificacion estadoVerificacion;
     private String notasAdmin;

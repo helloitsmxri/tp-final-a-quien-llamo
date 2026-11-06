@@ -7,6 +7,7 @@ import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioAdm
 import com.aquienllamo.aquienllamo.entidades.portfolio.entity.PortfolioEntity;
 import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
 import org.springframework.stereotype.Component;
+import java.util.Base64;
 
 @Component
 public class PortfolioMapper {
@@ -57,6 +58,11 @@ public class PortfolioMapper {
                 .estadoVerificacion(entity.getEstadoVerificacion())
                 .notasAdmin(entity.getNotasAdmin())
                 .fechaEntrega(entity.getFechaEntrega())
+                .archivoAdjunto(
+                        entity.getArchivoAdjunto() != null
+                                ? Base64.getEncoder().encodeToString(entity.getArchivoAdjunto())
+                                : null
+                )
                 .build();
     }
 
