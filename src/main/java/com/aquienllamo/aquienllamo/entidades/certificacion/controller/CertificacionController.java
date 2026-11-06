@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.entidades.certificacion.controller;
 
 import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTOActualizarRequest;
 import com.aquienllamo.aquienllamo.entidades.certificacion.service.CertificacionService;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTORequest;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.response.CertificacionDTOResponse;
@@ -44,9 +45,12 @@ public class CertificacionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(certificacionService.crearCertificacion(uuidTecnico, certificacionDTORequest));
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'TECNICO')")
     @PutMapping(value="/actualizar/{uuid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CertificacionDTOResponse> actualizarCertificacion(@PathVariable String uuid, @Valid @ModelAttribute CertificacionDTORequest dto){
+    public ResponseEntity<CertificacionDTOResponse> actualizarCertificacion(
+            @PathVariable String uuid,
+            @Valid @ModelAttribute CertificacionDTOActualizarRequest dto) {
+
         return ResponseEntity.ok(certificacionService.actualizarCertificacion(uuid, dto));
     }
 

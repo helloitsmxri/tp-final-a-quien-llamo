@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.entidades.certificacion.service;
 
 import com.aquienllamo.aquienllamo.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
+import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTOActualizarRequest;
 import com.aquienllamo.aquienllamo.entidades.certificacion.mapper.CertificacionMapper;
 import com.aquienllamo.aquienllamo.entidades.certificacion.repository.CertificacionRepository;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTORequest;
@@ -81,36 +82,57 @@ public class CertificacionService {
                 .toList();
     }
 
-    //actualizar
-    public CertificacionDTOResponse actualizarCertificacion(String uuid, CertificacionDTORequest certificacion){
-        CertificacionEntity nueva=certificacionRepository.findByUuid(uuid)
-                .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no se encontro."));
-        if (certificacion.getTitulo() != null && !certificacion.getTitulo().isBlank()) {
-            nueva.setTitulo(certificacion.getTitulo());
-        }
-        if (certificacion.getNumMatricula() != null) {
-            nueva.setNumMatricula(certificacion.getNumMatricula());
+    // Actualizar certificación
+    public CertificacionDTOResponse actualizarCertificacion(
+            String uuid,
+            CertificacionDTOActualizarRequest certificacion) {
+
+        CertificacionEntity existente = certificacionRepository.findByUuid(uuid)
+                .orElseThrow(() -> new CertificacionNotFoundEx(
+                        "La certificación con ese uuid no se encontró."
+                ));
+
+        // No permitir modificar certificaciones aprobadas.
+        if (existente.getEstadoVerificacion() == EstadoVerificacion.Aprobado) {
+            throw new CertificacionEstadoInvalidoEx(
+                    "No se pueden modificar certificaciones aprobadas."
+            );
         }
 
-        if (certificacion.getEnteOtorgador() != null) {
-            nueva.setEnteOtorgador(certificacion.getEnteOtorgador());
+        existente.setTitulo(certificacion.getTitulo());
+        existente.setNumMatricula(certificacion.getNumMatricula());
+        existente.setEnteOtorgador(certificacion.getEnteOtorgador());
+        existente.setFechaVencimiento(certificacion.getFechaVencimiento());
+
+        // Si viene una especialidad, se actualiza.
+        // Si no viene, se conserva la existente.
+        if (certificacion.getUuidEspecialidad() != null
+                && !certificacion.getUuidEspecialidad().isBlank()) {
+
+            EspecialidadEntity especialidad =
+                    buscarEspecialidad(certificacion.getUuidEspecialidad(), true);
+
+            existente.setEspecialidad(especialidad);
         }
 
-        if (certificacion.getFechaVencimiento() != null) {
-            nueva.setFechaVencimiento(certificacion.getFechaVencimiento());
+        // El archivo es opcional.
+        // Si no se envía uno nuevo, se conserva el anterior.
+        MultipartFile archivo = certificacion.getImagenCertificado();
+
+        if (archivo != null && !archivo.isEmpty()) {
+            existente.setImagenCertificado(extraerBytes(archivo));
+            existente.setTipoImagen(archivo.getContentType());
         }
 
-        // si no viene especialidad se conserva la que ya tenía
-        EspecialidadEntity especialidad = buscarEspecialidad(certificacion.getUuidEspecialidad(), false);
-        if (especialidad != null) {
-            nueva.setEspecialidad(especialidad);
+        // Si estaba rechazada, vuelve a quedar pendiente de revisión.
+        if (existente.getEstadoVerificacion() == EstadoVerificacion.Rechazado) {
+            existente.setEstadoVerificacion(EstadoVerificacion.Pendiente);
+            existente.setNotasAdmin(null);
         }
 
-        if (certificacion.getImagenCertificado()!=null && !certificacion.getImagenCertificado().isEmpty()){
-            nueva.setImagenCertificado(extraerBytes(certificacion.getImagenCertificado()));
-            nueva.setTipoImagen(certificacion.getImagenCertificado().getContentType());
-        }
-        return certificacionMapper.toResponse(certificacionRepository.save(nueva));
+        return certificacionMapper.toResponse(
+                certificacionRepository.save(existente)
+        );
     }
 
     //eliminar
