@@ -28,6 +28,9 @@ public class PortfolioEntity extends BaseEntity {
     @Column(name = "uuid",nullable = false,unique = true)
     private String uuid;
 
+    @Column(name = "titulo", nullable = false, length = 150)
+    private String titulo;
+
     @PrePersist
     public void generarUUID(){
         if(this.uuid == null){

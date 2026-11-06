@@ -17,6 +17,10 @@ public class PortfolioUsuarioDTORequest {
     private String uuidEspecialidad; //esto se supone que en un futuro nosotros vamos a mostrar el nombre
                                   //al usuario y lo que elija es el numero
 
+    @NotBlank(message = "El título no debe quedar vacío.")
+    @Size(max = 150, message = "El título no puede superar los 150 caracteres.")
+    private String titulo;
+
     @NotBlank(message = "Este campo no debe quedar vacio.")
     @Size(max = 5000, message = "La nota no debe de ser de mas de 5000 caracteres.")
     private String notasAspirante;

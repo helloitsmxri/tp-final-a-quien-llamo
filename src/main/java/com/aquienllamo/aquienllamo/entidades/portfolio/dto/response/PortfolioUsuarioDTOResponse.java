@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class PortfolioUsuarioDTOResponse {
 
     private String uuid;
+    private String titulo;
     private String nombreEspecialidad;
     private String notasAspirante;
     private String enlaceExterno;

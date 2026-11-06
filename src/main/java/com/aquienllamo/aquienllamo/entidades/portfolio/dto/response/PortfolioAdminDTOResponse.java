@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class PortfolioAdminDTOResponse {
 
     private String uuid; //uuid del portfolio
-
+    private String titulo;
     private String uuidTecnico;
     private String nombreTecnico;
 
