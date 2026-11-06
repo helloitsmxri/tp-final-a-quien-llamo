@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.entidades.tecnico.controller;
 
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoNuevoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.service.TecnicoService;
@@ -119,11 +120,16 @@ public class TecnicoController {
 
     //actualizar tecnico
     @PreAuthorize("hasRole('TECNICO')")
-    @PutMapping("/actualizar-perfil/{uuid}")
-    public ResponseEntity<TecnicoDTOResponse> updateTecnico(@PathVariable String uuid, @Valid @RequestBody TecnicoDTORequest dto) {
-        return ResponseEntity.ok(tecnicoService.updateTecnico(uuid, dto));
-    }
+    @PutMapping(
+            value = "/actualizar-perfil/{uuid}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<TecnicoDTOResponse> updateTecnico(
+            @PathVariable String uuid,
+            @ModelAttribute TecnicoEditarDTORequest dto) {
 
+        return ResponseEntity.ok(tecnicoService.updateTecnico2(uuid, dto));
+    }
     //eliminar tecnico
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/eliminar/{uuid}")

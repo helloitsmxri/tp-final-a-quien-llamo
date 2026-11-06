@@ -8,6 +8,7 @@ import com.aquienllamo.aquienllamo.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.auth.repositories.RoleRepository;
 import com.aquienllamo.aquienllamo.entidades.especialidad.exceptions.EspecialidadNotFoundEx;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.specs.TecnicoSpecifications;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -286,6 +288,130 @@ public class TecnicoService {
         tecnico.setHabilidades(habilidadRepository.findAllByUuidIn(dto.getUuidHabilidades()));
         tecnico.setEspecialidades(especialidadRepository.findAllByUuidIn(dto.getUuidEspecialidades()));
         return tecnicoMapper.toResponse(tecnicoRepository.save(tecnico));
+    }
+
+    // Actualizar perfil completo del técnico
+    public TecnicoDTOResponse updateTecnico2(String uuid, TecnicoEditarDTORequest dto) {
+
+        TecnicoEntity tecnico = tecnicoRepository.findByUuid(uuid)
+                .orElseThrow(() -> new TecnicoNotFoundEx(
+                        "El técnico con ese uuid no existe."
+                ));
+
+        // =========================
+        // DATOS PERSONALES
+        // =========================
+
+        UsuarioEntity usuario = tecnico.getUsuario();
+
+        if (dto.getNombre() != null) {
+            usuario.setNombre(dto.getNombre());
+        }
+
+        if (dto.getApellido() != null) {
+            usuario.setApellido(dto.getApellido());
+        }
+
+        if (dto.getTelefono() != null) {
+            usuario.setTelefono(dto.getTelefono());
+        }
+
+        if (dto.getSobreMi() != null) {
+            usuario.setSobreMi(dto.getSobreMi());
+        }
+
+        // Actualizar foto solamente si se seleccionó una nueva
+        if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+            processImageUpdate(usuario, dto.getFoto());
+        }
+
+        usuarioRepository.save(usuario);
+
+        // =========================
+        // DATOS PROFESIONALES
+        // =========================
+
+        if (dto.getCuit() != null) {
+
+            if (!tecnico.getCuit().equals(dto.getCuit())
+                    && tecnicoRepository.existsByCuit(dto.getCuit())) {
+
+                throw new DuplicateCuitEx("El CUIT ya existe.");
+            }
+
+            tecnico.setCuit(dto.getCuit());
+        }
+
+        if (dto.getDescripcionTrabajo() != null) {
+            tecnico.setDescripcionTrabajo(dto.getDescripcionTrabajo());
+        }
+
+        if (dto.getProyectos() != null) {
+            tecnico.setProyectos(dto.getProyectos());
+        }
+
+        // =========================
+        // HABILIDADES
+        // =========================
+
+        if (dto.getUuidHabilidades() != null) {
+
+            if (dto.getUuidHabilidades().stream()
+                    .anyMatch(uuidH -> !habilidadRepository.existsByUuid(uuidH))) {
+
+                throw new HabilidadNotFoundEx(
+                        "Una o más habilidades no existen."
+                );
+            }
+
+            tecnico.setHabilidades(
+                    habilidadRepository.findAllByUuidIn(dto.getUuidHabilidades())
+            );
+        }
+
+        // =========================
+        // ESPECIALIDADES
+        // =========================
+
+        if (dto.getUuidEspecialidades() != null) {
+
+            if (dto.getUuidEspecialidades().stream()
+                    .anyMatch(uuidE -> !especialidadRepository.existsByUuid(uuidE))) {
+
+                throw new EspecialidadNotFoundEx(
+                        "Una o más especialidades no existen."
+                );
+            }
+
+            tecnico.setEspecialidades(
+                    especialidadRepository.findAllByUuidIn(dto.getUuidEspecialidades())
+            );
+        }
+
+        // Guardar técnico y devolver respuesta
+        return tecnicoMapper.toResponse(tecnicoRepository.save(tecnico));
+    }
+
+    // Procesar foto al editar el perfil del técnico
+    private void processImageUpdate(UsuarioEntity usuario, MultipartFile foto) {
+
+        try {
+
+            String tipoImagen = foto.getContentType();
+
+            if (tipoImagen == null || !tipoImagen.startsWith("image/")) {
+                throw new ImageDataTypeNotFoundEx(
+                        "Formato no válido de imagen."
+                );
+            }
+
+            usuario.setTipoImagen(tipoImagen);
+            usuario.setFoto(foto.getBytes());
+
+        } catch (IOException errorImagen) {
+
+            throw new RuntimeException("Hubo un error al procesar la imagen.");
+        }
     }
 
     //eliminar tecnico
