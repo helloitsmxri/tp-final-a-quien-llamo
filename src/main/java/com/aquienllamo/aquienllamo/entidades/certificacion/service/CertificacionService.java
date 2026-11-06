@@ -39,6 +39,10 @@ public class CertificacionService {
         TecnicoEntity tecnico=tecnicoRepository.findByUuid(uuidTecnico)
                 .orElseThrow(()-> new TecnicoNotFoundEx("el técnico con ese uuid no existe."));
 
+        if (certificacion.getTitulo() == null || certificacion.getTitulo().isBlank()) {
+            throw new IllegalArgumentException("El título de la certificación es obligatorio.");
+        }
+
         CertificacionEntity nueva=certificacionMapper.toEntity(certificacion);
         nueva.setEstadoVerificacion(EstadoVerificacion.Pendiente);
         nueva.setNotasAdmin(null);
@@ -81,9 +85,20 @@ public class CertificacionService {
     public CertificacionDTOResponse actualizarCertificacion(String uuid, CertificacionDTORequest certificacion){
         CertificacionEntity nueva=certificacionRepository.findByUuid(uuid)
                 .orElseThrow(()-> new CertificacionNotFoundEx("la certificacion con ese uuid no se encontro."));
-        nueva.setNumMatricula(certificacion.getNumMatricula());
-        nueva.setEnteOtorgador(certificacion.getEnteOtorgador());
-        nueva.setFechaVencimiento(certificacion.getFechaVencimiento());
+        if (certificacion.getTitulo() != null && !certificacion.getTitulo().isBlank()) {
+            nueva.setTitulo(certificacion.getTitulo());
+        }
+        if (certificacion.getNumMatricula() != null) {
+            nueva.setNumMatricula(certificacion.getNumMatricula());
+        }
+
+        if (certificacion.getEnteOtorgador() != null) {
+            nueva.setEnteOtorgador(certificacion.getEnteOtorgador());
+        }
+
+        if (certificacion.getFechaVencimiento() != null) {
+            nueva.setFechaVencimiento(certificacion.getFechaVencimiento());
+        }
 
         // si no viene especialidad se conserva la que ya tenía
         EspecialidadEntity especialidad = buscarEspecialidad(certificacion.getUuidEspecialidad(), false);

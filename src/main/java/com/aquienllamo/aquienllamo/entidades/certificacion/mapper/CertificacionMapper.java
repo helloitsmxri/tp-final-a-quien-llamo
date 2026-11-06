@@ -19,6 +19,7 @@ public class CertificacionMapper {
         }
         return CertificacionDTOResponse.builder()
                 .uuid(certificacion.getUuid())
+                .titulo(certificacion.getTitulo())
                 .nombreTecnico(certificacion.getTecnico().getUsuario().getNombre())
                 .apellidoTecnico(certificacion.getTecnico().getUsuario().getApellido())
                 .uuidEspecialidad(certificacion.getEspecialidad() != null ? certificacion.getEspecialidad().getUuid() : null)
@@ -38,6 +39,7 @@ public class CertificacionMapper {
             return null;
         }
         return CertificacionEntity.builder()
+                .titulo(dto.getTitulo())
                 .numMatricula(dto.getNumMatricula())
                 .enteOtorgador(dto.getEnteOtorgador())
                 .fechaVencimiento(dto.getFechaVencimiento())

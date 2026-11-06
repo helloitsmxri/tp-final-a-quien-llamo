@@ -14,6 +14,8 @@ import java.time.LocalDate;
 public class CertificacionDTOResponse {
     private String uuid;
 
+    private String titulo;
+
     // Técnico asociado
     private String nombreTecnico;
     private String apellidoTecnico;
