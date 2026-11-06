@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.portfolio.controller;
 
+import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTOActualizarRequest;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTORequest;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioUsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.service.PortfolioUsuarioService;
@@ -33,6 +34,18 @@ public class PortfolioUsuarioController {
     @GetMapping("/tecnico/{uuidTecnico}")
     public ResponseEntity<List<PortfolioUsuarioDTOResponse>> listarPortfoliosEnviados(@PathVariable String uuidTecnico){
         return ResponseEntity.ok().body(service.verListadoPortfolios(uuidTecnico));
+    }
+
+    @PreAuthorize("hasRole('TECNICO')")
+    @PutMapping("/{uuidTecnico}/{uuidPortfolio}")
+    public ResponseEntity<PortfolioUsuarioDTOResponse> actualizarPortfolio(
+            @PathVariable String uuidTecnico,
+            @PathVariable String uuidPortfolio,
+            @Valid @RequestBody PortfolioUsuarioDTOActualizarRequest request
+    ) {
+        return ResponseEntity.ok(
+                service.actualizarPortfolio(uuidTecnico, uuidPortfolio, request)
+        );
     }
 
 

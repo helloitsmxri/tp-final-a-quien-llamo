@@ -1,6 +1,8 @@
 package com.aquienllamo.aquienllamo.entidades.portfolio.service;
 
+import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.especialidad.entity.EspecialidadEntity;
+import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTOActualizarRequest;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTORequest;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioUsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.entity.PortfolioEntity;
@@ -56,6 +58,66 @@ public class PortfolioUsuarioService {
         return portfolio.stream()
                 .map(PortfolioMapper::toResponseUsuario)
                 .toList();
+    }
+
+    public PortfolioUsuarioDTOResponse actualizarPortfolio(
+            String uuidTecnico,
+            String uuidPortfolio,
+            PortfolioUsuarioDTOActualizarRequest request
+    ) {
+        PortfolioEntity portfolio = portfolioRepository.findByUuid(uuidPortfolio)
+                .orElseThrow(() -> new PortfolioNotFoundEx(
+                        "ERROR: No se ha encontrado el portfolio ingresado."
+                ));
+
+        // Verificar que el portfolio pertenezca al técnico indicado
+        if (!portfolio.getTecnico().getUuid().equals(uuidTecnico)) {
+            throw new PortfolioNotFoundEx(
+                    "ERROR: No se ha encontrado el portfolio ingresado."
+            );
+        }
+
+        // Los portfolios aprobados no se pueden modificar
+        if (portfolio.getEstadoVerificacion() == EstadoVerificacion.Aprobado) {
+            throw new IllegalArgumentException(
+                    "No se puede modificar un portfolio aprobado."
+            );
+        }
+
+        // Actualizar los datos
+        portfolio.setTitulo(request.getTitulo());
+        portfolio.setNotasAspirante(request.getNotasAspirante());
+
+        String enlace = request.getEnlaceExterno();
+
+        portfolio.setEnlaceExterno(
+                enlace == null || enlace.isBlank() ? null : enlace.trim()
+        );
+
+        // Si se adjunta un archivo nuevo, reemplaza al anterior.
+        // Si no, conserva el archivo que ya tenía.
+        if (request.getArchivoAdjunto() != null) {
+            portfolio.setArchivoAdjunto(request.getArchivoAdjunto());
+            portfolio.setTipoArchivo(request.getTipoArchivo());
+        }
+
+        // Debe quedar al menos un enlace o un archivo
+        if ((portfolio.getEnlaceExterno() == null || portfolio.getEnlaceExterno().isBlank())
+                && portfolio.getArchivoAdjunto() == null) {
+            throw new IllegalArgumentException(
+                    "El portfolio debe tener un enlace o un archivo adjunto."
+            );
+        }
+
+        // Si estaba rechazado, vuelve a pendiente
+        if (portfolio.getEstadoVerificacion() == EstadoVerificacion.Rechazado) {
+            portfolio.setEstadoVerificacion(EstadoVerificacion.Pendiente);
+            portfolio.setNotasAdmin(null);
+        }
+
+        PortfolioEntity actualizado = portfolioRepository.save(portfolio);
+
+        return PortfolioMapper.toResponseUsuario(actualizado);
     }
 
 }

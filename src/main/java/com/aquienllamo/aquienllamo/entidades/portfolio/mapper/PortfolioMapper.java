@@ -58,6 +58,7 @@ public class PortfolioMapper {
                 .estadoVerificacion(entity.getEstadoVerificacion())
                 .notasAdmin(entity.getNotasAdmin())
                 .fechaEntrega(entity.getFechaEntrega())
+                .uuidEspecialidad(entity.getEspecialidad().getUuid())
                 .archivoAdjunto(
                         entity.getArchivoAdjunto() != null
                                 ? Base64.getEncoder().encodeToString(entity.getArchivoAdjunto())
