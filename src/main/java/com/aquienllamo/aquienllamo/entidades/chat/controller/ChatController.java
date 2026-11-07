@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,24 +19,14 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("/iniciar-chat")
-    public  ResponseEntity<ChatDTOResponse> iniciarChat(@RequestBody @Valid ChatDTORequest dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(chatService.iniciarChat(dto));
+    public ResponseEntity<ChatDTOResponse> iniciarChat(@RequestBody @Valid ChatDTORequest dto,
+                                                       Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(chatService.iniciarChat(dto, authentication.getName()));
     }
 
-    @GetMapping("/buscar-por-uuid/{uuid}")
-    public ResponseEntity<ChatDTOResponse> buscar(@PathVariable String uuid){
-        return ResponseEntity.ok(chatService.buscarPorUuid(uuid));
+    @GetMapping("/mis-chats")
+    public ResponseEntity<List<ChatDTOResponse>> misChats(Authentication authentication) {
+        return ResponseEntity.ok(chatService.listarMisChats(authentication.getName()));
     }
-
-    @GetMapping("/listar-chats-por-usuario/{uuid}")
-    public ResponseEntity<List<ChatDTOResponse>> listarPorUsuario(@PathVariable String uuid){
-        return ResponseEntity.ok(chatService.listarUsuarios(uuid));
-    }
-
-    @GetMapping("/listar-chats-por-tecnico/{uuid}")
-    public ResponseEntity<List<ChatDTOResponse>> listarPorTecnico(@PathVariable String uuid){
-        return ResponseEntity.ok(chatService.listarTecnicos(uuid));
-    }
-
-
 }
