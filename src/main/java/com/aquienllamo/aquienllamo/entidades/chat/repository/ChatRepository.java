@@ -19,10 +19,11 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
     // Para no crear chats duplicados entre el mismo cliente y técnico
     Optional<ChatEntity> findByUsuario_UuidAndTecnico_Uuid(String uuidUsuario, String uuidTecnico);
 
-    // Todos los chats donde participo, ya sea como cliente o como técnico
+    // Mis chats (como cliente o como técnico), solo los que ya tienen al menos un mensaje
     @Query("""
            SELECT c FROM ChatEntity c
-           WHERE c.usuario.email = :email OR c.tecnico.usuario.email = :email
+           WHERE (c.usuario.email = :email OR c.tecnico.usuario.email = :email)
+             AND EXISTS (SELECT m FROM MensajeEntity m WHERE m.chat = c)
            ORDER BY c.fechaChat DESC
            """)
     List<ChatEntity> findMisChats(@Param("email") String email);
