@@ -9,6 +9,7 @@ import com.aquienllamo.aquienllamo.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.auth.repositories.RoleRepository;
 import com.aquienllamo.aquienllamo.entidades.especialidad.exceptions.EspecialidadNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDTORequest;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
 import com.aquienllamo.aquienllamo.entidades.tecnico.specs.TecnicoSpecifications;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
@@ -213,6 +214,16 @@ public class TecnicoService {
                 tecnicoRepository.findByUuid(uuid)
                         .orElseThrow(()-> new TecnicoNotFoundEx("el técnico con ese uuid no se encuentra."))
         );
+    }
+
+    // Obtener perfil público del técnico
+    public TecnicoPerfilPublicoDTO getPerfilPublico(String uuid) {
+        TecnicoEntity tecnico = tecnicoRepository.findByUuid(uuid)
+                .orElseThrow(() -> new TecnicoNotFoundEx(
+                        "El técnico con ese uuid no se encuentra."
+                ));
+
+        return tecnicoMapper.toPerfilPublico(tecnico);
     }
 
     //filtrar por habilidad

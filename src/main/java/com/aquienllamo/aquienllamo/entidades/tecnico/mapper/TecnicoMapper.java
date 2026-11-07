@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.entidades.tecnico.mapper;
 
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
 import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
 import org.springframework.stereotype.Component;
 
@@ -11,24 +12,23 @@ import java.util.List;
 @Component
 public class TecnicoMapper {
 
-    public TecnicoDTOResponse toResponse(TecnicoEntity tecnico){
-        if (tecnico == null){
+    public TecnicoDTOResponse toResponse(TecnicoEntity tecnico) {
+        if (tecnico == null) {
             return null;
         }
 
-        //foto del usuario
-        String fotoBase64=null;
-        if (tecnico.getUsuario().getFoto()!=null){
-            fotoBase64= Base64.getEncoder().encodeToString(tecnico.getUsuario().getFoto());
+        String fotoBase64 = null;
+        if (tecnico.getUsuario().getFoto() != null) {
+            fotoBase64 = Base64.getEncoder()
+                    .encodeToString(tecnico.getUsuario().getFoto());
         }
 
-        //listas
-        List<String> habilidades=tecnico.getHabilidades().stream()
-                .map(h->h.getNombreHabilidad())
+        List<String> habilidades = tecnico.getHabilidades().stream()
+                .map(h -> h.getNombreHabilidad())
                 .toList();
 
-        List<String> especialidades=tecnico.getEspecialidades().stream()
-                .map(e->e.getNombreEspecialidad())
+        List<String> especialidades = tecnico.getEspecialidades().stream()
+                .map(e -> e.getNombreEspecialidad())
                 .toList();
 
         return TecnicoDTOResponse.builder()
@@ -48,10 +48,49 @@ public class TecnicoMapper {
                 .build();
     }
 
-    public TecnicoEntity toEntity(TecnicoDTORequest dto){
-        if (dto == null){
+    // DTO específico para el perfil público
+    public TecnicoPerfilPublicoDTO toPerfilPublico(TecnicoEntity tecnico) {
+        if (tecnico == null) {
             return null;
         }
+
+        String fotoBase64 = null;
+        if (tecnico.getUsuario().getFoto() != null) {
+            fotoBase64 = Base64.getEncoder()
+                    .encodeToString(tecnico.getUsuario().getFoto());
+        }
+
+        List<String> habilidades = tecnico.getHabilidades().stream()
+                .map(h -> h.getNombreHabilidad())
+                .toList();
+
+        List<String> especialidades = tecnico.getEspecialidades().stream()
+                .map(e -> e.getNombreEspecialidad())
+                .toList();
+
+        return TecnicoPerfilPublicoDTO.builder()
+                .uuid(tecnico.getUuid())
+                .uuidUsuario(tecnico.getUsuario().getUuid())
+                .nombre(tecnico.getUsuario().getNombre())
+                .apellido(tecnico.getUsuario().getApellido())
+                .email(tecnico.getUsuario().getEmail())
+                .telefono(tecnico.getUsuario().getTelefono())
+                .sobreMi(tecnico.getUsuario().getSobreMi())
+                .fotoBase64(fotoBase64)
+                .tipoImagen(tecnico.getUsuario().getTipoImagen())
+                .cuit(tecnico.getCuit())
+                .descripcionTrabajo(tecnico.getDescripcionTrabajo())
+                .proyectos(tecnico.getProyectos())
+                .habilidades(habilidades)
+                .especialidades(especialidades)
+                .build();
+    }
+
+    public TecnicoEntity toEntity(TecnicoDTORequest dto) {
+        if (dto == null) {
+            return null;
+        }
+
         return TecnicoEntity.builder()
                 .cuit(dto.getCuit())
                 .descripcionTrabajo(dto.getDescripcionTrabajo())

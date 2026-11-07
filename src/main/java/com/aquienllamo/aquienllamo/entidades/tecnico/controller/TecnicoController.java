@@ -4,6 +4,7 @@ import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTOReque
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoNuevoDTORequest;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
 import com.aquienllamo.aquienllamo.entidades.tecnico.service.TecnicoService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
@@ -55,11 +56,15 @@ public class TecnicoController {
         return ResponseEntity.ok(tecnicoService.getAllTecnicos());
     }
 
-    //buscar tecnico por uuid
+    // Ver perfil público de un técnico
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
     @GetMapping("/perfil/{uuid}")
-    public ResponseEntity<TecnicoDTOResponse> verPerfil(@PathVariable String uuid){
-        return ResponseEntity.ok(tecnicoService.getTecnicoByUuid(uuid));
+    public ResponseEntity<TecnicoPerfilPublicoDTO> verPerfil(
+            @PathVariable String uuid) {
+
+        return ResponseEntity.ok(
+                tecnicoService.getPerfilPublico(uuid)
+        );
     }
 
     //filtrar por habilidad

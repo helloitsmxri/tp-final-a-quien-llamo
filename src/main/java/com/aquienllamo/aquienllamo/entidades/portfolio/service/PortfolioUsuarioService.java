@@ -4,6 +4,7 @@ import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.especialidad.entity.EspecialidadEntity;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTOActualizarRequest;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTORequest;
+import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioPublicoDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioUsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.entity.PortfolioEntity;
 import com.aquienllamo.aquienllamo.entidades.portfolio.exceptions.PortfolioAlreadyExistsEx;
@@ -118,6 +119,14 @@ public class PortfolioUsuarioService {
         PortfolioEntity actualizado = portfolioRepository.save(portfolio);
 
         return PortfolioMapper.toResponseUsuario(actualizado);
+    }
+
+    public List<PortfolioPublicoDTOResponse> verPortfoliosPublicos(String uuidTecnico){
+        return portfolioRepository.findAllByTecnicoUuid(uuidTecnico)
+                .stream()
+                .filter(p -> p.getEstadoVerificacion() == EstadoVerificacion.Aprobado)
+                .map(p -> new PortfolioPublicoDTOResponse(p.getUuid(), p.getTitulo()))
+                .toList();
     }
 
 }
