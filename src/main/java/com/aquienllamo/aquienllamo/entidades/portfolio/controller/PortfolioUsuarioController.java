@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.entidades.portfolio.controller;
 
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTOActualizarRequest;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.request.PortfolioUsuarioDTORequest;
+import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioPublicoDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.dto.response.PortfolioUsuarioDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.portfolio.service.PortfolioUsuarioService;
 import jakarta.validation.Valid;
@@ -48,6 +49,9 @@ public class PortfolioUsuarioController {
         );
     }
 
-
+    @GetMapping("/publico/tecnico/{uuidTecnico}")
+    public ResponseEntity<List<PortfolioPublicoDTOResponse>> portfoliosPublicos(@PathVariable String uuidTecnico){
+        return ResponseEntity.ok(service.verPortfoliosPublicos(uuidTecnico));
+    }
 
 }
