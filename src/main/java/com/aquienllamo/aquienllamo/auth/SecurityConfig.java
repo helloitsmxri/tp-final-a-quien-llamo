@@ -61,6 +61,9 @@ public class SecurityConfig {
                         // Permitir las peticiones previas de CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                        // WebSocket del chat: el navegador no puede mandar el header Authorization en el handshake
+                        .requestMatchers("/ws/**").permitAll()   // NUEVO
+
                         // Rutas públicas
                         .requestMatchers(
                                 "/auth/**",
@@ -72,12 +75,12 @@ public class SecurityConfig {
                                 "/aquienllamo/ubicaciones/**"
                         ).permitAll()
 
-// Catálogo para el registro de técnicos (solo lectura)
-                                .requestMatchers(HttpMethod.GET,
-                                        "/aquienllamo/rubros/**",
-                                        "/aquienllamo/especialidades/**",
-                                        "/aquienllamo/habilidades/**"
-                                ).permitAll()
+                        // Catálogo para el registro de técnicos (solo lectura)
+                        .requestMatchers(HttpMethod.GET,
+                                "/aquienllamo/rubros/**",
+                                "/aquienllamo/especialidades/**",
+                                "/aquienllamo/habilidades/**"
+                        ).permitAll()
 
                         //Webhook de MERCADO PAGO
                         .requestMatchers("/webhooks/mercado-pago").permitAll()
