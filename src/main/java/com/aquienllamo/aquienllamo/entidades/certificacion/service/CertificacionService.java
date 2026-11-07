@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.entidades.certificacion.service;
 import com.aquienllamo.aquienllamo.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTOActualizarRequest;
+import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.response.CertificacionPublicaDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.certificacion.mapper.CertificacionMapper;
 import com.aquienllamo.aquienllamo.entidades.certificacion.repository.CertificacionRepository;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTORequest;
@@ -197,6 +198,14 @@ public class CertificacionService {
                 .findByEstadoVerificacion(estado)
                 .stream()
                 .map(certificacionMapper::toResponse)
+                .toList();
+    }
+
+    public List<CertificacionPublicaDTOResponse> obtenerPublicas(String uuidTecnico){
+        return certificacionRepository.findByTecnico_Uuid(uuidTecnico)
+                .stream()
+                .filter(c -> c.getEstadoVerificacion() == EstadoVerificacion.Aprobado)
+                .map(c -> new CertificacionPublicaDTOResponse(c.getUuid(), c.getTitulo()))
                 .toList();
     }
 
