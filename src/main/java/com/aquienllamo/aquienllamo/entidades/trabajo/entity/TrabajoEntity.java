@@ -27,14 +27,14 @@ public class TrabajoEntity extends BaseEntity {
     private String uuid;
 
     @PrePersist
-    public void generarUUID(){
-        if(this.uuid == null){
+    public void generarUUID() {
+        if (this.uuid == null) {
             this.uuid = UUID.randomUUID().toString();
         }
     }
 
     @OneToOne
-    @JoinColumn(name = "id_presupuesto")
+    @JoinColumn(name = "id_presupuesto", nullable = false, unique = true)
     private PresupuestoEntity presupuesto;
 
     @Column(name = "descripcion_trabajo", nullable = false, columnDefinition = "TEXT")
@@ -49,5 +49,4 @@ public class TrabajoEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_trabajo", nullable = false)
     private EstadoTrabajo estadoTrabajo;
-    
 }

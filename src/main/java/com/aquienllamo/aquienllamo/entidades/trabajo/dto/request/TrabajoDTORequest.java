@@ -1,6 +1,5 @@
 package com.aquienllamo.aquienllamo.entidades.trabajo.dto.request;
 
-import com.aquienllamo.aquienllamo.entidades.trabajo.enums.EstadoTrabajo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +21,8 @@ public class TrabajoDTORequest {
     private String uuidPresupuesto;
 
     @NotBlank(message = "Describa el trabajo a realizar.")
-    @Size(min = 50, max = 1000, message = "La descripcion debe tener minimo 50 caracteres, maximo 1000.")
+    @Size(min = 50, max = 1000,
+            message = "La descripcion debe tener minimo 50 caracteres, maximo 1000.")
     private String descripcionTrabajo;
 
     @NotNull(message = "Debe elegir una fecha para iniciar el trabajo.")
@@ -31,16 +31,13 @@ public class TrabajoDTORequest {
     @NotNull(message = "Debe elegir una fecha de finalizacion del trabajo.")
     private LocalDate fechaEstimadaFin;
 
-    // Se ignora: un trabajo nuevo siempre arranca en "Pendiente".
-    private EstadoTrabajo estadoTrabajo;
-
-    // NUEVO: la fecha de fin no puede ser anterior a la de inicio.
     @JsonIgnore
     @AssertTrue(message = "La fecha de finalizacion no puede ser anterior a la de inicio.")
     public boolean isFechasValidas() {
         if (fechaEstimadaInicio == null || fechaEstimadaFin == null) {
-            return true; // de eso se encarga @NotNull
+            return true;
         }
+
         return !fechaEstimadaFin.isBefore(fechaEstimadaInicio);
     }
 }

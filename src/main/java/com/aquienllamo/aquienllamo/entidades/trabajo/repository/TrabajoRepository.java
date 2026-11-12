@@ -19,35 +19,46 @@ public interface TrabajoRepository extends JpaRepository<TrabajoEntity, Integer>
 
     boolean existsByPresupuestoUuid(String presupuestoUuid);
 
-    @Query("SELECT trabajo FROM TrabajoEntity trabajo " +
-            "WHERE trabajo.presupuesto.usuario.uuid = :uuidUsuario")
-    List<TrabajoEntity> findAllByUuidUsuario(@Param("uuidUsuario") String uuidUsuario);
-
-    @Query("SELECT trabajo FROM TrabajoEntity trabajo " +
-            "WHERE trabajo.presupuesto.tecnico.usuario.uuid = :uuidTecnico")
-    List<TrabajoEntity> findAllByUuidTecnico(@Param("uuidTecnico") String uuidTecnico);
-
-    // NUEVO: todos los trabajos donde la persona logueada es el cliente O el técnico
-    @Query("SELECT t FROM TrabajoEntity t " +
-            "WHERE t.presupuesto.usuario.email = :email " +
-            "OR t.presupuesto.tecnico.usuario.email = :email " +
-            "ORDER BY t.fechaEstimadaInicio DESC")
-    List<TrabajoEntity> findAllByParticipante(@Param("email") String email);
-
-    //verificar que haya un trabajo finalizado entre los dos usuarios
-    //valida remitente, destinatario, autoreseña y duplicado
-    //se utiliza en rating
     @Query("""
-    SELECT COUNT(t) > 0 FROM TrabajoEntity t
-    WHERE t.estadoTrabajo = 'Finalizado'
-    AND (
-        (t.presupuesto.usuario.uuid = :uuidUsuario1 AND t.presupuesto.tecnico.usuario.uuid = :uuidUsuario2)
-        OR
-        (t.presupuesto.usuario.uuid = :uuidUsuario2 AND t.presupuesto.tecnico.usuario.uuid = :uuidUsuario1)
-    )
-""")
+            SELECT trabajo FROM TrabajoEntity trabajo
+            WHERE trabajo.presupuesto.usuario.uuid = :uuidUsuario
+            """)
+    List<TrabajoEntity> findAllByUuidUsuario(
+            @Param("uuidUsuario") String uuidUsuario
+    );
+
+    @Query("""
+            SELECT trabajo FROM TrabajoEntity trabajo
+            WHERE trabajo.presupuesto.tecnico.usuario.uuid = :uuidTecnico
+            """)
+    List<TrabajoEntity> findAllByUuidTecnico(
+            @Param("uuidTecnico") String uuidTecnico
+    );
+
+    @Query("""
+            SELECT t FROM TrabajoEntity t
+            WHERE t.presupuesto.usuario.email = :email
+            OR t.presupuesto.tecnico.usuario.email = :email
+            ORDER BY t.fechaEstimadaInicio DESC
+            """)
+    List<TrabajoEntity> findAllByParticipante(
+            @Param("email") String email
+    );
+
+    @Query("""
+            SELECT COUNT(t) > 0 FROM TrabajoEntity t
+            WHERE t.estadoTrabajo = :estado
+            AND (
+                (t.presupuesto.usuario.uuid = :uuidUsuario1
+                AND t.presupuesto.tecnico.usuario.uuid = :uuidUsuario2)
+                OR
+                (t.presupuesto.usuario.uuid = :uuidUsuario2
+                AND t.presupuesto.tecnico.usuario.uuid = :uuidUsuario1)
+            )
+            """)
     boolean existsTrabajoFinalizadoEntreUsuarios(
             @Param("uuidUsuario1") String uuidUsuario1,
-            @Param("uuidUsuario2") String uuidUsuario2
+            @Param("uuidUsuario2") String uuidUsuario2,
+            @Param("estado") EstadoTrabajo estado
     );
 }
