@@ -27,6 +27,13 @@ public interface TrabajoRepository extends JpaRepository<TrabajoEntity, Integer>
             "WHERE trabajo.presupuesto.tecnico.usuario.uuid = :uuidTecnico")
     List<TrabajoEntity> findAllByUuidTecnico(@Param("uuidTecnico") String uuidTecnico);
 
+    // NUEVO: todos los trabajos donde la persona logueada es el cliente O el técnico
+    @Query("SELECT t FROM TrabajoEntity t " +
+            "WHERE t.presupuesto.usuario.email = :email " +
+            "OR t.presupuesto.tecnico.usuario.email = :email " +
+            "ORDER BY t.fechaEstimadaInicio DESC")
+    List<TrabajoEntity> findAllByParticipante(@Param("email") String email);
+
     //verificar que haya un trabajo finalizado entre los dos usuarios
     //valida remitente, destinatario, autoreseña y duplicado
     //se utiliza en rating
