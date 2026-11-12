@@ -1,25 +1,22 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 19-10-2026 a las 15:43:11
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- ============================================================
+-- A QUIEN LLAMO - Esquema MySQL
+-- Compatible con MySQL 8.0+ / MySQL Workbench
+-- Define columnas, claves, índices y relaciones directamente en cada CREATE TABLE.
+-- InnoDB se conserva para soportar claves foráneas y transacciones.
+-- Recrea la base desde cero: elimina la versión anterior si existe.
+-- ============================================================
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+DROP DATABASE IF EXISTS a_quien_llamo;
 
+CREATE DATABASE a_quien_llamo
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+USE a_quien_llamo;
 
---
--- Base de datos: `a_quien_llamo`
---
+SET NAMES utf8mb4;
+SET time_zone = '+00:00';
+
 
 -- --------------------------------------------------------
 
@@ -28,32 +25,378 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `administrador` (
-  `id_admin` int(11) NOT NULL,
+  `id_admin` INT NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime(6) DEFAULT NULL,
   `clave` varchar(100) NOT NULL,
   `nombre_usuario` varchar(50) NOT NULL,
-  `uuid` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `caracteristica`
---
+  `uuid` varchar(255) NOT NULL ,
+  PRIMARY KEY (`id_admin`),
+  UNIQUE KEY `UK_administrador_uuid` (`uuid`),
+  UNIQUE KEY `UK_administrador_nombre_usuario` (`nombre_usuario`)
+) ENGINE=InnoDB;
 
 CREATE TABLE `caracteristica` (
-  `id_caracteristica` int(11) NOT NULL,
+  `id_caracteristica` INT NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime(6) DEFAULT NULL,
   `tipo` enum('NEGATIVA','POSITIVA') NOT NULL,
   `uuid` varchar(255) NOT NULL,
-  `valor_adjetivo` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `valor_adjetivo` varchar(50) DEFAULT NULL ,
+  PRIMARY KEY (`id_caracteristica`),
+  UNIQUE KEY `UK43dj7iq3exe0ryadscd77mxbs` (`uuid`)
+) ENGINE=InnoDB;
 
---
--- Volcado de datos para la tabla `caracteristica`
---
+CREATE TABLE `especialidad` (
+  `id_especialidad` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `nombre_especialidad` varchar(50) NOT NULL,
+  `tipo_validacion` enum('Certificado','Ninguna','Portfolio') DEFAULT NULL,
+  `uuid` varchar(255) NOT NULL ,
+  PRIMARY KEY (`id_especialidad`),
+  UNIQUE KEY `UK_especialidad_uuid` (`uuid`),
+  UNIQUE KEY `UK_especialidad_nombre` (`nombre_especialidad`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `habilidad` (
+  `id_habilidad` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `nombre_habilidad` varchar(50) NOT NULL,
+  `uuid` varchar(255) NOT NULL ,
+  PRIMARY KEY (`id_habilidad`),
+  UNIQUE KEY `UK_habilidad_uuid` (`uuid`),
+  UNIQUE KEY `UK_habilidad_nombre` (`nombre_habilidad`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `permit` (
+  `id_permit` INT NOT NULL AUTO_INCREMENT,
+  `permiso` enum('CAMBIAR_CLAVE','CONFIRMAR_PRESUPUESTO','CREAR_USUARIO','DAR_DE_BAJA_USUARIO','DENUNCIAR_USUARIO','EDITAR_PERFIL','EDITAR_PRESUPUESTO','ELIMINAR_USUARIO','REALIZAR_PRESUPUESTO','RECHAZAR_PRESUPUESTO','VER_PERFIL') NOT NULL ,
+  PRIMARY KEY (`id_permit`),
+  UNIQUE KEY `UK7fqhqc0bxljtajffs68a9b1j` (`permiso`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `rol` (
+  `id_role` INT NOT NULL AUTO_INCREMENT,
+  `rol` enum('ROLE_ADMINISTRADOR','ROLE_SUPERADMINISTRADOR','ROLE_TECNICO','ROLE_USUARIO') NOT NULL ,
+  PRIMARY KEY (`id_role`),
+  UNIQUE KEY `UKgidd9huji2j14xop37v9dc7li` (`rol`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `rubro` (
+  `id_rubro` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `nombre_rubro` varchar(255) NOT NULL,
+  `uuid` varchar(255) NOT NULL ,
+  PRIMARY KEY (`id_rubro`),
+  UNIQUE KEY `UK_rubro_uuid` (`uuid`),
+  UNIQUE KEY `UK_rubro_nombre` (`nombre_rubro`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `usuario` (
+  `id_usuario` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `activo` bit(1) NOT NULL,
+  `apellido` varchar(50) NOT NULL,
+  `clave` varchar(255) NOT NULL,
+  `dni` varchar(8) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `fecha_fin_suspension` date DEFAULT NULL,
+  `fecha_nacimiento` date NOT NULL,
+  `foto` mediumblob DEFAULT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `sobre_mi` text NOT NULL,
+  `telefono` varchar(50) NOT NULL,
+  `tipo_imagen` varchar(50) NOT NULL,
+  `ultima_actividad` datetime(6) NOT NULL,
+  `uuid` varchar(255) NOT NULL ,
+  PRIMARY KEY (`id_usuario`),
+  UNIQUE KEY `UKma71x4n4tydibsd9qt0m71le7` (`dni`),
+  UNIQUE KEY `UK5171l57faosmj8myawaucatdw` (`email`),
+  UNIQUE KEY `UKl8q1tlaiyb03eemicl6qgvddu` (`uuid`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `credencial` (
+  `credencial_id` INT NOT NULL AUTO_INCREMENT,
+  `clave` varchar(255) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `refresh_token` varchar(2048) DEFAULT NULL,
+  `username` varchar(50) NOT NULL,
+  `id_usuario` INT DEFAULT NULL ,
+  PRIMARY KEY (`credencial_id`),
+  UNIQUE KEY `UKkal4f1uym3c6ttymfx1lrvkui` (`username`),
+  UNIQUE KEY `UKpog5dow3mxrqivsn98edomnca` (`id_usuario`),
+  CONSTRAINT `FK2n9ltmbqhg4w8481ofpdhjp4t` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `denuncia` (
+  `id_denuncia` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `estado_denuncia` enum('Aprobada','En_proceso','Pendiente','Rechazada') NOT NULL,
+  `fecha_denuncia` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `foto` mediumblob DEFAULT NULL,
+  `motivo_denuncia` text NOT NULL,
+  `nota_del_admin` text DEFAULT NULL,
+  `tipo_foto` varchar(50) DEFAULT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `administrador_encargado` INT DEFAULT NULL,
+  `id_denunciado` INT NOT NULL,
+  `id_denunciante` INT NOT NULL ,
+  PRIMARY KEY (`id_denuncia`),
+  UNIQUE KEY `UKr97bx6lskfa7181mc2kyok2fx` (`uuid`),
+  KEY `FKedppucslrjcvkic9b9y8wc3pw` (`administrador_encargado`),
+  KEY `FK4fc6ogyys8twtmu8uamo1ap16` (`id_denunciado`),
+  KEY `FKpgm4jg3tw8vldkgfvik3i5d3p` (`id_denunciante`),
+  KEY `IDX_denuncia_estado_fecha` (`estado_denuncia`, `fecha_denuncia`),
+  CONSTRAINT `FK4fc6ogyys8twtmu8uamo1ap16` FOREIGN KEY (`id_denunciado`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FKedppucslrjcvkic9b9y8wc3pw` FOREIGN KEY (`administrador_encargado`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FKpgm4jg3tw8vldkgfvik3i5d3p` FOREIGN KEY (`id_denunciante`) REFERENCES `usuario` (`id_usuario`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `habilidad_especialidad` (
+  `id_habilidad` INT NOT NULL,
+  `id_especialidad` INT NOT NULL ,
+  PRIMARY KEY (`id_habilidad`, `id_especialidad`),
+  KEY `FKotnte27wg97k0mnmi1wsv3a7r` (`id_especialidad`),
+  CONSTRAINT `FKotnte27wg97k0mnmi1wsv3a7r` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`),
+  CONSTRAINT `FKpqylas7yu3b29b72h4tccwn6w` FOREIGN KEY (`id_habilidad`) REFERENCES `habilidad` (`id_habilidad`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `rating` (
+  `id_rating` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `foto` mediumblob DEFAULT NULL,
+  `tipo_foto` varchar(50) DEFAULT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `valoracion` INT NOT NULL,
+  `id_usuario_destinatario` INT NOT NULL,
+  `id_usuario_remitente` INT NOT NULL ,
+  PRIMARY KEY (`id_rating`),
+  UNIQUE KEY `UKsiuciuw7v2iwrhn0vk5vdk360` (`uuid`),
+  KEY `FKj4ctwpxjykxlpx1tc1p21sves` (`id_usuario_destinatario`),
+  KEY `FK8t5gwjwghuueca87ulwejr6p8` (`id_usuario_remitente`),
+  CONSTRAINT `FK8t5gwjwghuueca87ulwejr6p8` FOREIGN KEY (`id_usuario_remitente`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FKj4ctwpxjykxlpx1tc1p21sves` FOREIGN KEY (`id_usuario_destinatario`) REFERENCES `usuario` (`id_usuario`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `rubro_especialidad` (
+  `id_rubro` INT NOT NULL,
+  `id_especialidad` INT NOT NULL ,
+  PRIMARY KEY (`id_rubro`, `id_especialidad`),
+  KEY `FKp9y0ajqia6j400foiu2t1lnc0` (`id_especialidad`),
+  CONSTRAINT `FKedxaioki15re2eih79kmp8qjj` FOREIGN KEY (`id_rubro`) REFERENCES `rubro` (`id_rubro`),
+  CONSTRAINT `FKp9y0ajqia6j400foiu2t1lnc0` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `tecnico` (
+  `id_tecnico` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `cuit` varchar(20) NOT NULL,
+  `descripcion_trabajo` text DEFAULT NULL,
+  `proyectos` text DEFAULT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_usuario` INT DEFAULT NULL ,
+  PRIMARY KEY (`id_tecnico`),
+  UNIQUE KEY `UK_tecnico_uuid` (`uuid`),
+  UNIQUE KEY `UK_tecnico_cuit` (`cuit`),
+  UNIQUE KEY `UKkoxndpnthrvgvwuigmh9f467l` (`id_usuario`),
+  CONSTRAINT `FKglsl21216xiqdl2rtw9nijyji` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `ubicacion` (
+  `id_ubicacion` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `calle` varchar(50) NOT NULL,
+  `ciudad` varchar(50) NOT NULL,
+  `codigo_postal` varchar(50) NOT NULL,
+  `numero` INT DEFAULT NULL,
+  `numero_piso` INT DEFAULT NULL,
+  `piso` INT DEFAULT NULL,
+  `provincia` varchar(50) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_usuario` INT NOT NULL ,
+  PRIMARY KEY (`id_ubicacion`),
+  UNIQUE KEY `UKqwpyqibjgmaaav4a009cd5k0` (`uuid`),
+  KEY `FKdcu2t0v1s5qeyc4vp197ravvw` (`id_usuario`),
+  CONSTRAINT `FKdcu2t0v1s5qeyc4vp197ravvw` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `certificacion` (
+  `id_certificacion` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `ente_otorgador` varchar(255) NOT NULL,
+  `estado_verificacion` enum('Aprobado','Pendiente','Rechazado') DEFAULT NULL,
+  `fecha_vencimiento` date DEFAULT NULL,
+  `imagen_certificado` mediumblob NOT NULL,
+  `notas_admin` text DEFAULT NULL,
+  `num_matricula` varchar(100) NOT NULL,
+  `tipo_imagen` varchar(50) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_admin_revisor` INT DEFAULT NULL,
+  `id_tecnico` INT DEFAULT NULL ,
+  PRIMARY KEY (`id_certificacion`),
+  UNIQUE KEY `UK2g0wrp2149pupy22ju4wpttbg` (`uuid`),
+  KEY `FK7knd03pi88tosb3wicxncp81c` (`id_admin_revisor`),
+  KEY `FKr55m7box7l2l866en7plruduk` (`id_tecnico`),
+  CONSTRAINT `FK7knd03pi88tosb3wicxncp81c` FOREIGN KEY (`id_admin_revisor`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FKr55m7box7l2l866en7plruduk` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `chat` (
+  `id_chat` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `fecha_chat` datetime(6) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_tecnico` INT NOT NULL,
+  `id_usuario` INT NOT NULL ,
+  PRIMARY KEY (`id_chat`),
+  UNIQUE KEY `UK_chat_uuid` (`uuid`),
+  KEY `FKmfhjx839tw7b2tby5garfv576` (`id_tecnico`),
+  KEY `FK1yd9hrld2mou4jdaiqliu88ik` (`id_usuario`),
+  CONSTRAINT `FK1yd9hrld2mou4jdaiqliu88ik` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FKmfhjx839tw7b2tby5garfv576` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `credencial_rol` (
+  `credencial_id` INT NOT NULL,
+  `id_role` INT NOT NULL ,
+  PRIMARY KEY (`credencial_id`,`id_role`),
+  KEY `FKpd4bekonnhadgw4hqjbf36jbx` (`id_role`),
+  CONSTRAINT `FKoceysl0epyj5k3i59s9h6yej3` FOREIGN KEY (`credencial_id`) REFERENCES `credencial` (`credencial_id`),
+  CONSTRAINT `FKpd4bekonnhadgw4hqjbf36jbx` FOREIGN KEY (`id_role`) REFERENCES `rol` (`id_role`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `especialidad_tecnico` (
+  `id_tecnico` INT NOT NULL,
+  `id_especialidad` INT NOT NULL ,
+  PRIMARY KEY (`id_tecnico`, `id_especialidad`),
+  KEY `FKt7tjjghke4p5v3nauq8hnwjyb` (`id_especialidad`),
+  CONSTRAINT `FKh8c7bf8n16f69k0hya55orwg9` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`),
+  CONSTRAINT `FKt7tjjghke4p5v3nauq8hnwjyb` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `habilidad_tecnico` (
+  `id_tecnico` INT NOT NULL,
+  `id_habilidad` INT NOT NULL ,
+  PRIMARY KEY (`id_tecnico`, `id_habilidad`),
+  KEY `FK8kacwu0r6ef4ebyv938dih1mu` (`id_habilidad`),
+  CONSTRAINT `FK14s57rijv4u3rb3t7rfy3ot40` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`),
+  CONSTRAINT `FK8kacwu0r6ef4ebyv938dih1mu` FOREIGN KEY (`id_habilidad`) REFERENCES `habilidad` (`id_habilidad`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `portfolio` (
+  `id_portfolio` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `archivo_adjunto` mediumblob DEFAULT NULL,
+  `enlace_externo` varchar(255) DEFAULT NULL,
+  `estado_verificacion` enum('Aprobado','Pendiente','Rechazado') DEFAULT NULL,
+  `fecha_entrega` datetime(6) DEFAULT NULL,
+  `notas_admin` text DEFAULT NULL,
+  `notas_aspirante` text DEFAULT NULL,
+  `tipo_archivo` varchar(100) DEFAULT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_especialidad` INT NOT NULL,
+  `id_tecnico` INT NOT NULL ,
+  PRIMARY KEY (`id_portfolio`),
+  UNIQUE KEY `UKfkvfkavvp1j775h86rfb5iv0m` (`uuid`),
+  KEY `FK8yo07coyy7nwt4opjvim8l1o1` (`id_especialidad`),
+  KEY `FKdtr49vtt968lp9uwgyblywbv7` (`id_tecnico`),
+  CONSTRAINT `FK8yo07coyy7nwt4opjvim8l1o1` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`),
+  CONSTRAINT `FKdtr49vtt968lp9uwgyblywbv7` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `rating_caracteristica` (
+  `id_rating` INT NOT NULL,
+  `id_caracteristica` INT NOT NULL ,
+  PRIMARY KEY (`id_rating`, `id_caracteristica`),
+  KEY `FK3ctusiegyd3bkvmd5b8sjf90` (`id_caracteristica`),
+  CONSTRAINT `FK3ctusiegyd3bkvmd5b8sjf90` FOREIGN KEY (`id_caracteristica`) REFERENCES `caracteristica` (`id_caracteristica`),
+  CONSTRAINT `FK5po1jfnni5varu51d4uxsinmr` FOREIGN KEY (`id_rating`) REFERENCES `rating` (`id_rating`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `mensaje` (
+  `id_mensaje` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `archivo_url` varchar(255) DEFAULT NULL,
+  `fecha_mensaje` datetime(6) NOT NULL,
+  `mensaje` varchar(255) DEFAULT NULL,
+  `tipo_archivo` varchar(255) DEFAULT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_chat` INT NOT NULL,
+  `id_sender` INT NOT NULL ,
+  PRIMARY KEY (`id_mensaje`),
+  UNIQUE KEY `UK_mensaje_uuid` (`uuid`),
+  KEY `FKe19chdnxesv3itlf0v128hmrp` (`id_chat`),
+  KEY `FKmipwrttnexwj61hkitg4sdvr2` (`id_sender`),
+  CONSTRAINT `FKe19chdnxesv3itlf0v128hmrp` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
+  CONSTRAINT `FKmipwrttnexwj61hkitg4sdvr2` FOREIGN KEY (`id_sender`) REFERENCES `usuario` (`id_usuario`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `presupuesto` (
+  `id_presupuesto` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `descripcion_presupuesto` text NOT NULL,
+  `estado` enum('Aceptado','Cancelado','Pendiente','Rechazado') NOT NULL,
+  `precio_estimado` decimal(10,2) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_chat` INT NOT NULL,
+  `id_tecnico` INT NOT NULL,
+  `id_usuario` INT NOT NULL ,
+  PRIMARY KEY (`id_presupuesto`),
+  UNIQUE KEY `UKh0y6g5ihophql8qi53imkmut5` (`uuid`),
+  KEY `FKdsmvld5uqkt421se9qph8co0e` (`id_chat`),
+  KEY `FKsp432pndlhmxoinib1g0evcrd` (`id_tecnico`),
+  KEY `FKccrpu7i0j1b5r9tgnq97xq6b4` (`id_usuario`),
+  CONSTRAINT `FKccrpu7i0j1b5r9tgnq97xq6b4` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `FKdsmvld5uqkt421se9qph8co0e` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
+  CONSTRAINT `FKsp432pndlhmxoinib1g0evcrd` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `trabajo` (
+  `id_trabajo` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `descripcion_trabajo` text NOT NULL,
+  `estado_trabajo` enum('Cancelado','En_proceso','Finalizado','Pendiente') NOT NULL,
+  `fecha_estimada_fin` date NOT NULL,
+  `fecha_estimada_inicio` date NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_presupuesto` INT DEFAULT NULL ,
+  PRIMARY KEY (`id_trabajo`),
+  UNIQUE KEY `UKpg1p6dq23yabrwamch2ncyrfd` (`uuid`),
+  UNIQUE KEY `UKj4ty9v2iacd1be5c3j6gw2luh` (`id_presupuesto`),
+  CONSTRAINT `FKfx52xtnnowpsg4bp7ohm98jxo` FOREIGN KEY (`id_presupuesto`) REFERENCES `presupuesto` (`id_presupuesto`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `pago` (
+  `id_pago` INT NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime(6) DEFAULT NULL,
+  `estado` enum('Cancelado','Confirmado','Pendiente_de_revision','Rechazado') DEFAULT NULL,
+  `fecha_pago` datetime(6) NOT NULL,
+  `metodo_pago` enum('Credito','Debito','Efectivo','Transferencia') NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `id_trabajo` INT DEFAULT NULL ,
+  PRIMARY KEY (`id_pago`),
+  UNIQUE KEY `UK95x4dibob9y7v0n38ctudmoh3` (`uuid`),
+  UNIQUE KEY `UKbc2x9lcyvwdoy417hxlnlq5q4` (`id_trabajo`),
+  CONSTRAINT `FK4kawmu0llvo61fbd082fygrql` FOREIGN KEY (`id_trabajo`) REFERENCES `trabajo` (`id_trabajo`)
+) ENGINE=InnoDB;
+
+-- Datos iniciales
 
 INSERT INTO `caracteristica` (`id_caracteristica`, `created_at`, `updated_at`, `tipo`, `uuid`, `valor_adjetivo`) VALUES
 (1, '2026-09-27 01:07:46', NULL, 'POSITIVA', '1384d19a-ba06-11f1-8c83-00e04c880385', 'Responsable'),
@@ -66,112 +409,6 @@ INSERT INTO `caracteristica` (`id_caracteristica`, `created_at`, `updated_at`, `
 (8, '2026-09-27 01:07:46', NULL, 'NEGATIVA', '1385cd84-ba06-11f1-8c83-00e04c880385', 'Descortés'),
 (9, '2026-09-27 01:07:46', NULL, 'NEGATIVA', '1385cdcb-ba06-11f1-8c83-00e04c880385', 'Mala comunicación'),
 (10, '2026-09-27 01:07:46', NULL, 'NEGATIVA', '1385cdfc-ba06-11f1-8c83-00e04c880385', 'Poco profesional');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `certificacion`
---
-
-CREATE TABLE `certificacion` (
-  `id_certificacion` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `ente_otorgador` varchar(255) NOT NULL,
-  `estado_verificacion` enum('Aprobado','Pendiente','Rechazado') DEFAULT NULL,
-  `fecha_vencimiento` date DEFAULT NULL,
-  `imagen_certificado` mediumblob NOT NULL,
-  `notas_admin` text DEFAULT NULL,
-  `num_matricula` varchar(100) NOT NULL,
-  `tipo_imagen` varchar(50) NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_admin_revisor` int(11) DEFAULT NULL,
-  `id_tecnico` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `chat`
---
-
-CREATE TABLE `chat` (
-  `id_chat` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `fecha_chat` datetime(6) NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_tecnico` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `credencial`
---
-
-CREATE TABLE `credencial` (
-  `credencial_id` int(11) NOT NULL,
-  `clave` varchar(255) NOT NULL,
-  `enabled` tinyint(1) NOT NULL,
-  `refresh_token` varchar(2048) DEFAULT NULL,
-  `username` varchar(50) NOT NULL,
-  `id_usuario` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `credencial_rol`
---
-
-CREATE TABLE `credencial_rol` (
-  `credencial_id` int(11) NOT NULL,
-  `id_role` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `denuncia`
---
-
-CREATE TABLE `denuncia` (
-  `id_denuncia` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `estado_denuncia` enum('Aprobada','En_proceso','Pendiente','Rechazada') NOT NULL,
-  `fecha_denuncia` datetime(6) NOT NULL,
-  `foto` mediumblob DEFAULT NULL,
-  `motivo_denuncia` text NOT NULL,
-  `nota_del_admin` text DEFAULT NULL,
-  `tipo_foto` varchar(50) DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `administrador_encargado` int(11) DEFAULT NULL,
-  `id_denunciado` int(11) NOT NULL,
-  `id_denunciante` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `especialidad`
---
-
-CREATE TABLE `especialidad` (
-  `id_especialidad` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `nombre_especialidad` varchar(50) DEFAULT NULL,
-  `tipo_validacion` enum('Certificado','Ninguna','Portfolio') DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `especialidad`
---
-
 INSERT INTO `especialidad` (`id_especialidad`, `created_at`, `updated_at`, `nombre_especialidad`, `tipo_validacion`, `uuid`) VALUES
 (1, '2026-09-27 01:07:12', NULL, 'Apoyo Escolar', 'Ninguna', '1387ab6d-ba06-11f1-8c83-00e04c880385'),
 (2, '2026-09-27 01:07:12', NULL, 'Coaching y Desarrollo Personal', 'Certificado', '1387be1b-ba06-11f1-8c83-00e04c880385'),
@@ -234,36 +471,6 @@ INSERT INTO `especialidad` (`id_especialidad`, `created_at`, `updated_at`, `nomb
 (59, '2026-09-27 01:07:12', NULL, 'Diseño Gráfico', 'Portfolio', '1387ca73-ba06-11f1-8c83-00e04c880385'),
 (60, '2026-09-27 01:07:12', NULL, 'Ilustración y Arte', 'Portfolio', '1387cb7c-ba06-11f1-8c83-00e04c880385'),
 (61, '2026-09-27 01:07:12', NULL, 'Moda e Indumentaria', 'Portfolio', '1387cba4-ba06-11f1-8c83-00e04c880385');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `especialidad_tecnico`
---
-
-CREATE TABLE `especialidad_tecnico` (
-  `id_tecnico` int(11) NOT NULL,
-  `id_especialidad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `habilidad`
---
-
-CREATE TABLE `habilidad` (
-  `id_habilidad` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `nombre_habilidad` varchar(50) DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `habilidad`
---
-
 INSERT INTO `habilidad` (`id_habilidad`, `created_at`, `updated_at`, `nombre_habilidad`, `uuid`) VALUES
 (1, '2026-09-27 01:06:20', NULL, 'Muros', '1389eef2-ba06-11f1-8c83-00e04c880385'),
 (2, '2026-09-27 01:06:20', NULL, 'Reparación de grietas', '138a052f-ba06-11f1-8c83-00e04c880385'),
@@ -467,7 +674,6 @@ INSERT INTO `habilidad` (`id_habilidad`, `created_at`, `updated_at`, `nombre_hab
 (200, '2026-09-27 01:06:20', NULL, 'Manejo de cámara', '138e47da-ba06-11f1-8c83-00e04c880385'),
 (201, '2026-09-27 01:06:20', NULL, 'Dirección de fotografía', '138e4804-ba06-11f1-8c83-00e04c880385'),
 (202, '2026-09-27 01:06:20', NULL, 'Edición de sonido', '138e482b-ba06-11f1-8c83-00e04c880385'),
-(203, '2026-09-27 01:06:20', NULL, 'Motion graphics', '138e4852-ba06-11f1-8c83-00e04c880385'),
 (204, '2026-09-27 01:06:20', NULL, 'Sesiones exteriores', '138e4879-ba06-11f1-8c83-00e04c880385'),
 (205, '2026-09-27 01:06:20', NULL, 'Sesiones de estudio', '138e48a3-ba06-11f1-8c83-00e04c880385'),
 (206, '2026-09-27 01:06:20', NULL, 'Cobertura de shows', '138e48cb-ba06-11f1-8c83-00e04c880385'),
@@ -495,22 +701,6 @@ INSERT INTO `habilidad` (`id_habilidad`, `created_at`, `updated_at`, `nombre_hab
 (228, '2026-09-27 01:06:20', NULL, 'Cajas de seguridad', '138f804c-ba06-11f1-8c83-00e04c880385'),
 (229, '2026-09-27 01:06:20', NULL, 'Cerraduras digitales', '138f8172-ba06-11f1-8c83-00e04c880385'),
 (230, '2026-09-27 01:06:20', NULL, 'Llave maestra', '138f81aa-ba06-11f1-8c83-00e04c880385');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `habilidad_especialidad`
---
-
-CREATE TABLE `habilidad_especialidad` (
-  `id_habilidad` int(11) NOT NULL,
-  `id_especialidad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `habilidad_especialidad`
---
-
 INSERT INTO `habilidad_especialidad` (`id_habilidad`, `id_especialidad`) VALUES
 (1, 20),
 (2, 20),
@@ -543,9 +733,31 @@ INSERT INTO `habilidad_especialidad` (`id_habilidad`, `id_especialidad`) VALUES
 (27, 33),
 (28, 33),
 (29, 33),
+(30, 19),
 (30, 33),
+(31, 26),
+(31, 36),
+(32, 26),
+(32, 36),
+(33, 26),
+(33, 36),
+(34, 26),
+(34, 36),
+(35, 26),
+(35, 28),
+(35, 36),
+(36, 26),
+(36, 36),
+(37, 26),
+(37, 36),
+(38, 26),
+(38, 36),
+(39, 26),
+(39, 36),
 (39, 57),
-(40, 57),
+(40, 26),
+(40, 28),
+(40, 36),
 (41, 23),
 (42, 23),
 (43, 23),
@@ -554,10 +766,13 @@ INSERT INTO `habilidad_especialidad` (`id_habilidad`, `id_especialidad`) VALUES
 (45, 35),
 (46, 23),
 (46, 35),
+(47, 23),
 (47, 35),
+(47, 54),
 (48, 23),
 (48, 35),
 (49, 23),
+(49, 35),
 (50, 23),
 (50, 35),
 (51, 29),
@@ -577,69 +792,89 @@ INSERT INTO `habilidad_especialidad` (`id_habilidad`, `id_especialidad`) VALUES
 (63, 52),
 (64, 52),
 (65, 52),
+(65, 53),
 (66, 52),
+(66, 53),
 (67, 52),
-(67, 55),
 (68, 52),
 (69, 52),
+(70, 52),
 (70, 55),
+(71, 52),
 (71, 55),
+(72, 52),
 (72, 55),
 (73, 55),
-(74, 52),
 (74, 55),
 (75, 55),
 (76, 55),
 (77, 55),
 (78, 52),
+(78, 55),
 (79, 53),
 (80, 53),
 (81, 53),
 (82, 53),
 (83, 53),
-(83, 59),
-(83, 60),
-(83, 61),
 (84, 53),
 (85, 53),
 (86, 59),
 (87, 59),
 (88, 59),
 (89, 59),
-(89, 61),
 (90, 59),
 (91, 59),
+(92, 11),
 (92, 59),
 (93, 59),
 (94, 52),
 (94, 60),
 (95, 52),
 (95, 60),
+(96, 5),
+(97, 5),
+(98, 5),
+(99, 5),
+(100, 5),
 (101, 6),
 (101, 7),
-(101, 17),
+(101, 18),
+(102, 6),
 (102, 7),
+(102, 18),
+(103, 6),
 (103, 7),
+(103, 18),
 (104, 6),
 (104, 7),
-(104, 17),
+(104, 18),
+(105, 6),
 (105, 7),
+(105, 18),
+(106, 6),
 (106, 7),
+(106, 18),
 (107, 6),
-(107, 17),
+(107, 7),
+(107, 18),
 (108, 6),
-(108, 17),
+(108, 7),
+(108, 18),
 (109, 6),
-(109, 16),
+(109, 7),
+(109, 18),
 (110, 6),
+(110, 7),
+(110, 18),
 (111, 6),
-(111, 17),
-(112, 14),
-(112, 16),
-(113, 16),
-(114, 16),
-(115, 16),
-(116, 16),
+(111, 7),
+(111, 18),
+(112, 17),
+(113, 17),
+(114, 17),
+(115, 17),
+(116, 17),
+(117, 7),
 (117, 14),
 (118, 14),
 (119, 14),
@@ -651,6 +886,13 @@ INSERT INTO `habilidad_especialidad` (`id_habilidad`, `id_especialidad`) VALUES
 (125, 15),
 (126, 15),
 (127, 15),
+(128, 8),
+(129, 8),
+(130, 8),
+(131, 8),
+(131, 9),
+(132, 8),
+(132, 10),
 (133, 45),
 (134, 45),
 (135, 45),
@@ -664,6 +906,11 @@ INSERT INTO `habilidad_especialidad` (`id_habilidad`, `id_especialidad`) VALUES
 (143, 46),
 (144, 46),
 (145, 46),
+(146, 47),
+(147, 47),
+(148, 47),
+(149, 47),
+(150, 47),
 (151, 48),
 (152, 48),
 (153, 48),
@@ -682,245 +929,80 @@ INSERT INTO `habilidad_especialidad` (`id_habilidad`, `id_especialidad`) VALUES
 (166, 3),
 (167, 3),
 (168, 3),
-(169, 40),
-(170, 40),
-(171, 40),
-(172, 41),
-(173, 41),
-(174, 41),
-(175, 41),
-(176, 42),
-(177, 42),
-(178, 42),
-(179, 42),
-(180, 49),
-(180, 50),
-(181, 50),
-(181, 57),
-(182, 49),
-(182, 50),
-(183, 50),
-(184, 49),
-(184, 51),
-(185, 51),
-(186, 51),
-(187, 22),
-(188, 22),
-(189, 22),
-(190, 22),
+(169, 8),
+(169, 10),
+(169, 11),
+(170, 8),
+(170, 10),
+(170, 11),
+(171, 10),
+(172, 10),
+(173, 10),
+(174, 11),
+(175, 11),
+(176, 11),
+(177, 11),
+(178, 11),
+(179, 10),
+(180, 10),
+(181, 11),
+(182, 11),
+(183, 11),
+(184, 11),
+(184, 13),
+(185, 10),
+(186, 10),
+(187, 11),
+(188, 10),
+(188, 59),
+(189, 11),
+(190, 11),
 (191, 10),
 (192, 10),
 (193, 10),
 (194, 10),
 (195, 10),
-(196, 11),
-(197, 11),
-(198, 11),
-(199, 11),
-(200, 11),
+(196, 10),
+(197, 10),
+(198, 10),
+(199, 10),
+(200, 10),
 (201, 10),
-(202, 60),
-(203, 11),
+(202, 11),
 (204, 11),
 (205, 11),
 (206, 11),
-(208, 10),
-(209, 11),
-(210, 10),
-(210, 53),
-(210, 59),
-(210, 60),
-(211, 11),
-(212, 11),
-(212, 59),
-(213, 10),
-(214, 10),
-(215, 10),
-(215, 61),
-(216, 10),
-(217, 10),
-(220, 11),
-(221, 10),
-(221, 11),
-(222, 10),
-(222, 11),
-(223, 11),
-(224, 11),
-(225, 11),
-(225, 59),
-(226, 10),
-(227, 10),
-(229, 11),
-(230, 53);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `habilidad_tecnico`
---
-
-CREATE TABLE `habilidad_tecnico` (
-  `id_tecnico` int(11) NOT NULL,
-  `id_habilidad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `mensaje`
---
-
-CREATE TABLE `mensaje` (
-  `id_mensaje` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `archivo_url` varchar(255) DEFAULT NULL,
-  `fecha_mensaje` datetime(6) NOT NULL,
-  `mensaje` varchar(255) DEFAULT NULL,
-  `tipo_archivo` varchar(255) DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_chat` int(11) NOT NULL,
-  `id_sender` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pago`
---
-
-CREATE TABLE `pago` (
-  `id_pago` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `estado` enum('Cancelado','Confirmado','Pendiente_de_revision','Rechazado') DEFAULT NULL,
-  `fecha_pago` datetime(6) NOT NULL,
-  `metodo_pago` enum('Credito','Debito','Efectivo','Transferencia') NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_trabajo` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `permit`
---
-
-CREATE TABLE `permit` (
-  `id_permit` int(11) NOT NULL,
-  `permiso` enum('CAMBIAR_CLAVE','CONFIRMAR_PRESUPUESTO','CREAR_USUARIO','DAR_DE_BAJA_USUARIO','DENUNCIAR_USUARIO','EDITAR_PERFIL','EDITAR_PRESUPUESTO','ELIMINAR_USUARIO','REALIZAR_PRESUPUESTO','RECHAZAR_PRESUPUESTO','VER_PERFIL') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `portfolio`
---
-
-CREATE TABLE `portfolio` (
-  `id_portfolio` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `archivo_adjunto` mediumblob DEFAULT NULL,
-  `enlace_externo` varchar(255) DEFAULT NULL,
-  `estado_verificacion` enum('Aprobado','Pendiente','Rechazado') DEFAULT NULL,
-  `fecha_entrega` datetime(6) DEFAULT NULL,
-  `notas_admin` text DEFAULT NULL,
-  `notas_aspirante` text DEFAULT NULL,
-  `tipo_archivo` varchar(100) DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_especialidad` int(11) NOT NULL,
-  `id_tecnico` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `presupuesto`
---
-
-CREATE TABLE `presupuesto` (
-  `id_presupuesto` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `descripcion_presupuesto` text NOT NULL,
-  `estado` enum('Aceptado','Cancelado','Pendiente','Rechazado') NOT NULL,
-  `precio_estimado` decimal(10,2) NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_chat` int(11) NOT NULL,
-  `id_tecnico` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `rating`
---
-
-CREATE TABLE `rating` (
-  `id_rating` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `descripcion` text DEFAULT NULL,
-  `foto` mediumblob DEFAULT NULL,
-  `tipo_foto` varchar(50) DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `valoracion` int(11) NOT NULL,
-  `id_usuario_destinatario` int(11) NOT NULL,
-  `id_usuario_remitente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `rating_caracteristica`
---
-
-CREATE TABLE `rating_caracteristica` (
-  `id_rating` int(11) NOT NULL,
-  `id_caracteristica` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `rol`
---
-
-CREATE TABLE `rol` (
-  `id_role` int(11) NOT NULL,
-  `rol` enum('ROLE_ADMINISTRADOR','ROLE_SUPERADMINISTRADOR','ROLE_TECNICO','ROLE_USUARIO') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `rol`
---
-
+(207, 11),
+(208, 11),
+(209, 40),
+(210, 40),
+(211, 40),
+(212, 41),
+(213, 41),
+(214, 41),
+(215, 41),
+(216, 42),
+(217, 42),
+(218, 42),
+(219, 42),
+(220, 50),
+(221, 50),
+(222, 49),
+(222, 50),
+(223, 49),
+(223, 50),
+(224, 51),
+(225, 51),
+(226, 51),
+(227, 22),
+(228, 22),
+(229, 22),
+(230, 22);
 INSERT INTO `rol` (`id_role`, `rol`) VALUES
 (2, 'ROLE_ADMINISTRADOR'),
 (1, 'ROLE_SUPERADMINISTRADOR'),
 (4, 'ROLE_TECNICO'),
 (3, 'ROLE_USUARIO');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `rubro`
---
-
-CREATE TABLE `rubro` (
-  `id_rubro` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `nombre_rubro` varchar(255) DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `rubro`
---
-
 INSERT INTO `rubro` (`id_rubro`, `created_at`, `updated_at`, `nombre_rubro`, `uuid`) VALUES
 (1, '2026-09-27 01:02:31', NULL, 'Hogar', '1386b5d9-ba06-11f1-8c83-00e04c880385'),
 (2, '2026-09-27 01:02:31', NULL, 'Construcción', '1386c8e3-ba06-11f1-8c83-00e04c880385'),
@@ -932,22 +1014,6 @@ INSERT INTO `rubro` (`id_rubro`, `created_at`, `updated_at`, `nombre_rubro`, `uu
 (8, '2026-09-27 01:02:31', NULL, 'Tecnología', '1386ca9d-ba06-11f1-8c83-00e04c880385'),
 (9, '2026-09-27 01:02:31', NULL, 'Educación', '1386cacf-ba06-11f1-8c83-00e04c880385'),
 (10, '2026-09-27 01:02:31', NULL, 'Gastronomía', '1386caff-ba06-11f1-8c83-00e04c880385');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `rubro_especialidad`
---
-
-CREATE TABLE `rubro_especialidad` (
-  `id_rubro` int(11) NOT NULL,
-  `id_especialidad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `rubro_especialidad`
---
-
 INSERT INTO `rubro_especialidad` (`id_rubro`, `id_especialidad`) VALUES
 (9, 1),
 (5, 2),
@@ -1031,7 +1097,6 @@ INSERT INTO `rubro_especialidad` (`id_rubro`, `id_especialidad`) VALUES
 (3, 42),
 (5, 43),
 (5, 44),
-(1, 45),
 (4, 45),
 (5, 45),
 (4, 46),
@@ -1067,542 +1132,3 @@ INSERT INTO `rubro_especialidad` (`id_rubro`, `id_especialidad`) VALUES
 (9, 60),
 (4, 61),
 (7, 61);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tecnico`
---
-
-CREATE TABLE `tecnico` (
-  `id_tecnico` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `cuit` varchar(20) NOT NULL,
-  `descripcion_trabajo` text DEFAULT NULL,
-  `proyectos` text DEFAULT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_usuario` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `trabajo`
---
-
-CREATE TABLE `trabajo` (
-  `id_trabajo` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `descripcion_trabajo` text NOT NULL,
-  `estado_trabajo` enum('Cancelado','En_proceso','Finalizado','Pendiente') NOT NULL,
-  `fecha_estimada_fin` date NOT NULL,
-  `fecha_estimada_inicio` date NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_presupuesto` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `ubicacion`
---
-
-CREATE TABLE `ubicacion` (
-  `id_ubicacion` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `calle` varchar(50) NOT NULL,
-  `ciudad` varchar(50) NOT NULL,
-  `codigo_postal` varchar(50) NOT NULL,
-  `numero` int(11) DEFAULT NULL,
-  `numero_piso` int(11) DEFAULT NULL,
-  `piso` int(11) DEFAULT NULL,
-  `provincia` varchar(50) NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuario`
---
-
-CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime(6) DEFAULT NULL,
-  `activo` bit(1) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
-  `clave` varchar(255) NOT NULL,
-  `dni` varchar(8) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `fecha_fin_suspension` date DEFAULT NULL,
-  `fecha_nacimiento` date NOT NULL,
-  `foto` mediumblob DEFAULT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `sobre_mi` text NOT NULL,
-  `telefono` varchar(50) NOT NULL,
-  `tipo_imagen` varchar(50) NOT NULL,
-  `ultima_actividad` datetime(6) NOT NULL,
-  `uuid` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `administrador`
---
-ALTER TABLE `administrador`
-  ADD PRIMARY KEY (`id_admin`),
-  ADD UNIQUE KEY `UKm3dykycv19jeq15e8xsi1atr5` (`uuid`);
-
---
--- Indices de la tabla `caracteristica`
---
-ALTER TABLE `caracteristica`
-  ADD PRIMARY KEY (`id_caracteristica`),
-  ADD UNIQUE KEY `UK43dj7iq3exe0ryadscd77mxbs` (`uuid`);
-
---
--- Indices de la tabla `certificacion`
---
-ALTER TABLE `certificacion`
-  ADD PRIMARY KEY (`id_certificacion`),
-  ADD UNIQUE KEY `UK2g0wrp2149pupy22ju4wpttbg` (`uuid`),
-  ADD KEY `FK7knd03pi88tosb3wicxncp81c` (`id_admin_revisor`),
-  ADD KEY `FKr55m7box7l2l866en7plruduk` (`id_tecnico`);
-
---
--- Indices de la tabla `chat`
---
-ALTER TABLE `chat`
-  ADD PRIMARY KEY (`id_chat`),
-  ADD KEY `FKmfhjx839tw7b2tby5garfv576` (`id_tecnico`),
-  ADD KEY `FK1yd9hrld2mou4jdaiqliu88ik` (`id_usuario`);
-
---
--- Indices de la tabla `credencial`
---
-ALTER TABLE `credencial`
-  ADD PRIMARY KEY (`credencial_id`),
-  ADD UNIQUE KEY `UKkal4f1uym3c6ttymfx1lrvkui` (`username`),
-  ADD UNIQUE KEY `UKpog5dow3mxrqivsn98edomnca` (`id_usuario`);
-
---
--- Indices de la tabla `credencial_rol`
---
-ALTER TABLE `credencial_rol`
-  ADD PRIMARY KEY (`credencial_id`,`id_role`),
-  ADD KEY `FKpd4bekonnhadgw4hqjbf36jbx` (`id_role`);
-
---
--- Indices de la tabla `denuncia`
---
-ALTER TABLE `denuncia`
-  ADD PRIMARY KEY (`id_denuncia`),
-  ADD UNIQUE KEY `UKr97bx6lskfa7181mc2kyok2fx` (`uuid`),
-  ADD KEY `FKedppucslrjcvkic9b9y8wc3pw` (`administrador_encargado`),
-  ADD KEY `FK4fc6ogyys8twtmu8uamo1ap16` (`id_denunciado`),
-  ADD KEY `FKpgm4jg3tw8vldkgfvik3i5d3p` (`id_denunciante`);
-
---
--- Indices de la tabla `especialidad`
---
-ALTER TABLE `especialidad`
-  ADD PRIMARY KEY (`id_especialidad`),
-  ADD UNIQUE KEY `UKrhm7jnafmiajhw43qved0inrn` (`uuid`);
-
---
--- Indices de la tabla `especialidad_tecnico`
---
-ALTER TABLE `especialidad_tecnico`
-  ADD KEY `FKt7tjjghke4p5v3nauq8hnwjyb` (`id_especialidad`),
-  ADD KEY `FKh8c7bf8n16f69k0hya55orwg9` (`id_tecnico`);
-
---
--- Indices de la tabla `habilidad`
---
-ALTER TABLE `habilidad`
-  ADD PRIMARY KEY (`id_habilidad`),
-  ADD UNIQUE KEY `UK3ej83m8656nvjo33k46nb1r8i` (`uuid`);
-
---
--- Indices de la tabla `habilidad_especialidad`
---
-ALTER TABLE `habilidad_especialidad`
-  ADD KEY `FKotnte27wg97k0mnmi1wsv3a7r` (`id_especialidad`),
-  ADD KEY `FKpqylas7yu3b29b72h4tccwn6w` (`id_habilidad`);
-
---
--- Indices de la tabla `habilidad_tecnico`
---
-ALTER TABLE `habilidad_tecnico`
-  ADD KEY `FK8kacwu0r6ef4ebyv938dih1mu` (`id_habilidad`),
-  ADD KEY `FK14s57rijv4u3rb3t7rfy3ot40` (`id_tecnico`);
-
---
--- Indices de la tabla `mensaje`
---
-ALTER TABLE `mensaje`
-  ADD PRIMARY KEY (`id_mensaje`),
-  ADD KEY `FKe19chdnxesv3itlf0v128hmrp` (`id_chat`),
-  ADD KEY `FKmipwrttnexwj61hkitg4sdvr2` (`id_sender`);
-
---
--- Indices de la tabla `pago`
---
-ALTER TABLE `pago`
-  ADD PRIMARY KEY (`id_pago`),
-  ADD UNIQUE KEY `UK95x4dibob9y7v0n38ctudmoh3` (`uuid`),
-  ADD UNIQUE KEY `UKbc2x9lcyvwdoy417hxlnlq5q4` (`id_trabajo`);
-
---
--- Indices de la tabla `permit`
---
-ALTER TABLE `permit`
-  ADD PRIMARY KEY (`id_permit`),
-  ADD UNIQUE KEY `UK7fqhqc0bxljtajffs68a9b1j` (`permiso`);
-
---
--- Indices de la tabla `portfolio`
---
-ALTER TABLE `portfolio`
-  ADD PRIMARY KEY (`id_portfolio`),
-  ADD UNIQUE KEY `UKfkvfkavvp1j775h86rfb5iv0m` (`uuid`),
-  ADD KEY `FK8yo07coyy7nwt4opjvim8l1o1` (`id_especialidad`),
-  ADD KEY `FKdtr49vtt968lp9uwgyblywbv7` (`id_tecnico`);
-
---
--- Indices de la tabla `presupuesto`
---
-ALTER TABLE `presupuesto`
-  ADD PRIMARY KEY (`id_presupuesto`),
-  ADD UNIQUE KEY `UKh0y6g5ihophql8qi53imkmut5` (`uuid`),
-  ADD KEY `FKdsmvld5uqkt421se9qph8co0e` (`id_chat`),
-  ADD KEY `FKsp432pndlhmxoinib1g0evcrd` (`id_tecnico`),
-  ADD KEY `FKccrpu7i0j1b5r9tgnq97xq6b4` (`id_usuario`);
-
---
--- Indices de la tabla `rating`
---
-ALTER TABLE `rating`
-  ADD PRIMARY KEY (`id_rating`),
-  ADD UNIQUE KEY `UKsiuciuw7v2iwrhn0vk5vdk360` (`uuid`),
-  ADD KEY `FKj4ctwpxjykxlpx1tc1p21sves` (`id_usuario_destinatario`),
-  ADD KEY `FK8t5gwjwghuueca87ulwejr6p8` (`id_usuario_remitente`);
-
---
--- Indices de la tabla `rating_caracteristica`
---
-ALTER TABLE `rating_caracteristica`
-  ADD KEY `FK3ctusiegyd3bkvmd5b8sjf90` (`id_caracteristica`),
-  ADD KEY `FK5po1jfnni5varu51d4uxsinmr` (`id_rating`);
-
---
--- Indices de la tabla `rol`
---
-ALTER TABLE `rol`
-  ADD PRIMARY KEY (`id_role`),
-  ADD UNIQUE KEY `UKgidd9huji2j14xop37v9dc7li` (`rol`);
-
---
--- Indices de la tabla `rubro`
---
-ALTER TABLE `rubro`
-  ADD PRIMARY KEY (`id_rubro`),
-  ADD UNIQUE KEY `UK5yffd86m0hw8hi4kpf7sq40xm` (`uuid`);
-
---
--- Indices de la tabla `rubro_especialidad`
---
-ALTER TABLE `rubro_especialidad`
-  ADD KEY `FKp9y0ajqia6j400foiu2t1lnc0` (`id_especialidad`),
-  ADD KEY `FKedxaioki15re2eih79kmp8qjj` (`id_rubro`);
-
---
--- Indices de la tabla `tecnico`
---
-ALTER TABLE `tecnico`
-  ADD PRIMARY KEY (`id_tecnico`),
-  ADD UNIQUE KEY `UK3fngl95qr0xsjgeb5j3e291j4` (`uuid`),
-  ADD UNIQUE KEY `UKkoxndpnthrvgvwuigmh9f467l` (`id_usuario`);
-
---
--- Indices de la tabla `trabajo`
---
-ALTER TABLE `trabajo`
-  ADD PRIMARY KEY (`id_trabajo`),
-  ADD UNIQUE KEY `UKpg1p6dq23yabrwamch2ncyrfd` (`uuid`),
-  ADD UNIQUE KEY `UKj4ty9v2iacd1be5c3j6gw2luh` (`id_presupuesto`);
-
---
--- Indices de la tabla `ubicacion`
---
-ALTER TABLE `ubicacion`
-  ADD PRIMARY KEY (`id_ubicacion`),
-  ADD UNIQUE KEY `UKqwpyqibjgmaaav4a009cd5k0` (`uuid`),
-  ADD KEY `FKdcu2t0v1s5qeyc4vp197ravvw` (`id_usuario`);
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`id_usuario`),
-  ADD UNIQUE KEY `UKma71x4n4tydibsd9qt0m71le7` (`dni`),
-  ADD UNIQUE KEY `UK5171l57faosmj8myawaucatdw` (`email`),
-  ADD UNIQUE KEY `UKl8q1tlaiyb03eemicl6qgvddu` (`uuid`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `caracteristica`
---
-ALTER TABLE `caracteristica`
-  MODIFY `id_caracteristica` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `certificacion`
---
-ALTER TABLE `certificacion`
-  MODIFY `id_certificacion` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `chat`
---
-ALTER TABLE `chat`
-  MODIFY `id_chat` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `credencial`
---
-ALTER TABLE `credencial`
-  MODIFY `credencial_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `denuncia`
---
-ALTER TABLE `denuncia`
-  MODIFY `id_denuncia` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `especialidad`
---
-ALTER TABLE `especialidad`
-  MODIFY `id_especialidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
-
---
--- AUTO_INCREMENT de la tabla `habilidad`
---
-ALTER TABLE `habilidad`
-  MODIFY `id_habilidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231;
-
---
--- AUTO_INCREMENT de la tabla `mensaje`
---
-ALTER TABLE `mensaje`
-  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `pago`
---
-ALTER TABLE `pago`
-  MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `permit`
---
-ALTER TABLE `permit`
-  MODIFY `id_permit` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `portfolio`
---
-ALTER TABLE `portfolio`
-  MODIFY `id_portfolio` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `presupuesto`
---
-ALTER TABLE `presupuesto`
-  MODIFY `id_presupuesto` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `rating`
---
-ALTER TABLE `rating`
-  MODIFY `id_rating` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `rol`
---
-ALTER TABLE `rol`
-  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de la tabla `rubro`
---
-ALTER TABLE `rubro`
-  MODIFY `id_rubro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `tecnico`
---
-ALTER TABLE `tecnico`
-  MODIFY `id_tecnico` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `trabajo`
---
-ALTER TABLE `trabajo`
-  MODIFY `id_trabajo` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `ubicacion`
---
-ALTER TABLE `ubicacion`
-  MODIFY `id_ubicacion` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `certificacion`
---
-ALTER TABLE `certificacion`
-  ADD CONSTRAINT `FK7knd03pi88tosb3wicxncp81c` FOREIGN KEY (`id_admin_revisor`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `FKr55m7box7l2l866en7plruduk` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`);
-
---
--- Filtros para la tabla `chat`
---
-ALTER TABLE `chat`
-  ADD CONSTRAINT `FK1yd9hrld2mou4jdaiqliu88ik` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `FKmfhjx839tw7b2tby5garfv576` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`);
-
---
--- Filtros para la tabla `credencial`
---
-ALTER TABLE `credencial`
-  ADD CONSTRAINT `FK2n9ltmbqhg4w8481ofpdhjp4t` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `credencial_rol`
---
-ALTER TABLE `credencial_rol`
-  ADD CONSTRAINT `FKoceysl0epyj5k3i59s9h6yej3` FOREIGN KEY (`credencial_id`) REFERENCES `credencial` (`credencial_id`),
-  ADD CONSTRAINT `FKpd4bekonnhadgw4hqjbf36jbx` FOREIGN KEY (`id_role`) REFERENCES `rol` (`id_role`);
-
---
--- Filtros para la tabla `denuncia`
---
-ALTER TABLE `denuncia`
-  ADD CONSTRAINT `FK4fc6ogyys8twtmu8uamo1ap16` FOREIGN KEY (`id_denunciado`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `FKedppucslrjcvkic9b9y8wc3pw` FOREIGN KEY (`administrador_encargado`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `FKpgm4jg3tw8vldkgfvik3i5d3p` FOREIGN KEY (`id_denunciante`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `especialidad_tecnico`
---
-ALTER TABLE `especialidad_tecnico`
-  ADD CONSTRAINT `FKh8c7bf8n16f69k0hya55orwg9` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`),
-  ADD CONSTRAINT `FKt7tjjghke4p5v3nauq8hnwjyb` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`);
-
---
--- Filtros para la tabla `habilidad_especialidad`
---
-ALTER TABLE `habilidad_especialidad`
-  ADD CONSTRAINT `FKotnte27wg97k0mnmi1wsv3a7r` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`),
-  ADD CONSTRAINT `FKpqylas7yu3b29b72h4tccwn6w` FOREIGN KEY (`id_habilidad`) REFERENCES `habilidad` (`id_habilidad`);
-
---
--- Filtros para la tabla `habilidad_tecnico`
---
-ALTER TABLE `habilidad_tecnico`
-  ADD CONSTRAINT `FK14s57rijv4u3rb3t7rfy3ot40` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`),
-  ADD CONSTRAINT `FK8kacwu0r6ef4ebyv938dih1mu` FOREIGN KEY (`id_habilidad`) REFERENCES `habilidad` (`id_habilidad`);
-
---
--- Filtros para la tabla `mensaje`
---
-ALTER TABLE `mensaje`
-  ADD CONSTRAINT `FKe19chdnxesv3itlf0v128hmrp` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
-  ADD CONSTRAINT `FKmipwrttnexwj61hkitg4sdvr2` FOREIGN KEY (`id_sender`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `pago`
---
-ALTER TABLE `pago`
-  ADD CONSTRAINT `FK4kawmu0llvo61fbd082fygrql` FOREIGN KEY (`id_trabajo`) REFERENCES `trabajo` (`id_trabajo`);
-
---
--- Filtros para la tabla `portfolio`
---
-ALTER TABLE `portfolio`
-  ADD CONSTRAINT `FK8yo07coyy7nwt4opjvim8l1o1` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`),
-  ADD CONSTRAINT `FKdtr49vtt968lp9uwgyblywbv7` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`);
-
---
--- Filtros para la tabla `presupuesto`
---
-ALTER TABLE `presupuesto`
-  ADD CONSTRAINT `FKccrpu7i0j1b5r9tgnq97xq6b4` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `FKdsmvld5uqkt421se9qph8co0e` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`),
-  ADD CONSTRAINT `FKsp432pndlhmxoinib1g0evcrd` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnico` (`id_tecnico`);
-
---
--- Filtros para la tabla `rating`
---
-ALTER TABLE `rating`
-  ADD CONSTRAINT `FK8t5gwjwghuueca87ulwejr6p8` FOREIGN KEY (`id_usuario_remitente`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `FKj4ctwpxjykxlpx1tc1p21sves` FOREIGN KEY (`id_usuario_destinatario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `rating_caracteristica`
---
-ALTER TABLE `rating_caracteristica`
-  ADD CONSTRAINT `FK3ctusiegyd3bkvmd5b8sjf90` FOREIGN KEY (`id_caracteristica`) REFERENCES `caracteristica` (`id_caracteristica`),
-  ADD CONSTRAINT `FK5po1jfnni5varu51d4uxsinmr` FOREIGN KEY (`id_rating`) REFERENCES `rating` (`id_rating`);
-
---
--- Filtros para la tabla `rubro_especialidad`
---
-ALTER TABLE `rubro_especialidad`
-  ADD CONSTRAINT `FKedxaioki15re2eih79kmp8qjj` FOREIGN KEY (`id_rubro`) REFERENCES `rubro` (`id_rubro`),
-  ADD CONSTRAINT `FKp9y0ajqia6j400foiu2t1lnc0` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`);
-
---
--- Filtros para la tabla `tecnico`
---
-ALTER TABLE `tecnico`
-  ADD CONSTRAINT `FKglsl21216xiqdl2rtw9nijyji` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `trabajo`
---
-ALTER TABLE `trabajo`
-  ADD CONSTRAINT `FKfx52xtnnowpsg4bp7ohm98jxo` FOREIGN KEY (`id_presupuesto`) REFERENCES `presupuesto` (`id_presupuesto`);
-
---
--- Filtros para la tabla `ubicacion`
---
-ALTER TABLE `ubicacion`
-  ADD CONSTRAINT `FKdcu2t0v1s5qeyc4vp197ravvw` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

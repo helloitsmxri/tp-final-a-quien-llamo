@@ -6,293 +6,604 @@ import com.aquienllamo.aquienllamo.administrador.exceptions.AdministradorNotFoun
 import com.aquienllamo.aquienllamo.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.auth.permissions.RolesUser;
 import com.aquienllamo.aquienllamo.auth.repositories.CredentialsRepository;
-import com.aquienllamo.aquienllamo.entidades.denuncia.enums.EstadoDenunciaE;
+import com.aquienllamo.aquienllamo.entidades.chat.entity.ChatEntity;
+import com.aquienllamo.aquienllamo.entidades.chat.exceptions.ChatNotFoundEx;
+import com.aquienllamo.aquienllamo.entidades.chat.repository.ChatRepository;
 import com.aquienllamo.aquienllamo.entidades.denuncia.dto.request.DenunciaDTORequest;
 import com.aquienllamo.aquienllamo.entidades.denuncia.dto.response.DenunciaDTOResponse;
+import com.aquienllamo.aquienllamo.entidades.denuncia.dto.response.DenunciaFotoDTO;
 import com.aquienllamo.aquienllamo.entidades.denuncia.entity.DenunciaEntity;
+import com.aquienllamo.aquienllamo.entidades.denuncia.enums.EstadoDenunciaE;
 import com.aquienllamo.aquienllamo.entidades.denuncia.exceptions.DenunciaNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.denuncia.exceptions.DenunciaResueltaEx;
 import com.aquienllamo.aquienllamo.entidades.denuncia.mapper.DenunciaMapper;
 import com.aquienllamo.aquienllamo.entidades.denuncia.repository.DenunciaRepository;
-import com.aquienllamo.aquienllamo.util.SecurityUtils;
-import com.aquienllamo.aquienllamo.entidades.chat.exceptions.ChatNotFoundEx;
-import com.aquienllamo.aquienllamo.entidades.chat.entity.ChatEntity;
-import com.aquienllamo.aquienllamo.exception.generales.ImageDataTypeNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
-import com.aquienllamo.aquienllamo.entidades.chat.repository.ChatRepository;
-
-import java.io.IOException;
-import java.util.List;
-
 import com.aquienllamo.aquienllamo.entidades.usuario.repository.UsuarioRepository;
+import com.aquienllamo.aquienllamo.exception.generales.ImageDataTypeNotFoundEx;
+import com.aquienllamo.aquienllamo.util.SecurityUtils;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class DenunciaService {
+
+    private static final String EMAIL_ADMINISTRACION =
+            "aquienllamoinfo@gmail.com";
+
+    private static final String URL_BASE =
+            "http://localhost:8080/aquienllamo/denuncias/";
+
     private final DenunciaRepository denunciaRepository;
     private final DenunciaMapper denunciaMapper;
     private final UsuarioRepository usuarioRepository;
     private final ChatRepository chatRepository;
     private final EmailService emailService;
     private final CredentialsRepository credentialsRepository;
-    //crear
-    public DenunciaDTOResponse crearDenuncia(DenunciaDTORequest denuncia, String uuidChat){
-        //obtener usuario logueado
-        CredentialsEntity cred =
-                (CredentialsEntity) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
 
-        UsuarioEntity denunciante = cred.getUsuario();
 
-        //obtener el chat y sacar el denunciado
-        ChatEntity chat=chatRepository.findByUuidChat(uuidChat)
-                .orElseThrow(()-> new ChatNotFoundEx("el chat con ese uuid no se encontro"));
+    // CREAR DENUNCIA DESDE UN CHAT
+
+    public DenunciaDTOResponse crearDenuncia(
+            DenunciaDTORequest dto,
+            String uuidChat
+    ) {
+
+        UsuarioEntity denunciante = obtenerUsuarioActual();
+
+        ChatEntity chat = chatRepository.findByUuidChat(uuidChat)
+                .orElseThrow(() ->
+                        new ChatNotFoundEx("No se encontró el chat indicado.")
+                );
+
+        UsuarioEntity usuarioDelChat = chat.getUsuario();
+
+        UsuarioEntity tecnicoDelChat =
+                chat.getTecnico().getUsuario();
 
         UsuarioEntity denunciado;
 
-        if (chat.getUsuario().getUuid().equals(denunciante.getUuid())) {
-            denunciado=chat.getTecnico().getUsuario();
-        }else {
-            denunciado=chat.getUsuario();
+        if (usuarioDelChat.getUuid().equals(denunciante.getUuid())) {
+
+            denunciado = tecnicoDelChat;
+
+        } else if (tecnicoDelChat.getUuid().equals(denunciante.getUuid())) {
+
+            denunciado = usuarioDelChat;
+
+        } else {
+
+            throw new AccessDeniedException(
+                    "No participás de este chat."
+            );
         }
 
-        DenunciaEntity nueva=denunciaMapper.toEntity(denuncia);
-        nueva.setEstadoDenuncia(EstadoDenunciaE.Pendiente);
+        return guardarNuevaDenuncia(
+                dto,
+                denunciante,
+                denunciado
+        );
+    }
+
+
+    // CREAR DENUNCIA DESDE EL PERFIL DE OTRO USUARIO
+
+    public DenunciaDTOResponse crearDenunciaDesdePerfil(
+            DenunciaDTORequest dto,
+            String uuidDenunciado
+    ) {
+
+        UsuarioEntity denunciante = obtenerUsuarioActual();
+
+        UsuarioEntity denunciado = usuarioRepository
+                .findByUuid(uuidDenunciado)
+                .orElseThrow(() ->
+                        new DenunciaNotFoundEx(
+                                "No se encontró el usuario que querés denunciar."
+                        )
+                );
+
+        return guardarNuevaDenuncia(
+                dto,
+                denunciante,
+                denunciado
+        );
+    }
+
+
+    // METODO COMPARTIDO PARA GUARDAR UNA DENUNCIA
+
+    private DenunciaDTOResponse guardarNuevaDenuncia(
+            DenunciaDTORequest dto,
+            UsuarioEntity denunciante,
+            UsuarioEntity denunciado
+    ) {
+
+        if (denunciante.getUuid().equals(denunciado.getUuid())) {
+
+            throw new AccessDeniedException(
+                    "No podés denunciar tu propia cuenta."
+            );
+        }
+
+        DenunciaEntity nueva = denunciaMapper.toEntity(dto);
+
         nueva.setDenunciante(denunciante);
         nueva.setDenunciado(denunciado);
 
-        if (denuncia.getFoto()!=null && !denuncia.getFoto().isEmpty()){
+        nueva.setEstadoDenuncia(EstadoDenunciaE.Pendiente);
+
+        // La columna fecha_denuncia es NOT NULL y no tiene DEFAULT.
+        nueva.setFechaDenuncia(LocalDateTime.now());
+
+        if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+
             try {
-                nueva.setFoto(denuncia.getFoto().getBytes());
-                nueva.setTipoFoto(denuncia.getFoto().getContentType());
-            }catch (IOException ex){
-                throw new ImageDataTypeNotFoundEx("Error al procesar la foto");
+
+                nueva.setFoto(dto.getFoto().getBytes());
+
+                nueva.setTipoFoto(
+                        dto.getFoto().getContentType()
+                );
+
+            } catch (IOException ex) {
+
+                throw new ImageDataTypeNotFoundEx(
+                        "No se pudo procesar la foto adjunta."
+                );
             }
         }
-        
-        denunciaRepository.save(nueva);
-        emailService.enviarDenunciaAdmin("aquienllamoinfo@gmail.com", nueva.getUuid());
-        emailService.enviarSeCreoDenunciaDenunciante(denunciante.getEmail(), denunciante.getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + nueva.getUuid());
-        emailService.enviarSeCreoDenunciaDenunciado(denunciado.getEmail(), denunciado.getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + nueva.getUuid());
-        return denunciaMapper.toResponse(nueva);
+
+        DenunciaEntity guardada =
+                denunciaRepository.save(nueva);
+
+        emailService.enviarDenunciaAdmin(
+                EMAIL_ADMINISTRACION,
+                guardada.getUuid()
+        );
+
+        emailService.enviarSeCreoDenunciaDenunciante(
+                denunciante.getEmail(),
+                denunciante.getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        emailService.enviarSeCreoDenunciaDenunciado(
+                denunciado.getEmail(),
+                denunciado.getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        return denunciaMapper.toResponse(guardada);
     }
 
-    //listar denuncias
-    public List<DenunciaDTOResponse> listarDenuncias(){
+
+    // LISTAR TODAS LAS DENUNCIAS: ADMINISTRACIÓN
+
+    public List<DenunciaDTOResponse> listarDenuncias() {
+
         return denunciaRepository.findAll()
                 .stream()
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
 
-    //buscar por uuid
-    public DenunciaDTOResponse buscarPorUuid(String uuid){
-        return denunciaRepository.findByUuid(uuid)
-                .map(denunciaMapper::toResponse)
-                .orElseThrow(()-> new DenunciaNotFoundEx("no se encontro la denuncia con ese uuid"));
+
+    // BUSCAR UNA DENUNCIA POR UUID
+
+    public DenunciaDTOResponse buscarPorUuid(String uuid) {
+
+        DenunciaEntity denuncia = obtenerDenuncia(uuid);
+
+        validarAccesoDenuncia(denuncia);
+
+        return denunciaMapper.toResponse(denuncia);
     }
 
-    //listar por estado
-    public List<DenunciaDTOResponse> listarPorEstado(EstadoDenunciaE estado){
+
+    // LISTAR POR ESTADO
+
+    public List<DenunciaDTOResponse> listarPorEstado(
+            EstadoDenunciaE estado
+    ) {
+
         return denunciaRepository.findByEstadoDenuncia(estado)
                 .stream()
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
 
-    //eliminar
-    public void eliminarDenuncia(String uuid){
-        DenunciaEntity denuncia=denunciaRepository.findByUuid(uuid)
-                .orElseThrow(()-> new DenunciaNotFoundEx("no se encontro la denuncia con ese uuid"));
-        denunciaRepository.delete(denuncia);
+
+    // ASIGNAR ADMINISTRADOR
+
+    public DenunciaDTOResponse asignarAdministrador(
+            String uuidDenuncia,
+            String uuidAdmin
+    ) {
+
+        DenunciaEntity denuncia = obtenerDenuncia(uuidDenuncia);
+
+        if (denuncia.getAdministrador() != null) {
+
+            throw new AdminAsignadoDenunciaEx(
+                    "La denuncia ya tiene un administrador asignado."
+            );
+        }
+
+        if (denuncia.getEstadoDenuncia() != EstadoDenunciaE.Pendiente) {
+
+            throw new DenunciaResueltaEx(
+                    "Solo se pueden asignar denuncias pendientes."
+            );
+        }
+
+        UsuarioEntity administrador = usuarioRepository
+                .findByUuid(uuidAdmin)
+                .orElseThrow(() ->
+                        new AdministradorNotFoundEx(
+                                "No se encontró el administrador indicado."
+                        )
+                );
+
+        CredentialsEntity credencialesAdmin =
+                credentialsRepository.findByUsuario(administrador)
+                        .orElseThrow(() ->
+                                new AdministradorNotFoundEx(
+                                        "El usuario indicado no tiene credenciales."
+                                )
+                        );
+
+        if (!esAdministrador(credencialesAdmin)) {
+
+            throw new AdministradorNotFoundEx(
+                    "Solo se puede asignar una denuncia a un administrador o superadministrador."
+            );
+        }
+
+        denuncia.setAdministrador(administrador);
+
+        denuncia.setEstadoDenuncia(
+                EstadoDenunciaE.En_proceso
+        );
+
+        DenunciaEntity guardada =
+                denunciaRepository.save(denuncia);
+
+        emailService.enviarSeAsignoUnAdmin(
+                guardada.getDenunciante().getEmail(),
+                guardada.getDenunciante().getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        emailService.enviarSeAsignoUnAdmin2(
+                guardada.getDenunciado().getEmail(),
+                guardada.getDenunciado().getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        return denunciaMapper.toResponse(guardada);
     }
 
-    //actualizar
-//    public DenunciaDTOResponse actualizarDenuncia(String uuid, DenunciaDTORequest denuncia){
-//        DenunciaEntity nueva=denunciaRepository.findByUuid(uuid)
-//                .orElseThrow(()-> new DenunciaNotFoundEx("no se encontro la denuncia con ese uuid"));
-//        if (denuncia.getMotivoDenuncia()!=null){
-//            nueva.setMotivoDenuncia(denuncia.getMotivoDenuncia());
-//        }
-//        if (denuncia.getFoto() != null && !denuncia.getFoto().isEmpty()) {
-//            try {
-//                nueva.setFoto(denuncia.getFoto().getBytes());
-//                nueva.setTipoFoto(denuncia.getFoto().getContentType());
-//            } catch (IOException ex) {
-//                throw new ImageDataTypeNotFoundEx("Error al procesar la foto");
-//            }
-//        }
-//        return denunciaMapper.toResponse(denunciaRepository.save(nueva));
-//    }
 
-    //asignar admin a denuncia
-    public DenunciaDTOResponse asignarAdministrador(String uuidDenuncia, String uuidAdmin){
-        DenunciaEntity denuncia=denunciaRepository.findByUuid(uuidDenuncia)
-                .orElseThrow(()-> new DenunciaNotFoundEx("No se encontro la denuncia con ese uuid"));
+    // DENUNCIAS SIN ASIGNAR
 
-        if (denuncia.getAdministrador()!=null){
-            throw new AdminAsignadoDenunciaEx("La denuncia ya tiene un administrador asignado");
-        }
+    public List<DenunciaDTOResponse> obtenerDenunciasSinAsignar() {
 
-        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Rechazada || denuncia.getEstadoDenuncia()==EstadoDenunciaE.Aprobada){
-            throw new DenunciaResueltaEx("No se puede asignar una denuncia ya resuelta.");
-        }
-
-        UsuarioEntity admin=usuarioRepository.findByUuid(uuidAdmin)
-                .orElseThrow(()-> new AdministradorNotFoundEx("No se encontro el administrador con ese uuid"));
-
-        CredentialsEntity credentialAdmin = credentialsRepository.findByUsuario(admin)
-                .orElseThrow(()-> new AdministradorNotFoundEx("No se encontro el administrador con ese uuid"));
-
-        if(!credentialAdmin.hasRole(RolesUser.ROLE_ADMINISTRADOR) || !credentialAdmin.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
-            throw new RuntimeException("No se le puede asignar la denuncia a un usuario que no tenga el rol administrador.");
-        }
-
-
-
-
-        denuncia.setAdministrador(admin);
-        denuncia.setEstadoDenuncia(EstadoDenunciaE.En_proceso);
-        DenunciaEntity denunciaGuardada=denunciaRepository.save(denuncia);
-        emailService.enviarSeAsignoUnAdmin(denunciaGuardada.getDenunciante().getEmail(), denunciaGuardada.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denunciaGuardada.getUuid());
-        emailService.enviarSeAsignoUnAdmin2(denunciaGuardada.getDenunciado().getEmail(), denunciaGuardada.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denunciaGuardada.getUuid());
-        return denunciaMapper.toResponse(denunciaRepository.save(denuncia));
-    }
-
-    //mostrar denuncias sin admin asignado
-    public List<DenunciaDTOResponse> obtenerDenunciasSinAsignar(){
         return denunciaRepository.findByAdministradorIsNull()
                 .stream()
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
 
-    //aprobar denuncia
-    public DenunciaDTOResponse aprobarDenuncia(String uuidDenuncia, String mensaje){
 
-        DenunciaEntity denuncia=denunciaRepository.findByUuid(uuidDenuncia)
-                .orElseThrow(()-> new DenunciaNotFoundEx("No se encontro la denuncia con ese uuid"));
+    // APROBAR DENUNCIA
 
-        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Aprobada){
-            throw new DenunciaResueltaEx("La denuncia ya esta aprobada.");
-        }
+    public DenunciaDTOResponse aprobarDenuncia(
+            String uuidDenuncia,
+            String mensaje
+    ) {
 
-        if (denuncia.getEstadoDenuncia()==EstadoDenunciaE.Rechazada){
-            throw new DenunciaResueltaEx("La denuncia no se puede aprobar porque fue rechazada anteriormente.");
-        }
+        DenunciaEntity denuncia = obtenerDenuncia(uuidDenuncia);
 
-        if (denuncia.getAdministrador() == null) {
-            throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
-        }
+        validarPermisoParaResolver(denuncia);
 
-        CredentialsEntity usuarioLogueado = SecurityUtils.getCurrentCredentials();
+        denuncia.setEstadoDenuncia(
+                EstadoDenunciaE.Aprobada
+        );
 
-
-        if(!usuarioLogueado.hasRole(RolesUser.ROLE_ADMINISTRADOR) && !usuarioLogueado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
-            throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
-        }
-
-        UsuarioEntity admin = SecurityUtils.getCurrentUser();
-
-        if (!denuncia.getAdministrador().getUuid().equals(admin.getUuid())){
-            throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
-        }
-
-        denuncia.setEstadoDenuncia(EstadoDenunciaE.Aprobada);
         denuncia.setNotaDelAdmin(mensaje);
-        denunciaRepository.save(denuncia);
-        emailService.enviarDenunciaAprobadaDenunciante(denuncia.getDenunciante().getEmail(), denuncia.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
-        emailService.enviarDenunciaAprobadaDenunciado(denuncia.getDenunciado().getEmail(),  denuncia.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
-        return denunciaMapper.toResponse(denuncia);
+
+        DenunciaEntity guardada =
+                denunciaRepository.save(denuncia);
+
+        emailService.enviarDenunciaAprobadaDenunciante(
+                guardada.getDenunciante().getEmail(),
+                guardada.getDenunciante().getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        emailService.enviarDenunciaAprobadaDenunciado(
+                guardada.getDenunciado().getEmail(),
+                guardada.getDenunciado().getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        return denunciaMapper.toResponse(guardada);
     }
 
-    // rechazar denuncia
-    public DenunciaDTOResponse rechazarDenuncia(String uuidDenuncia, String mensaje){
-        DenunciaEntity denuncia = denunciaRepository.findByUuid(uuidDenuncia)
-                .orElseThrow(() -> new DenunciaNotFoundEx("No se encontró una denuncia."));
 
-        if (denuncia.getEstadoDenuncia() != EstadoDenunciaE.En_proceso){
-            throw new DenunciaResueltaEx("La denuncia debe estar en proceso para ser resuelta.");
-        }
+    // RECHAZAR DENUNCIA
 
-        if (denuncia.getAdministrador() == null) {
-            throw new AdministradorNotFoundEx("No hay administrador asignado a esta denuncia.");
-        }
-        CredentialsEntity usuarioLogueado = SecurityUtils.getCurrentCredentials();
+    public DenunciaDTOResponse rechazarDenuncia(
+            String uuidDenuncia,
+            String mensaje
+    ) {
 
+        DenunciaEntity denuncia = obtenerDenuncia(uuidDenuncia);
 
-        if(!usuarioLogueado.hasRole(RolesUser.ROLE_ADMINISTRADOR) && !usuarioLogueado.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR)){
-            throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
-        }
+        validarPermisoParaResolver(denuncia);
 
-        UsuarioEntity admin = SecurityUtils.getCurrentUser();
+        denuncia.setEstadoDenuncia(
+                EstadoDenunciaE.Rechazada
+        );
 
-
-        if (!denuncia.getAdministrador().getUuid().equals(admin.getUuid())){
-            throw new AdminAsignadoDenunciaEx("Solo el administrador asignado puede aprobar esta denuncia.");
-        }
-
-        denuncia.setEstadoDenuncia(EstadoDenunciaE.Rechazada);
         denuncia.setNotaDelAdmin(mensaje);
-        denunciaRepository.save(denuncia);
-        emailService.enviarDenunciaRechazadaDenunciante(denuncia.getDenunciante().getEmail(), denuncia.getDenunciante().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
-        emailService.enviarDenunciaRechazadaDenunciado(denuncia.getDenunciado().getEmail(), denuncia.getDenunciado().getNombre(), "http://localhost:8080/aquienllamo/denuncias/" + denuncia.getUuid());
-        return denunciaMapper.toResponse(denuncia);
+
+        DenunciaEntity guardada =
+                denunciaRepository.save(denuncia);
+
+        emailService.enviarDenunciaRechazadaDenunciante(
+                guardada.getDenunciante().getEmail(),
+                guardada.getDenunciante().getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        emailService.enviarDenunciaRechazadaDenunciado(
+                guardada.getDenunciado().getEmail(),
+                guardada.getDenunciado().getNombre(),
+                URL_BASE + guardada.getUuid()
+        );
+
+        return denunciaMapper.toResponse(guardada);
     }
 
-    public List<DenunciaDTOResponse> denunciasMasViejasPrimero(){
+
+    // VALIDAR QUIÉN PUEDE RESOLVER UNA DENUNCIA
+
+    private void validarPermisoParaResolver(
+            DenunciaEntity denuncia
+    ) {
+
+        if (denuncia.getEstadoDenuncia()
+                != EstadoDenunciaE.En_proceso) {
+
+            throw new DenunciaResueltaEx(
+                    "La denuncia debe estar en proceso y todavía no debe haber sido resuelta."
+            );
+        }
+
+        CredentialsEntity credenciales =
+                SecurityUtils.getCurrentCredentials();
+
+        if (!esAdministrador(credenciales)) {
+
+            throw new AccessDeniedException(
+                    "La cuenta no tiene permisos de administración."
+            );
+        }
+
+        boolean esSuperadministrador =
+                credenciales.hasRole(
+                        RolesUser.ROLE_SUPERADMINISTRADOR
+                );
+
+        String uuidAdminActual =
+                credenciales.getUsuario().getUuid();
+
+        if (!esSuperadministrador
+                && (denuncia.getAdministrador() == null
+                || !denuncia.getAdministrador()
+                .getUuid()
+                .equals(uuidAdminActual))) {
+
+            throw new AdminAsignadoDenunciaEx(
+                    "Solo el administrador asignado puede resolver esta denuncia."
+            );
+        }
+    }
+
+
+    // ORDENAR DENUNCIAS
+
+    public List<DenunciaDTOResponse> denunciasMasViejasPrimero() {
+
         return denunciaRepository.findAllByOrderByFechaDenunciaAsc()
                 .stream()
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
 
-    public List<DenunciaDTOResponse> denunciasMasNuevasPrimero(){
+    public List<DenunciaDTOResponse> denunciasMasNuevasPrimero() {
+
         return denunciaRepository.findAllByOrderByFechaDenunciaDesc()
                 .stream()
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
 
-    // pendientes sin asignar
-    public List<DenunciaDTOResponse> denunciasSinAsignar(){
-        return denunciaRepository.findByAdministradorIsNull()
+
+    // DENUNCIAS QUE REALIZÓ EL USUARIO AUTENTICADO
+
+    public List<DenunciaDTOResponse> misDenunciasCreadas() {
+
+        String uuidUsuario =
+                obtenerUsuarioActual().getUuid();
+
+        return denunciaRepository
+                .findByDenunciante_UuidOrderByFechaDenunciaDesc(
+                        uuidUsuario
+                )
                 .stream()
                 .map(denunciaMapper::toResponse)
                 .toList();
     }
 
 
-    public List<DenunciaDTOResponse> misDenuncias(EstadoDenunciaE estado){
+    // DENUNCIAS QUE RECIBIÓ EL USUARIO AUTENTICADO
 
-        CredentialsEntity cred =
-                (CredentialsEntity) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+    public List<DenunciaDTOResponse> misDenunciasRecibidas() {
 
-
-        UsuarioEntity adminLogueado = cred.getUsuario();
-
-        if (!cred.hasRole(RolesUser.ROLE_SUPERADMINISTRADOR) && !cred.hasRole(RolesUser.ROLE_ADMINISTRADOR)) {
-            throw new AdministradorNotFoundEx("La cuenta no pertenece a un administrador.");
-        }
+        String uuidUsuario =
+                obtenerUsuarioActual().getUuid();
 
         return denunciaRepository
-                .findByAdministradorUuidAndEstadoDenuncia(
-                        adminLogueado.getUuid(),
-                        estado
+                .findByDenunciado_UuidOrderByFechaDenunciaDesc(
+                        uuidUsuario
                 )
                 .stream()
                 .map(denunciaMapper::toResponse)
                 .toList();
+    }
+
+
+    // DENUNCIAS ASIGNADAS AL ADMINISTRADOR AUTENTICADO
+
+    public List<DenunciaDTOResponse> misDenuncias(
+            EstadoDenunciaE estado
+    ) {
+
+        CredentialsEntity credenciales =
+                SecurityUtils.getCurrentCredentials();
+
+        if (!esAdministrador(credenciales)) {
+
+            throw new AccessDeniedException(
+                    "La cuenta no pertenece a un administrador."
+            );
+        }
+
+        String uuidAdmin =
+                credenciales.getUsuario().getUuid();
+
+        List<DenunciaEntity> denuncias;
+
+        if (estado == null) {
+
+            denuncias =
+                    denunciaRepository.findByAdministradorUuid(
+                            uuidAdmin
+                    );
+
+        } else {
+
+            denuncias =
+                    denunciaRepository.findByAdministradorUuidAndEstadoDenuncia(
+                            uuidAdmin,
+                            estado
+                    );
+        }
+
+        return denuncias.stream()
+                .map(denunciaMapper::toResponse)
+                .toList();
+    }
+
+
+    // MÉTODOS AUXILIARES
+
+    private DenunciaEntity obtenerDenuncia(String uuid) {
+
+        return denunciaRepository.findByUuid(uuid)
+                .orElseThrow(() ->
+                        new DenunciaNotFoundEx(
+                                "No se encontró la denuncia con ese UUID."
+                        )
+                );
+    }
+
+    private UsuarioEntity obtenerUsuarioActual() {
+
+        return SecurityUtils.getCurrentUser();
+    }
+
+    private boolean esAdministrador(
+            CredentialsEntity credenciales
+    ) {
+
+        return credenciales.hasRole(
+                RolesUser.ROLE_ADMINISTRADOR
+        )
+                ||
+                credenciales.hasRole(
+                        RolesUser.ROLE_SUPERADMINISTRADOR
+                );
+    }
+
+    // OBTENER FOTO DE UNA DENUNCIA
+
+    public DenunciaFotoDTO obtenerFoto(String uuid) {
+
+        DenunciaEntity denuncia = obtenerDenuncia(uuid);
+
+        // Verificar que el usuario tenga permiso para consultar la denuncia.
+        validarAccesoDenuncia(denuncia);
+
+        // Verificar que exista una foto.
+        if (denuncia.getFoto() == null || denuncia.getFoto().length == 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Esta denuncia no tiene una foto adjunta."
+            );
+        }
+
+        String tipoContenido = denuncia.getTipoFoto();
+
+        if (tipoContenido == null || tipoContenido.isBlank()) {
+            tipoContenido = "application/octet-stream";
+        }
+
+        return new DenunciaFotoDTO(
+                denuncia.getFoto(),
+                tipoContenido
+        );
+    }
+
+    // VALIDAR ACCESO A UNA DENUNCIA
+
+    private void validarAccesoDenuncia(DenunciaEntity denuncia) {
+
+        CredentialsEntity credenciales =
+                SecurityUtils.getCurrentCredentials();
+
+        boolean esAdmin = esAdministrador(credenciales);
+
+        String uuidUsuarioActual =
+                credenciales.getUsuario().getUuid();
+
+        boolean esParticipante =
+                denuncia.getDenunciante().getUuid()
+                        .equals(uuidUsuarioActual)
+                        ||
+                        denuncia.getDenunciado().getUuid()
+                                .equals(uuidUsuarioActual);
+
+        if (!esAdmin && !esParticipante) {
+            throw new AccessDeniedException(
+                    "No tenés permiso para consultar esta denuncia."
+            );
+        }
     }
 
 }

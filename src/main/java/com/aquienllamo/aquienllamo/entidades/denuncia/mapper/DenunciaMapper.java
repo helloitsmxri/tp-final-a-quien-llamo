@@ -11,21 +11,33 @@ public class DenunciaMapper {
 
         return DenunciaDTOResponse.builder()
                 .uuid(denuncia.getUuid())
-                .nombreAdministrador(
-                        denuncia.getAdministrador() != null
-                                ? denuncia.getAdministrador().getNombre()
-                                : null
+                .uuidAdministrador(denuncia.getAdministrador() != null
+                                    ? denuncia.getAdministrador().getUuid()
+                                    : null
                 )
+                .nombreAdministrador(denuncia.getAdministrador() != null
+                                    ? denuncia.getAdministrador().getNombre()
+                                    : null)
+                .uuidDenunciante(denuncia.getDenunciante().getUuid())
                 .nombreDenunciante(denuncia.getDenunciante().getNombre())
                 .apellidoDenunciante(denuncia.getDenunciante().getApellido())
                 .emailDenunciante(denuncia.getDenunciante().getEmail())
+
+                .uuidDenunciado(denuncia.getDenunciado().getUuid())
                 .nombreDenunciado(denuncia.getDenunciado().getNombre())
                 .apellidoDenunciado(denuncia.getDenunciado().getApellido())
                 .emailDenunciado(denuncia.getDenunciado().getEmail())
+
                 .estadoDenuncia(denuncia.getEstadoDenuncia())
                 .motivoDenuncia(denuncia.getMotivoDenuncia())
                 .notaDelAdmin(denuncia.getNotaDelAdmin())
                 .fechaDenuncia(denuncia.getFechaDenuncia())
+
+                .tieneFoto(
+                        denuncia.getFoto() != null
+                        && denuncia.getFoto().length > 0
+                )
+                .tipoFoto(denuncia.getTipoFoto())
                 .build();
     }
 

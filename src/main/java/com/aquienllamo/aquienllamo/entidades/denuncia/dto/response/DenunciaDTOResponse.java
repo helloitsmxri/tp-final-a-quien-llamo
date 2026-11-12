@@ -13,12 +13,15 @@ import java.time.LocalDateTime;
 public class DenunciaDTOResponse {
     private String uuid;
 
+    private String uuidAdministrador;
     private String nombreAdministrador;
 
+    private String uuidDenunciante;
     private String nombreDenunciante;
     private String apellidoDenunciante;
     private String emailDenunciante;
 
+    private String uuidDenunciado;
     private String nombreDenunciado;
     private String apellidoDenunciado;
     private String emailDenunciado;
@@ -29,5 +32,8 @@ public class DenunciaDTOResponse {
     private String notaDelAdmin;
 
     private LocalDateTime fechaDenuncia;
+
+    private boolean tieneFoto;
+    private String tipoFoto;
 
 }
