@@ -1,11 +1,16 @@
 package com.aquienllamo.aquienllamo.administrador;
 
 import com.aquienllamo.aquienllamo.administrador.dto.request.AsignRolDTORequest;
+import com.aquienllamo.aquienllamo.administrador.dto.response.AdministradorDTOResponse;
+import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/aquienllamo/administradores")
@@ -62,4 +67,11 @@ public class AdministradorController {
     public String quitarBaja(@PathVariable String uuid){
         return administradorService.quitarBaja(uuid);
     }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SUPERADMINISTRADOR')")
+    public ResponseEntity<List<AdministradorDTOResponse>> obtenerAdministradores() {
+        return ResponseEntity.ok(administradorService.obtenerAdministradores());
+    }
 }
+

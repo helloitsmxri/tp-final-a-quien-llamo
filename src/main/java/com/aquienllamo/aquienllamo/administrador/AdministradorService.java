@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.administrador;
 
 import com.aquienllamo.aquienllamo.APIs.GoogleGmail.EmailService;
 import com.aquienllamo.aquienllamo.administrador.dto.request.AsignRolDTORequest;
+import com.aquienllamo.aquienllamo.administrador.dto.response.AdministradorDTOResponse;
 import com.aquienllamo.aquienllamo.auth.credentials.CredentialsEntity;
 import com.aquienllamo.aquienllamo.auth.permissions.RoleEntity;
 import com.aquienllamo.aquienllamo.auth.permissions.RolesUser;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -169,6 +171,21 @@ public class AdministradorService {
         usuarioRepository.save(user);
 
         return "Se le ha quitado exitosamente la suspensión al usuario.";
+    }
+
+    public List<AdministradorDTOResponse> obtenerAdministradores() {
+
+        return credentialsRepository
+                .findAllByRoles_Role(RolesUser.ROLE_ADMINISTRADOR)
+                .stream()
+                .filter(credencial -> credencial.getUsuario() != null)
+                .map(credencial -> AdministradorDTOResponse.builder()
+                        .uuid(credencial.getUsuario().getUuid())
+                        .nombreUsuario(credencial.getUsuario().getNombre())
+                        .apellidoUsuario(credencial.getUsuario().getApellido())
+                        .emailUsuario(credencial.getUsuario().getEmail())
+                        .build())
+                .toList();
     }
 
 }

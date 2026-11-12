@@ -9,5 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class AdministradorDTOResponse {
+    private String uuid;
     private String nombreUsuario;
+    private String apellidoUsuario;
+    private String emailUsuario;
 }
