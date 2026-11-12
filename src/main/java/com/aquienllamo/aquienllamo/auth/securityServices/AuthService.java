@@ -137,7 +137,7 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
                 .orElseThrow(() -> new UsernameNotFoundException("No se encontró el usuario en el sistema."));
 
         String token = jwtService.generatePasswordResetToken(cred);
-        String enlace = "http://localhost:3000/reset-password?token=" + token;
+        String enlace = "http://localhost:4200/reset-password?token=" + token;
 
         emailService.enviarRecuperacionClave(req.getEmail(), enlace);
     }

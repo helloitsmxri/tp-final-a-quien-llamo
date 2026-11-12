@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.entidades.certificacion.controller;
 
 import com.aquienllamo.aquienllamo.administrador.enums.EstadoVerificacion;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTOActualizarRequest;
+import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.response.CertificacionPublicaDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.certificacion.service.CertificacionService;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.request.CertificacionDTORequest;
 import com.aquienllamo.aquienllamo.entidades.certificacion.dtos.response.CertificacionDTOResponse;
@@ -75,9 +76,12 @@ public class CertificacionController {
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PatchMapping("/rechazar/{uuid}")
-    public ResponseEntity<CertificacionDTOResponse> rechazarCertificacion(@PathVariable String uuid, @RequestParam String motivo){
+    public ResponseEntity<CertificacionDTOResponse> rechazarCertificacion(@PathVariable String uuid, @RequestParam String motivo) {
         return ResponseEntity.ok(certificacionService.rechazarCertificacion(uuid, motivo));
     }
 
-
+    @GetMapping("/publico/tecnico/{uuidTecnico}")
+    public ResponseEntity<List<CertificacionPublicaDTOResponse>> certificacionesPublicas(@PathVariable String uuidTecnico){
+        return ResponseEntity.ok(certificacionService.obtenerPublicas(uuidTecnico));
+    }
 }
