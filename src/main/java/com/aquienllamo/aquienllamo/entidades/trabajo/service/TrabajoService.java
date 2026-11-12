@@ -10,15 +10,18 @@ import com.aquienllamo.aquienllamo.entidades.trabajo.dto.response.TrabajoDTOResp
 import com.aquienllamo.aquienllamo.entidades.trabajo.entity.TrabajoEntity;
 import com.aquienllamo.aquienllamo.entidades.trabajo.enums.EstadoTrabajo;
 import com.aquienllamo.aquienllamo.entidades.trabajo.exceptions.TrabajoAlreadyExistsEx;
+import com.aquienllamo.aquienllamo.entidades.trabajo.exceptions.TrabajoNotAcceptedEx;
 import com.aquienllamo.aquienllamo.entidades.trabajo.exceptions.TrabajoNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.trabajo.mapper.TrabajoMapper;
 import com.aquienllamo.aquienllamo.entidades.trabajo.repository.TrabajoRepository;
 import com.aquienllamo.aquienllamo.entidades.usuario.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -27,86 +30,182 @@ public class TrabajoService {
 
     private final TrabajoRepository trabajoRepository;
     private final PresupuestoRepository presupuestoRepository;
-    private final UsuarioRepository  usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
     private final EmailService emailService;
 
-    //crear un trabajo
-    public TrabajoDTOResponse crearTrabajo (TrabajoDTORequest trabajoDTORequest) {
+    public TrabajoDTOResponse crearTrabajo(
+            TrabajoDTORequest request,
+            String emailTecnico) {
 
-        PresupuestoEntity presupuesto = presupuestoRepository.findByUuid(trabajoDTORequest.getUuidPresupuesto())
-                .orElseThrow(()-> new PresupuestoNotFoundEx("ERROR: El presupuesto ingresado no existe."));
+        PresupuestoEntity presupuesto = presupuestoRepository
+                .findByUuid(request.getUuidPresupuesto())
+                .orElseThrow(() -> new PresupuestoNotFoundEx(
+                        "ERROR: El presupuesto ingresado no existe."));
 
-        if(!presupuesto.getEstado().equals(EstadoPresupuestoE.Aceptado)){
-            throw new PresupuestoNotFoundEx("ERROR: Solo se pueden crear trabajos con presupuestos aceptados.");
+        // Verificamos que el técnico del presupuesto sea quien realiza la solicitud.
+        if (presupuesto.getTecnico() == null ||
+                presupuesto.getTecnico().getUsuario() == null ||
+                !Objects.equals(
+                        presupuesto.getTecnico().getUsuario().getEmail(),
+                        emailTecnico)) {
+
+            throw new AccessDeniedException(
+                    "Solo el tecnico de este presupuesto puede crear el trabajo.");
         }
 
-        if(trabajoRepository.existsByPresupuestoUuid(trabajoDTORequest.getUuidPresupuesto())){
+        // El presupuesto debe estar aceptado.
+        if (presupuesto.getEstado() != EstadoPresupuestoE.Aceptado) {
+            throw new PresupuestoNotFoundEx(
+                    "ERROR: Solo se pueden crear trabajos con presupuestos aceptados.");
+        }
+
+        // Un presupuesto solamente puede tener un trabajo.
+        if (trabajoRepository.existsByPresupuestoUuid(request.getUuidPresupuesto())) {
             throw new TrabajoAlreadyExistsEx("ERROR: El trabajo ya existe.");
         }
 
-        TrabajoEntity trabajo = TrabajoMapper.toEntity(trabajoDTORequest,presupuesto);
+        TrabajoEntity trabajo = TrabajoMapper.toEntity(request, presupuesto);
+
+        // El estado inicial siempre lo establece el backend.
         trabajo.setEstadoTrabajo(EstadoTrabajo.Pendiente);
 
         trabajoRepository.save(trabajo);
-        emailService.enviarTrabajoCreado(presupuesto.getUsuario().getEmail(), trabajo.getDescripcionTrabajo());
-        return TrabajoMapper.toResponse(trabajo);
 
+        // Notificamos al cliente.
+        emailService.enviarTrabajoCreado(
+                presupuesto.getUsuario().getEmail(),
+                trabajo.getDescripcionTrabajo()
+        );
+
+        return TrabajoMapper.toResponse(trabajo);
     }
 
-    //listar todos los trabajos
-    public List<TrabajoDTOResponse> listarTrabajos(){
+    public List<TrabajoDTOResponse> listarTrabajos() {
         return trabajoRepository.findAll()
                 .stream()
                 .map(TrabajoMapper::toResponse)
                 .toList();
     }
 
-    //listar trabajo por estado de trabajo
-    public List<TrabajoDTOResponse> listarTrabajoPorEstadoTrabajo(EstadoTrabajo estadoTrabajo){
+    public List<TrabajoDTOResponse> listarTrabajoPorEstadoTrabajo(
+            EstadoTrabajo estadoTrabajo) {
+
         return trabajoRepository.findAllByEstadoTrabajo(estadoTrabajo)
                 .stream()
                 .map(TrabajoMapper::toResponse)
                 .toList();
     }
 
-    //cambiar estado de trabajo por el tecnico
-    public TrabajoDTOResponse cambiarEstadoTrabajo(String uuidTrabajo, EstadoTrabajo nuevoEstado) {
+    public List<TrabajoDTOResponse> listarMisTrabajos(String email) {
+        return trabajoRepository.findAllByParticipante(email)
+                .stream()
+                .map(TrabajoMapper::toResponse)
+                .toList();
+    }
+
+    public TrabajoDTOResponse cambiarEstadoTrabajo(
+            String uuidTrabajo,
+            EstadoTrabajo nuevoEstado,
+            String email,
+            boolean esAdmin) {
+
         TrabajoEntity trabajo = trabajoRepository.findByUuid(uuidTrabajo)
-                .orElseThrow(() -> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe"));
+                .orElseThrow(() -> new TrabajoNotFoundEx(
+                        "ERROR: El trabajo ingresado no existe"));
+
+        // Los administradores pueden modificar el estado.
+        // Si no es administrador, debe ser el técnico del trabajo.
+        if (!esAdmin && !esElTecnico(trabajo, email)) {
+            throw new AccessDeniedException(
+                    "Solo el tecnico de este trabajo puede cambiar su estado.");
+        }
+
+        validarTransicion(trabajo.getEstadoTrabajo(), nuevoEstado);
+
         trabajo.setEstadoTrabajo(nuevoEstado);
+
         return TrabajoMapper.toResponse(trabajoRepository.save(trabajo));
     }
-    
-    //enlistar a todos los trabajos por cliente
-    public List<TrabajoDTOResponse> listarTrabajosPorCliente (String uuidCliente){
+
+    public List<TrabajoDTOResponse> listarTrabajosPorCliente(String uuidCliente) {
         return trabajoRepository.findAllByUuidUsuario(uuidCliente)
                 .stream()
                 .map(TrabajoMapper::toResponse)
                 .toList();
     }
 
-    //enlistar a todos los trabajos por tecnico
-    public List<TrabajoDTOResponse> listarTrabajosPorTecnico(String uuidTecnico){
+    public List<TrabajoDTOResponse> listarTrabajosPorTecnico(String uuidTecnico) {
         return trabajoRepository.findAllByUuidTecnico(uuidTecnico)
                 .stream()
                 .map(TrabajoMapper::toResponse)
                 .toList();
     }
 
-    //un cliente solo puede ver sus propios
-    // trabajos, un técnico solo puede ver los suyos, y
-    // el administrador puede ver todos
-    public boolean perteneceAlUsuario(String uuidUsuario, String email){
+    public boolean perteneceAlUsuario(String uuidUsuario, String email) {
         return usuarioRepository.findByUuid(uuidUsuario)
-                .map(usuario -> usuario.getEmail().equals(email))
+                .map(usuario -> Objects.equals(usuario.getEmail(), email))
                 .orElse(false);
     }
 
-    //obtener un trabajo por el uuid
-    public TrabajoDTOResponse obtenerTrabajoPorUuid (String uuidTrabajo){
+    public TrabajoDTOResponse obtenerTrabajoPorUuid(
+            String uuidTrabajo,
+            String email,
+            boolean esAdmin) {
+
         TrabajoEntity trabajo = trabajoRepository.findByUuid(uuidTrabajo)
-                .orElseThrow(()-> new TrabajoNotFoundEx("ERROR: El trabajo ingresado no existe"));
+                .orElseThrow(() -> new TrabajoNotFoundEx(
+                        "ERROR: El trabajo ingresado no existe"));
+
+        if (!esAdmin &&
+                !esElTecnico(trabajo, email) &&
+                !esElCliente(trabajo, email)) {
+
+            throw new AccessDeniedException(
+                    "No tiene permiso para ver este trabajo.");
+        }
+
         return TrabajoMapper.toResponse(trabajo);
     }
 
+    private boolean esElTecnico(TrabajoEntity trabajo, String email) {
+
+        return trabajo.getPresupuesto() != null &&
+                trabajo.getPresupuesto().getTecnico() != null &&
+                trabajo.getPresupuesto().getTecnico().getUsuario() != null &&
+                Objects.equals(
+                        trabajo.getPresupuesto().getTecnico().getUsuario().getEmail(),
+                        email);
+    }
+
+    private boolean esElCliente(TrabajoEntity trabajo, String email) {
+
+        return trabajo.getPresupuesto() != null &&
+                trabajo.getPresupuesto().getUsuario() != null &&
+                Objects.equals(
+                        trabajo.getPresupuesto().getUsuario().getEmail(),
+                        email);
+    }
+
+    private void validarTransicion(
+            EstadoTrabajo actual,
+            EstadoTrabajo nuevo) {
+
+        boolean permitido = switch (actual) {
+            case Pendiente ->
+                    nuevo == EstadoTrabajo.En_proceso ||
+                            nuevo == EstadoTrabajo.Cancelado;
+
+            case En_proceso ->
+                    nuevo == EstadoTrabajo.Finalizado ||
+                            nuevo == EstadoTrabajo.Cancelado;
+
+            case Finalizado, Cancelado -> false;
+        };
+
+        if (!permitido) {
+            throw new TrabajoNotAcceptedEx(
+                    "ERROR: No se puede pasar el trabajo de "
+                            + actual + " a " + nuevo + ".");
+        }
+    }
 }
