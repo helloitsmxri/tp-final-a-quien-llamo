@@ -29,7 +29,7 @@ public class PortfolioMapper {
     }
 
     //portafolio de admin
-    public static PortfolioAdminDTOResponse toResponseAdmin (PortfolioEntity entity){
+    public static PortfolioAdminDTOResponse toResponseAdmin(PortfolioEntity entity) {
         return PortfolioAdminDTOResponse.builder()
                 .uuid(entity.getUuid())
                 .titulo(entity.getTitulo())
@@ -39,6 +39,11 @@ public class PortfolioMapper {
                 .notasAspirante(entity.getNotasAspirante())
                 .enlaceExterno(entity.getEnlaceExterno())
                 .tipoArchivo(entity.getTipoArchivo())
+                .archivoAdjunto(
+                        entity.getArchivoAdjunto() != null
+                                ? Base64.getEncoder().encodeToString(entity.getArchivoAdjunto())
+                                : null
+                )
                 .estadoVerificacion(entity.getEstadoVerificacion())
                 .notasAdmin(entity.getNotasAdmin())
                 .fechaEntrega(entity.getFechaEntrega())

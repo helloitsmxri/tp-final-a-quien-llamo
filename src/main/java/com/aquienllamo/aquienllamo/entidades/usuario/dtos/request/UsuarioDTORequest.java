@@ -34,8 +34,10 @@ public class UsuarioDTORequest {
 
     @NotBlank (message = "La clave es obligatoria.")
     @Size(min = 8, message = "Debe contener al menos 8 caracteres.")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "La clave debe tener al menos una mayúscula, una minúscula, un número y un carácter especial")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d\\s]).{8,}$",
+            message = "La clave debe tener al menos una mayúscula, una minúscula, un número y un carácter especial"
+    )
     private String clave;
 
     @NotBlank(message = "El teléfono es obligatorio")

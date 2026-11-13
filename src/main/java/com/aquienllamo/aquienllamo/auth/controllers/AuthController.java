@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,6 +77,29 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public void resetPassword(@RequestBody ResetPasswordDTORequest req){
         authService.resetPassword(req);
+    }
+
+    @GetMapping("/validate-token")
+    @ResponseStatus(HttpStatus.OK)
+    public void validateToken() {
+    }
+
+    @GetMapping("/role-super-admin")
+    @PreAuthorize("hasRole('SUPERADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public void rolSuperAdmin() {
+    }
+
+    @GetMapping("/role-admin")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public void rolAdmin() {
+    }
+
+    @GetMapping("/role-tecnico")
+    @PreAuthorize("hasRole('TECNICO')")
+    @ResponseStatus(HttpStatus.OK)
+    public void rolTecnico() {
     }
 
 }

@@ -23,7 +23,7 @@ public class PortfolioAdminDTOResponse {
     private String nombreEspecialidad;
 
     private EstadoVerificacion estadoVerificacion;
-
+    private String archivoAdjunto;
     private String notasAspirante;
     private String enlaceExterno;
     private String tipoArchivo;

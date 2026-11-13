@@ -62,7 +62,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // WebSocket del chat: el navegador no puede mandar el header Authorization en el handshake
-                        .requestMatchers("/ws/**").permitAll()   // NUEVO
+                        .requestMatchers("/ws/**").permitAll()
+
+                        // Archivos adjuntos del chat (se abren con un link, sin token)
+                        .requestMatchers("/uploads/**").permitAll()   // NUEVO
 
                         // Rutas públicas
                         .requestMatchers(
@@ -74,6 +77,8 @@ public class SecurityConfig {
                                 "/maps/**",
                                 "/aquienllamo/ubicaciones/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/aquienllamo/tecnicos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/aquienllamo/tecnicos/perfil/**").permitAll()
 
                         // Catálogo para el registro de técnicos (solo lectura)
                         .requestMatchers(HttpMethod.GET,
