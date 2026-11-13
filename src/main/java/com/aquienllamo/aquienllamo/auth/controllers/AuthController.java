@@ -25,6 +25,13 @@ public class AuthController {
     private final AuthService authService;
     private final UsuarioService userService;
 
+    // VALIDAR TOKEN DE ACCESO
+    @GetMapping("/validate-token")
+    @ResponseStatus(HttpStatus.OK)
+    public void validarToken(Authentication authentication) {
+        // Si llega acá, Spring Security ya validó la autenticación.
+    }
+
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AuthResponse iniciarSesion(@Valid @RequestBody AuthRequest request){
