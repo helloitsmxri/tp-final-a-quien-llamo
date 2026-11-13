@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/caracteristica")
+@RequestMapping("/caracteristicas")
 public class CaracteristicaController {
 
     private final CaracteristicaService caracteristicaService;
@@ -36,8 +36,8 @@ public class CaracteristicaController {
     }
 
     // listar todas las caracteristicas:
-    @GetMapping("/caracteristicas")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @GetMapping("")
+    @PreAuthorize("hasRole('USUARIO')")
     @ResponseStatus(HttpStatus.OK)
     public List<CaracteristicaDTOResponse> findAllCaracteristicas(){
         return caracteristicaService.findAll();
@@ -53,7 +53,7 @@ public class CaracteristicaController {
 
     // encontrar por uuid
     @GetMapping("/{uuid}")
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('USUARIO')")
     @ResponseStatus(HttpStatus.OK)
     public CaracteristicaDTOResponse findByUuid(@PathVariable String uuid){
         return caracteristicaService.findByUuid(uuid);
