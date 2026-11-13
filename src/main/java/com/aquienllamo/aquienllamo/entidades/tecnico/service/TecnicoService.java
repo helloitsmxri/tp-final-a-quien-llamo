@@ -60,6 +60,7 @@ public class TecnicoService {
     private final EmailService emailService;
 
     //registrar usuario como tecnico
+    @Transactional
     public TecnicoDTOResponse registrarTecnico(TecnicoDTORequest dto, String uuidUsuario){
         UsuarioEntity user = usuarioRepository.findByUuid(uuidUsuario)
                 .orElseThrow(()-> new UserNotFoundEx("no se encontro el usuario con ese uuid."));

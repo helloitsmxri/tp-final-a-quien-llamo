@@ -35,7 +35,7 @@ public class TecnicoEntity extends BaseEntity {
     }
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", unique = true)
     private UsuarioEntity usuario;
 
     @Column(nullable = false, length = 20)

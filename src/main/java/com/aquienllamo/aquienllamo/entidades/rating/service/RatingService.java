@@ -7,7 +7,6 @@ import com.aquienllamo.aquienllamo.entidades.rating.entity.RatingEntity;
 import com.aquienllamo.aquienllamo.entidades.rating.exceptions.RatingAlreadyExistsEx;
 import com.aquienllamo.aquienllamo.entidades.rating.mapper.RatingMapper;
 import com.aquienllamo.aquienllamo.entidades.rating.repository.*;
-import com.aquienllamo.aquienllamo.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.entidades.caracteristica.repository.CaracteristicaRepository;
 import com.aquienllamo.aquienllamo.entidades.trabajo.entity.TrabajoEntity;
 import com.aquienllamo.aquienllamo.entidades.trabajo.enums.EstadoTrabajo;
@@ -31,7 +30,6 @@ public class RatingService {
     private final UsuarioRepository usuarioRepository;
     private final CaracteristicaRepository caracteristicaRepository;
     private final TrabajoRepository trabajoRepository;
-    private final CredentialsRepository credentialsRepository;
 
     public RatingDTOResponse crearRating(RatingDTORequest request) {
 
