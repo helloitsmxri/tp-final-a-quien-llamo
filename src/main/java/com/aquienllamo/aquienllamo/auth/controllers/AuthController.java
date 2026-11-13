@@ -78,12 +78,7 @@ public class AuthController {
     public void resetPassword(@RequestBody ResetPasswordDTORequest req){
         authService.resetPassword(req);
     }
-
-    @GetMapping("/validate-token")
-    @ResponseStatus(HttpStatus.OK)
-    public void validateToken() {
-    }
-
+    
     @GetMapping("/role-super-admin")
     @PreAuthorize("hasRole('SUPERADMINISTRADOR')")
     @ResponseStatus(HttpStatus.OK)
