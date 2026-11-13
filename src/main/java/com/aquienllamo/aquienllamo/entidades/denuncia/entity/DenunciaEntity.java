@@ -31,6 +31,10 @@ public class DenunciaEntity extends BaseEntity {
         if (this.uuid == null) {
             this.uuid = UUID.randomUUID().toString();
         }
+
+        if (this.fechaDenuncia == null) {
+            this.fechaDenuncia = LocalDateTime.now();
+        }
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,7 +59,7 @@ public class DenunciaEntity extends BaseEntity {
     @Column(name = "nota_del_admin", columnDefinition = "TEXT")
     private String notaDelAdmin;
 
-    @Column(name = "fecha_denuncia", nullable = false, insertable = false, updatable = false)
+    @Column(name = "fecha_denuncia", nullable = false, updatable = false)
     private LocalDateTime fechaDenuncia;
 
     @Column(name = "tipo_foto", length = 50)
