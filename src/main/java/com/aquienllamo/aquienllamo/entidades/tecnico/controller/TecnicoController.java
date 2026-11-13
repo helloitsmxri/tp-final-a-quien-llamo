@@ -50,14 +50,14 @@ public class TecnicoController {
     }
 
     //listar todos los tecnicos
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
+
     @GetMapping
     public ResponseEntity<List<TecnicoDTOResponse>> getAllTecnicos(){
         return ResponseEntity.ok(tecnicoService.getAllTecnicos());
     }
 
     // Ver perfil público de un técnico
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','USUARIO','TECNICO')")
+
     @GetMapping("/perfil/{uuid}")
     public ResponseEntity<TecnicoPerfilPublicoDTO> verPerfil(
             @PathVariable String uuid) {

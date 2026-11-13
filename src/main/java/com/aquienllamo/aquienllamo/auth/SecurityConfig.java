@@ -77,6 +77,8 @@ public class SecurityConfig {
                                 "/maps/**",
                                 "/aquienllamo/ubicaciones/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/aquienllamo/tecnicos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/aquienllamo/tecnicos/perfil/**").permitAll()
 
                         // Catálogo para el registro de técnicos (solo lectura)
                         .requestMatchers(HttpMethod.GET,
