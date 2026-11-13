@@ -120,25 +120,32 @@ public class AdministradorService {
         return "Se ha suspendido al usuario por un mes";
     }
 
-    public String darDeBajaUsuario(String uuid){
+
+    public String darDeBajaUsuario(String uuid) {
         UsuarioEntity user = usuarioRepository.findByUuid(uuid)
                 .orElseThrow(() -> new UserNotFoundEx("No se encontró el usuario"));
 
-        // si el user no está activo entonces significa q está dado de baja ya
-
-        if (!Boolean.TRUE.equals(user.getActivo())){
+        if (!Boolean.TRUE.equals(user.getActivo())) {
             throw new UserAlreadyDisabledEx("El usuario ya se encuentra dado de baja.");
         }
 
         user.setActivo(false);
 
-        // y si ya estaba suspendido desde antes, le sacamos la suspensión y simplemente lo bajamos
+        // Si estaba suspendido, le quitamos la suspensión.
         user.setFechaFinSuspension(null);
 
+        // Invalidamos el refresh token para impedir que renueve su sesión.
+        CredentialsEntity cred = credentialsRepository.findByUsuario(user)
+                .orElseThrow(() -> new UserNotFoundEx("No se encontraron las credenciales del usuario"));
+
+        cred.setRefreshToken(null);
+
         usuarioRepository.save(user);
+        credentialsRepository.save(cred);
 
         return "Usuario dado de baja correctamente";
     }
+
 
     // "rehabilitar" un usuario, o sea, sacarle la baja de la cuenta.
     public String quitarBaja(String uuid){
