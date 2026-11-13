@@ -68,8 +68,7 @@ public class PresupuestoEntity extends BaseEntity {
     @Column(name = "precio_estimado", precision = 10, scale = 2, nullable = false)
     private BigDecimal precioEstimado;
 
-    // Lo conservamos temporalmente por compatibilidad con los presupuestos anteriores.
-    @Column(name = "descripcion_presupuesto", columnDefinition = "TEXT")
+    @Column(name = "descripcion_presupuesto", nullable = true, columnDefinition = "TEXT")
     private String descripcionPresupuesto;
 
     @OneToMany(
