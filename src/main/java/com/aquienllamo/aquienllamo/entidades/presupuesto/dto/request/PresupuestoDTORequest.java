@@ -21,11 +21,14 @@ public class PresupuestoDTORequest {
     @Size(max = 2000, message = "Las observaciones no pueden superar los 2000 caracteres")
     private String observaciones;
 
+    /*
     @NotNull(message = "Es necesario ingresar el descuento")
     @DecimalMin(value = "0.00", message = "El descuento no puede ser negativo")
     @DecimalMax(value = "100.00", message = "El descuento no puede superar el 100%")
     @Digits(integer = 3, fraction = 2, message = "El porcentaje no tiene un formato válido")
     private BigDecimal descuentoPorcentaje;
+
+     */
 
     @NotEmpty(message = "El presupuesto debe tener al menos un concepto")
     @Valid

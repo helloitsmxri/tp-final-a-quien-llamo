@@ -484,7 +484,6 @@ public class PresupuestoService {
     }
 
 
-    // Carga los datos del presupuesto y calcula todos sus importes.
     private void actualizarDatosPresupuesto(
             PresupuestoEntity presupuesto,
             PresupuestoDTORequest dto) {
@@ -498,20 +497,14 @@ public class PresupuestoService {
 
         subtotal = subtotal.setScale(2, RoundingMode.HALF_UP);
 
-        // 2. Normalizar el porcentaje de descuento.
-        BigDecimal descuentoPorcentaje = dto.getDescuentoPorcentaje()
-                .setScale(2, RoundingMode.HALF_UP);
+        // 2. Deshabilitar el descuento estableciendo sus valores en cero.
+        BigDecimal descuentoPorcentaje = BigDecimal.ZERO;
+        BigDecimal montoDescuento = BigDecimal.ZERO;
 
-        // 3. Calcular el importe del descuento.
-        BigDecimal montoDescuento = subtotal
-                .multiply(descuentoPorcentaje)
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        // 3. El precio final es igual al subtotal.
+        BigDecimal precioFinal = subtotal;
 
-        // 4. Calcular el precio final.
-        BigDecimal precioFinal = subtotal.subtract(montoDescuento)
-                .setScale(2, RoundingMode.HALF_UP);
-
-        // 5. Actualizar los datos generales.
+        // 4. Actualizar los datos generales del presupuesto.
         presupuesto.setNombreProyecto(dto.getNombreProyecto());
         presupuesto.setObservaciones(dto.getObservaciones());
         presupuesto.setSubtotal(subtotal);
@@ -519,11 +512,10 @@ public class PresupuestoService {
         presupuesto.setMontoDescuento(montoDescuento);
         presupuesto.setPrecioEstimado(precioFinal);
 
-        // 6. Eliminar los detalles anteriores.
-        // Se conserva la colección administrada por Hibernate.
+        // 5. Eliminar los detalles anteriores.
         presupuesto.getDetalles().clear();
 
-        // 7. Agregar los nuevos detalles.
+        // 6. Agregar los nuevos detalles.
         for (PresupuestoDetalleDTORequest detalleDTO : dto.getDetalles()) {
 
             PresupuestoDetalleEntity detalle = PresupuestoDetalleEntity.builder()

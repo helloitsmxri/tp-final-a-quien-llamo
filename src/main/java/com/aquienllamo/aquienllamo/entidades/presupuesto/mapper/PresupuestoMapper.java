@@ -40,7 +40,7 @@ public class PresupuestoMapper {
                 .detalles(detalles)
 
                 .subtotal(presupuesto.getSubtotal())
-                .descuentoPorcentaje(presupuesto.getDescuentoPorcentaje())
+               // .descuentoPorcentaje(presupuesto.getDescuentoPorcentaje())
                 .montoDescuento(presupuesto.getMontoDescuento())
                 .precioEstimado(presupuesto.getPrecioEstimado())
 
