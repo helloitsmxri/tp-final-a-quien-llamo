@@ -348,7 +348,6 @@ CREATE TABLE `presupuesto` (
   `id_presupuesto` INT NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime(6) DEFAULT NULL,
-  `descripcion_presupuesto` text NOT NULL,
   `estado` enum('Aceptado','Cancelado','Pendiente','Rechazado') NOT NULL,
   `precio_estimado` decimal(10,2) NOT NULL,
   `uuid` varchar(255) NOT NULL,
