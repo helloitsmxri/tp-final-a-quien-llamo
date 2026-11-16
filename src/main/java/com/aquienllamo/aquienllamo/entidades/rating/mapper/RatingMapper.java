@@ -7,23 +7,31 @@ import com.aquienllamo.aquienllamo.entidades.rating.entity.RatingEntity;
 import com.aquienllamo.aquienllamo.entidades.usuario.entities.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.List;
 
 @Component
 public class RatingMapper {
 
-    public static RatingDTOResponse toResponse (RatingEntity entity){
+    public static RatingDTOResponse toResponse(RatingEntity entity) {
+        UsuarioEntity remitente = entity.getUsuarioRemitente();
+
+        String fotoBase64 = (remitente.getFoto() != null && remitente.getFoto().length > 0)
+                ? Base64.getEncoder().encodeToString(remitente.getFoto())
+                : null;
+
         return RatingDTOResponse.builder()
-                .uuidRemitente(entity.getUsuarioRemitente().getUuid())
-                .nombreRemitente(entity.getUsuarioRemitente().getNombre())
+                .uuidRemitente(remitente.getUuid())
+                .nombreRemitente(remitente.getNombre())
+                .apellidoRemitente(remitente.getApellido())
                 .nombreDestinatario(entity.getUsuarioDestinatario().getNombre())
                 .valoracion(entity.getValoracion())
                 .descripcion(entity.getDescripcion())
-                .tipoFoto(entity.getTipoFoto())
-                .foto(entity.getFoto())
+                .tipoFoto(remitente.getTipoImagen())
+                .foto(fotoBase64)
                 .caracteristicas(entity.getCaracteristicas()
                         .stream()
-                        .map(CaracteristicaEntity::getValorAdjetivo) //el nombre de la caracteristica
+                        .map(CaracteristicaEntity::getValorAdjetivo)
                         .toList())
                 .build();
     }

@@ -13,11 +13,12 @@ import java.util.List;
 public class RatingDTOResponse {
     private String uuidRemitente; //para que el front pueda ir al perfil de quien escribió la reseña
     private String nombreRemitente; //el nombre del comentario
+    private String apellidoRemitente;
     private String nombreDestinatario; //el nombre del que recibe el comentario
     private Integer valoracion;
     private String descripcion;
     private String tipoFoto;
-    private byte[] foto;
+    private String foto;
     private List<String> caracteristicas;
 
 }
