@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.entidades.tecnico.controller;
 
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDTORequest;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoTrabajoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoNuevoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
@@ -142,4 +143,13 @@ public class TecnicoController {
         tecnicoService.deleteTecnico(uuid);
         return ResponseEntity.noContent().build();
     }
+
+    // Actualizar alias y CVU del técnico logueado
+    @PreAuthorize("hasRole('TECNICO')")
+    @PatchMapping("/mi-perfil/datos-cobro")
+    public ResponseEntity<Void> actualizarDatosCobro(Authentication authentication, @Valid @RequestBody TecnicoTrabajoDTORequest dto) {
+        tecnicoService.actualizarDatosCobro(authentication.getName(), dto);
+        return ResponseEntity.noContent().build();
+    }
 }
+

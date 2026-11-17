@@ -64,4 +64,10 @@ public class TecnicoEntity extends BaseEntity {
     )
     private List<EspecialidadEntity> especialidades;
 
+    @Column(name = "cvu", length = 22)
+    private String cvu;
+
+    @Column(name = "alias", length = 100)
+    private String alias;
+
 }

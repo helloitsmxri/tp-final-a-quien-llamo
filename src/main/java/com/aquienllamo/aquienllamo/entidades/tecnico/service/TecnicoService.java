@@ -9,6 +9,7 @@ import com.aquienllamo.aquienllamo.auth.repositories.CredentialsRepository;
 import com.aquienllamo.aquienllamo.auth.repositories.RoleRepository;
 import com.aquienllamo.aquienllamo.entidades.especialidad.exceptions.EspecialidadNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDTORequest;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoTrabajoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
 import com.aquienllamo.aquienllamo.entidades.tecnico.specs.TecnicoSpecifications;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
@@ -460,4 +461,17 @@ public class TecnicoService {
     }
 
      */
+
+    // Actualizar datos de cobro del técnico logueado
+    public void actualizarDatosCobro(String email, TecnicoTrabajoDTORequest dto) {
+
+        TecnicoEntity tecnico = tecnicoRepository.findByUsuarioEmail(email)
+                .orElseThrow(() -> new TecnicoNotFoundEx(
+                        "El usuario logueado no es un técnico."
+                ));
+
+        tecnicoMapper.actualizarDatosCobro(tecnico, dto);
+
+        tecnicoRepository.save(tecnico);
+    }
 }
