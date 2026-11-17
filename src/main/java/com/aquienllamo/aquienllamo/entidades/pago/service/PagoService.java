@@ -7,6 +7,7 @@ import com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago.ResultadoProcesamiento
 import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPago;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPagoFactory;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ResultadoConsultaPago;
+import com.aquienllamo.aquienllamo.entidades.pago.entity.PagoProveedorEntity;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
 import com.aquienllamo.aquienllamo.entidades.pago.dto.request.PagoDTORequest;
@@ -28,9 +29,12 @@ import com.aquienllamo.aquienllamo.entidades.usuario.repository.UsuarioRepositor
 import com.aquienllamo.aquienllamo.entidades.usuario.exceptions.UserNotFoundEx;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,47 +51,66 @@ public class PagoService {
 
 
     // Crear un pago.
+    // Crear un pago.
+
     public PagoDTOResponse crearPago(PagoDTORequest request) {
 
+        // 1. Buscar el trabajo.
         TrabajoEntity trabajo = trabajoRepository
                 .findByUuid(request.getUuidTrabajo())
                 .orElseThrow(() ->
                         new TrabajoNotFoundEx("El trabajo ingresado no existe.")
                 );
 
+        // 2. Verificar si el trabajo ya tiene un pago registrado.
+        if (pagoRepository.existsByTrabajo_Uuid(trabajo.getUuid())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este trabajo ya tiene un pago registrado.");
+        }
+
+        // 3. Verificar que tenga un presupuesto válido.
         if (trabajo.getPresupuesto() == null
                 || trabajo.getPresupuesto().getEstado() == null) {
-            throw new TrabajoNotAcceptedEx("El trabajo no posee un presupuesto o estado válido.");
+
+            throw new TrabajoNotAcceptedEx(
+                    "El trabajo no posee un presupuesto o estado válido."
+            );
         }
 
+        // 4. Verificar que el presupuesto esté aceptado.
         if (!EstadoPresupuestoE.Aceptado.equals(
                 trabajo.getPresupuesto().getEstado())) {
-            throw new TrabajoNotAcceptedEx("El trabajo que intenta pagar no está aprobado.");
+
+            throw new TrabajoNotAcceptedEx(
+                    "El trabajo que intenta pagar no está aprobado."
+            );
         }
 
-        // Obtener el importe oficial desde el presupuesto persistido.
+        // 5. Obtener el importe oficial.
         BigDecimal monto = trabajo.getPresupuesto().getPrecioEstimado();
 
         if (monto == null || monto.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("El presupuesto no posee un importe válido.");
+            throw new IllegalArgumentException(
+                    "El presupuesto no posee un importe válido."
+            );
         }
 
-        // Crear el pago con el importe calculado en el backend.
-        PagoEntity pago = PagoMapper.toEntity(request, trabajo, monto);
-
-        // Obtener proveedor.
+        // 6. Obtener el proveedor.
         ProveedorPago proveedor =
                 proveedorPagoFactory.obtener(request.getProveedorDePago());
 
-        // Obtener estrategia del método.
+        // 7. Obtener la estrategia.
         MetodoPago estrategia =
                 pagoFactory.obtener(request.getMetodoDePago());
 
-        // Guardar primero para generar el UUID.
+        // 8. Crear el pago.
+        PagoEntity pago = PagoMapper.toEntity(request, trabajo, monto);
+
         pago.setEstadoPago(EstadoPago.Pendiente_de_revision);
+
+        // 9. Guardar el pago para generar su UUID.
         pago = pagoRepository.saveAndFlush(pago);
 
-        // Procesar el pago con la estrategia correspondiente.
+        // 10. Procesar el pago con la pasarela.
         ResultadoProcesamientoPago resultado =
                 estrategia.procesar(
                         request,
@@ -96,14 +119,37 @@ public class PagoService {
                         proveedor
                 );
 
-        // Actualizar el estado devuelto por la estrategia.
-        pago.setEstadoPago(resultado.getEstadoPago());
+        if (resultado == null) {
+            throw new IllegalStateException(
+                    "La pasarela no devolvió un resultado del procesamiento."
+            );
+        }
 
-        // Persistir los cambios.
+        // 11. Actualizar el estado interno del pago.
+        if (resultado.getEstadoPago() != null) {
+            pago.setEstadoPago(resultado.getEstadoPago());
+        }
+
+        // 12. Crear los datos específicos del proveedor.
+        PagoProveedorEntity datosProveedor = PagoProveedorEntity.builder()
+                .pago(pago)
+                .proveedor(request.getProveedorDePago())
+                .externalPaymentId(resultado.getExternalPaymentId())
+                .checkoutUrl(resultado.getCheckoutUrl())
+                .estadoExterno(resultado.getEstadoExterno())
+                .fechaActualizacion(LocalDateTime.now())
+                .build();
+
+        // 13. Asociar los datos del proveedor al pago.
+        pago.setDatosProveedor(datosProveedor);
+
+        // 14. Guardar el pago y sus datos del proveedor por cascada.
         pago = pagoRepository.save(pago);
 
-        return PagoMapper.toResponse(pago, resultado.getCheckoutUrl());
+        // 15. Devolver el DTO.
+        return PagoMapper.toResponse(pago);
     }
+
 
     // Sincronizar el estado de un pago con su proveedor externo.
     public PagoDTOResponse sincronizarEstado(String uuidPago) {
@@ -260,10 +306,13 @@ public class PagoService {
     public void procesarWebhookMercadoPago(String orderId) {
 
         PagoEntity pago = pagoRepository
-                .findByMercadoPagoOrderId(orderId)
-                .orElseThrow(() -> new PagoNotFoundEx("No existe un pago asociado a esta orden.")
+                .findByDatosProveedor_ExternalPaymentId(orderId)
+                .orElseThrow(() ->
+                        new PagoNotFoundEx(
+                                "No se encontró un pago asociado a la orden de Mercado Pago."
+                        )
                 );
-        // Reutiliza la lógica existente de consulta y actualización.
+
         sincronizarEstado(pago.getUuid());
     }
 
@@ -275,11 +324,16 @@ public class PagoService {
     }
 
     // Buscar un pago por ID de orden de Mercado Pago.
-    public PagoDTOResponse buscarPagoPorMercadoPagoOrderId(String mercadoPagoOrderId) {
+    public PagoDTOResponse buscarPagoPorMercadoPagoOrderId(String orderId) {
 
         PagoEntity pago = pagoRepository
-                .findByMercadoPagoOrderId(mercadoPagoOrderId)
-                .orElseThrow(() -> new PagoNotFoundEx("No existe un pago asociado a esta orden de Mercado Pago."));
+                .findByDatosProveedor_ExternalPaymentId(orderId)
+                .orElseThrow(() ->
+                        new PagoNotFoundEx(
+                                "No se encontró un pago asociado a la orden de Mercado Pago."
+                        )
+                );
+
         return PagoMapper.toResponse(pago);
     }
 

@@ -7,6 +7,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,9 +17,9 @@ import java.time.LocalDateTime;
 @Builder
 public class PagoDTOResponse {
 
-    private String uuid; //id del pago generado
+    private String uuid;
 
-    private String uuidTrabajo; //id del trabajo que se abono
+    private String uuidTrabajo;
 
     private String nombreProyecto;
 
@@ -33,6 +35,7 @@ public class PagoDTOResponse {
 
     private String checkoutUrl;
 
-    private String mercadoPagoOrderId;
+    private String externalPaymentId;
 
+    private String estadoExterno;
 }

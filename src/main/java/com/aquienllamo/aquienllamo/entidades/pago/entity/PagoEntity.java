@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"trabajo", "datosProveedor"})
 @Builder
 @Table(name = "Pago")
 public class PagoEntity extends BaseEntity {
@@ -29,8 +29,8 @@ public class PagoEntity extends BaseEntity {
     private String uuid;
 
     @PrePersist
-    public void generarUUID(){
-        if(this.uuid == null){
+    public void generarUUID() {
+        if (this.uuid == null) {
             this.uuid = UUID.randomUUID().toString();
         }
     }
@@ -43,24 +43,25 @@ public class PagoEntity extends BaseEntity {
     private BigDecimal monto;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "metodo_pago",nullable = false)
+    @Column(name = "metodo_pago", nullable = false)
     private MetodoDePago metodoDePago;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "proveedor_pago",nullable = false)
+    @Column(name = "proveedor_pago", nullable = false)
     private EProveedorPago proveedorDePago;
 
     @Builder.Default
     @Column(name = "fecha_pago", nullable = false)
     private LocalDateTime fechaPago = LocalDateTime.now();
 
-
-
-    @Column(name = "mercado_pago_order_id", unique = true, nullable = true)
-    private String mercadoPagoOrderId;
+    @OneToOne(
+            mappedBy = "pago",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private PagoProveedorEntity datosProveedor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
     private EstadoPago estadoPago;
-
 }

@@ -14,13 +14,15 @@ import java.util.Optional;
 @Repository
 public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
 
+        Optional<PagoEntity> findByUuid(String uuid);
+        Optional<PagoEntity> findByDatosProveedor_ExternalPaymentId(String externalPaymentId);
+        boolean existsByTrabajo_Uuid(String uuidTrabajo);
+
     //listar pagos segun un metodo de pago
     List<PagoEntity> findAllByMetodoDePago(MetodoDePago metodoDePago);
 
     //listar pagos segun el estado
     List<PagoEntity> findAllByEstadoPago(EstadoPago estado);
-
-    Optional<PagoEntity> findByUuid(String uuid);
 
     //para navegar en pago a trabajo a presupuesto a usuario al uuid de usuario
     @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.presupuesto.usuario.uuid = :uuid")
@@ -29,7 +31,5 @@ public interface PagoRepository extends JpaRepository<PagoEntity,Integer> {
     //lo mismo pero para tecnico
     @Query("SELECT p FROM PagoEntity p WHERE p.trabajo.presupuesto.tecnico.uuid = :uuid")
     List<PagoEntity> findAllByTecnico(@Param("uuid") String uuid);
-
-    Optional<PagoEntity> findByMercadoPagoOrderId(String mercadoPagoOrderId);
 
 }

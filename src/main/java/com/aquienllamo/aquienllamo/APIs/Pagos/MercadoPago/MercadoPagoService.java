@@ -123,20 +123,24 @@ public class MercadoPagoService implements ProveedorPago {
     @Override
     public ResultadoConsultaPago consultarEstado(PagoEntity pago) {
 
-        if (pago == null ||
-                pago.getMercadoPagoOrderId() == null ||
-                pago.getMercadoPagoOrderId().isBlank()) {
+        if (pago == null
+                || pago.getDatosProveedor() == null
+                || pago.getDatosProveedor().getExternalPaymentId() == null
+                || pago.getDatosProveedor().getExternalPaymentId().isBlank()) {
+
             throw new IllegalArgumentException(
                     "El pago no tiene una orden de Mercado Pago asociada."
             );
         }
 
-        MercadoPagoOrderStatusResponse orden =
-                consultarOrden(pago.getMercadoPagoOrderId());
+        String orderId = pago.getDatosProveedor().getExternalPaymentId();
+
+        MercadoPagoOrderStatusResponse orden = consultarOrden(orderId);
 
         // Verificar que la orden corresponda al pago local.
         if (orden.getExternalReference() == null
                 || !orden.getExternalReference().equals(pago.getUuid())) {
+
             throw new IllegalStateException(
                     "La orden de Mercado Pago no corresponde al pago indicado."
             );
@@ -149,19 +153,24 @@ public class MercadoPagoService implements ProveedorPago {
                 && "accredited".equalsIgnoreCase(detalle)) {
 
             return new ResultadoConsultaPago(
-                    EstadoPago.Confirmado, true
+                    EstadoPago.Confirmado,
+                    true
             );
         }
 
         if ("canceled".equalsIgnoreCase(estado)) {
+
             return new ResultadoConsultaPago(
-                    EstadoPago.Cancelado, true
+                    EstadoPago.Cancelado,
+                    true
             );
         }
 
         if ("failed".equalsIgnoreCase(estado)) {
+
             return new ResultadoConsultaPago(
-                    EstadoPago.Rechazado, true
+                    EstadoPago.Rechazado,
+                    true
             );
         }
 
@@ -170,13 +179,15 @@ public class MercadoPagoService implements ProveedorPago {
                 || "action_required".equalsIgnoreCase(estado)) {
 
             return new ResultadoConsultaPago(
-                    EstadoPago.Pendiente_de_revision, true
+                    EstadoPago.Pendiente_de_revision,
+                    true
             );
         }
 
         // Estado desconocido: no modificar el estado local.
         return new ResultadoConsultaPago(
-                null, false
+                null,
+                false
         );
     }
 
@@ -204,12 +215,11 @@ public class MercadoPagoService implements ProveedorPago {
         MercadoPagoOrderResponse respuesta =
                 crearOrdenCheckout(request, pago, monto);
 
-        // Guardar el ID de la orden devuelto por Mercado Pago.
-        pago.setMercadoPagoOrderId(respuesta.getId());
-
         return new ResultadoProcesamientoPago(
                 EstadoPago.Pendiente_de_revision,
-                respuesta.getCheckoutUrl()
+                respuesta.getCheckoutUrl(),
+                respuesta.getId(),
+                respuesta.getStatus()
         );
     }
 }

@@ -10,4 +10,6 @@ public class ResultadoProcesamientoPago {
 
     private EstadoPago estadoPago;
     private String checkoutUrl;
+    private String externalPaymentId;
+    private String estadoExterno;
 }
