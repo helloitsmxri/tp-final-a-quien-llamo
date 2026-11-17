@@ -79,7 +79,8 @@ public class TrabajoService {
 
         TecnicoEntity tecnico = presupuesto.getTecnico();
 
-        if  (tecnico.getAlias() == null || tecnico.getAlias().equals("") && tecnico.getCvu() == null || tecnico.getCvu().equals("")) {
+        if  ((tecnico.getAlias() == null || tecnico.getAlias().isBlank()) &&
+                (tecnico.getCvu() == null || tecnico.getCvu().isBlank())) {
             throw new AccessDeniedException(
                     "Antes de crear un trabajo debe rellenar al menos uno de los campos: ALIAS y CVU.");
         }
