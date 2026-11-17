@@ -13,9 +13,20 @@ import java.math.BigDecimal;
 public class PagoMapper {
 
     public static PagoDTOResponse toResponse(PagoEntity entity) {
+
         return PagoDTOResponse.builder()
                 .uuid(entity.getUuid())
                 .uuidTrabajo(entity.getTrabajo().getUuid())
+
+                // Datos del proyecto obtenidos del presupuesto
+                .nombreProyecto(entity.getTrabajo()
+                        .getPresupuesto()
+                        .getNombreProyecto())
+
+                .descripcionProyecto(entity.getTrabajo()
+                        .getPresupuesto()
+                        .getDescripcionPresupuesto())
+
                 .proveedorDePago(entity.getProveedorDePago())
                 .metodoDePago(entity.getMetodoDePago())
                 .fechaPago(entity.getFechaPago())

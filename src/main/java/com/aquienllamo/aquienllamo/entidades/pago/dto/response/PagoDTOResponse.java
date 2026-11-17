@@ -19,6 +19,10 @@ public class PagoDTOResponse {
 
     private String uuidTrabajo; //id del trabajo que se abono
 
+    private String nombreProyecto;
+
+    private String descripcionProyecto;
+
     private EProveedorPago proveedorDePago;
 
     private MetodoDePago metodoDePago;
