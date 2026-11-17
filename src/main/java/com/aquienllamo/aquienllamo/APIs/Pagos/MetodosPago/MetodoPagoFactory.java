@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class PagoFactory {
+public class MetodoPagoFactory {
 
     private final List<MetodoPago> estrategias;
 
-    public PagoFactory(
+    public MetodoPagoFactory(
             List<MetodoPago> estrategias) {
         this.estrategias = estrategias;
     }

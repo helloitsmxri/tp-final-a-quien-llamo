@@ -1,6 +1,7 @@
 package com.aquienllamo.aquienllamo.entidades.pago.entity;
 
 import com.aquienllamo.aquienllamo.common.BaseEntity;
+import com.aquienllamo.aquienllamo.entidades.pago.enums.EProveedorPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
 import com.aquienllamo.aquienllamo.entidades.trabajo.entity.TrabajoEntity;
@@ -45,9 +46,15 @@ public class PagoEntity extends BaseEntity {
     @Column(name = "metodo_pago",nullable = false)
     private MetodoDePago metodoDePago;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "proveedor_pago",nullable = false)
+    private EProveedorPago proveedorDePago;
+
     @Builder.Default
     @Column(name = "fecha_pago", nullable = false)
     private LocalDateTime fechaPago = LocalDateTime.now();
+
+
 
     @Column(name = "mercado_pago_order_id", unique = true, nullable = true)
     private String mercadoPagoOrderId;

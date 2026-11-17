@@ -1,10 +1,11 @@
 
 package com.aquienllamo.aquienllamo.entidades.pago.service;
 
-import com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago.PagoFactory;
+import com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago.MetodoPagoFactory;
 import com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago.MetodoPago;
 import com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago.ResultadoProcesamientoPago;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPago;
+import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPagoFactory;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ResultadoConsultaPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
@@ -41,10 +42,8 @@ public class PagoService {
     private final TrabajoRepository trabajoRepository;
     private final UsuarioRepository usuarioRepository;
     private final TecnicoRepository tecnicoRepository;
-    private final PagoFactory pagoFactory;
-
-    // Interfaz común para consultar el estado del proveedor.
-    private final ProveedorPago proveedorPago;
+    private final MetodoPagoFactory pagoFactory;
+    private final ProveedorPagoFactory proveedorPagoFactory;
 
 
     // Crear un pago.
@@ -76,7 +75,11 @@ public class PagoService {
         // Crear el pago con el importe calculado en el backend.
         PagoEntity pago = PagoMapper.toEntity(request, trabajo, monto);
 
-        // Obtener la estrategia de procesamiento.
+        // Obtener proveedor.
+        ProveedorPago proveedor =
+                proveedorPagoFactory.obtener(request.getProveedorDePago());
+
+        // Obtener estrategia del método.
         MetodoPago estrategia =
                 pagoFactory.obtener(request.getMetodoDePago());
 
@@ -85,7 +88,13 @@ public class PagoService {
         pago = pagoRepository.saveAndFlush(pago);
 
         // Procesar el pago con la estrategia correspondiente.
-        ResultadoProcesamientoPago resultado = estrategia.procesar(request, pago, monto);
+        ResultadoProcesamientoPago resultado =
+                estrategia.procesar(
+                        request,
+                        pago,
+                        monto,
+                        proveedor
+                );
 
         // Actualizar el estado devuelto por la estrategia.
         pago.setEstadoPago(resultado.getEstadoPago());
@@ -95,7 +104,6 @@ public class PagoService {
 
         return PagoMapper.toResponse(pago, resultado.getCheckoutUrl());
     }
-
 
     // Sincronizar el estado de un pago con su proveedor externo.
     public PagoDTOResponse sincronizarEstado(String uuidPago) {
@@ -109,19 +117,22 @@ public class PagoService {
         if (pago.getEstadoPago() == EstadoPago.Confirmado
                 || pago.getEstadoPago() == EstadoPago.Cancelado
                 || pago.getEstadoPago() == EstadoPago.Rechazado) {
+
             return PagoMapper.toResponse(pago);
         }
 
-        // Consultar al proveedor mediante la interfaz común.
-        ResultadoConsultaPago resultado =
-                proveedorPago.consultarEstado(pago);
+        // Obtener el proveedor correspondiente al pago.
+        ProveedorPago proveedor =
+                proveedorPagoFactory.obtener(pago.getProveedorDePago());
 
-        // Si el proveedor no pudo verificar el estado, no modificarlo.
+        // Consultar el estado.
+        ResultadoConsultaPago resultado =
+                proveedor.consultarEstado(pago);
+
         if (resultado == null || !resultado.verificado()) {
             return PagoMapper.toResponse(pago);
         }
 
-        // Actualizar solo si el resultado contiene un estado válido.
         if (resultado.estadoPago() != null) {
             pago.setEstadoPago(resultado.estadoPago());
             pago = pagoRepository.save(pago);

@@ -1,5 +1,7 @@
 package com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago;
 
+import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPago;
+import com.aquienllamo.aquienllamo.entidades.pago.enums.EProveedorPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
 import com.aquienllamo.aquienllamo.entidades.pago.dto.request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.pago.entity.PagoEntity;
@@ -13,6 +15,7 @@ public interface MetodoPago {
     ResultadoProcesamientoPago procesar(
             PagoDTORequest request,
             PagoEntity pago,
-            BigDecimal monto
+            BigDecimal monto,
+            ProveedorPago proveedor
     );
 }

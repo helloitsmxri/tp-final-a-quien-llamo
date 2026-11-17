@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.pago.dto.request;
 
+import com.aquienllamo.aquienllamo.entidades.pago.enums.EProveedorPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -17,8 +18,13 @@ public class PagoDTORequest {
     @NotBlank(message = "Debe ingresar el trabajo que va a pagar.")
     private String uuidTrabajo;
 
+    @NotNull(message = "Debe seleccionar un proveedor de pago.")
+    private EProveedorPago proveedorDePago;
+
     @NotNull(message = "Debe seleccionar un metodo de pago")
     private MetodoDePago metodoDePago;
+
+
 
     //datos ddel comprobador para la api PayU
 

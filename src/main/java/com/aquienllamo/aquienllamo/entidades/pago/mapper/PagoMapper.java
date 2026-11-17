@@ -16,6 +16,7 @@ public class PagoMapper {
         return PagoDTOResponse.builder()
                 .uuid(entity.getUuid())
                 .uuidTrabajo(entity.getTrabajo().getUuid())
+                .proveedorDePago(entity.getProveedorDePago())
                 .metodoDePago(entity.getMetodoDePago())
                 .fechaPago(entity.getFechaPago())
                 .estadoPago(entity.getEstadoPago())
@@ -32,13 +33,17 @@ public class PagoMapper {
         return response;
     }
 
-    public static PagoEntity toEntity(PagoDTORequest request, TrabajoEntity trabajo, BigDecimal monto) {
+    public static PagoEntity toEntity(
+            PagoDTORequest request,
+            TrabajoEntity trabajo,
+            BigDecimal monto
+    ) {
         return PagoEntity.builder()
                 .trabajo(trabajo)
                 .monto(monto)
+                .proveedorDePago(request.getProveedorDePago())
                 .metodoDePago(request.getMetodoDePago())
                 .estadoPago(EstadoPago.Pendiente_de_revision)
                 .build();
     }
-
 }

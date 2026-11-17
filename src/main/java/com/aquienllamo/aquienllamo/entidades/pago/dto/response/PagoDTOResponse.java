@@ -1,5 +1,6 @@
 package com.aquienllamo.aquienllamo.entidades.pago.dto.response;
 
+import com.aquienllamo.aquienllamo.entidades.pago.enums.EProveedorPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
 import lombok.*;
@@ -17,6 +18,8 @@ public class PagoDTOResponse {
     private String uuid; //id del pago generado
 
     private String uuidTrabajo; //id del trabajo que se abono
+
+    private EProveedorPago proveedorDePago;
 
     private MetodoDePago metodoDePago;
 

@@ -1,8 +1,10 @@
 
 package com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago;
 
+import com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago.ResultadoProcesamientoPago;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPago;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ResultadoConsultaPago;
+import com.aquienllamo.aquienllamo.entidades.pago.enums.EProveedorPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
 import com.aquienllamo.aquienllamo.entidades.pago.dto.request.PagoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.pago.entity.PagoEntity;
@@ -186,5 +188,28 @@ public class MercadoPagoService implements ProveedorPago {
                         "Bearer " + properties.getAccessToken()
                 )
                 .build();
+    }
+
+    @Override
+    public boolean soporta(EProveedorPago proveedor) {
+        return proveedor == EProveedorPago.MERCADO_PAGO;
+    }
+
+    @Override
+    public ResultadoProcesamientoPago crearCheckout(
+            PagoDTORequest request,
+            PagoEntity pago,
+            BigDecimal monto
+    ) {
+        MercadoPagoOrderResponse respuesta =
+                crearOrdenCheckout(request, pago, monto);
+
+        // Guardar el ID de la orden devuelto por Mercado Pago.
+        pago.setMercadoPagoOrderId(respuesta.getId());
+
+        return new ResultadoProcesamientoPago(
+                EstadoPago.Pendiente_de_revision,
+                respuesta.getCheckoutUrl()
+        );
     }
 }

@@ -2,6 +2,7 @@ package com.aquienllamo.aquienllamo.APIs.Pagos.MetodosPago;
 
 import com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago.MercadoPagoOrderResponse;
 import com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago.MercadoPagoService;
+import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
 import com.aquienllamo.aquienllamo.entidades.pago.dto.request.PagoDTORequest;
@@ -21,7 +22,9 @@ public class PagoTransferencia implements MetodoPago {
     public ResultadoProcesamientoPago procesar(
             PagoDTORequest request,
             PagoEntity pago,
-            BigDecimal monto) {
+            BigDecimal monto,
+            ProveedorPago proveedor
+    ) {
 
         MercadoPagoOrderResponse respuesta =
                 mercadoPagoService.crearOrdenCheckout(
