@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -177,13 +179,27 @@ public class TrabajoService {
 
         boolean esAdmin = esAdministrador(credentials);
 
-        // Si no es administrador, debe ser el técnico del trabajo.
-        if (!esAdmin && !esElTecnico(trabajo, usuario)) {
+        // Si no es administrador, debe ser el técnico del trabajo o el cliente del trabajo.
+        if (!esAdmin && !esElTecnico(trabajo, usuario) && !esElCliente(trabajo, usuario) ) {
+
             throw new AccessDeniedException(
-                    "Solo el tecnico de este trabajo puede cambiar su estado.");
+                    "Solo un Admin o los involucrados en el trabajo puede cambiar su estado.");
+        }
+
+        if(esElCliente(trabajo, usuario) && trabajo.getFechaEstimadaFin().isBefore(LocalDate.now()) && nuevoEstado == EstadoTrabajo.Finalizado){
+            throw new AccessDeniedException("Un usuario solo puede finalizar el trabajo luego de que pase la fecha de finalizacion.");
+        }
+
+        if(esElCliente(trabajo, usuario) && nuevoEstado == EstadoTrabajo.En_proceso){
+            throw new AccessDeniedException("Un usuario no puede iniciar un trabajo.");
         }
 
         validarTransicion(trabajo.getEstadoTrabajo(), nuevoEstado);
+
+        if (!esAdmin && !esElTecnico(trabajo, usuario) && !esElCliente(trabajo, usuario) ) {
+            throw new AccessDeniedException(
+                    "Solo un Admin o los involucrados en el trabajo puede cambiar su estado.");
+        }
 
         trabajo.setEstadoTrabajo(nuevoEstado);
 

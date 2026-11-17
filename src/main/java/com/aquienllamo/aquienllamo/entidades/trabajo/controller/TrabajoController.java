@@ -74,7 +74,7 @@ public class TrabajoController {
     // =====================================================
 
     @PatchMapping("/{uuid}/estado")
-    @PreAuthorize("hasAnyRole('TECNICO', 'ADMINISTRADOR', 'SUPERADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('USUARIO','TECNICO', 'ADMINISTRADOR', 'SUPERADMINISTRADOR')")
     public ResponseEntity<TrabajoDTOResponse> cambiarEstado(
             @PathVariable String uuid,
             @RequestParam EstadoTrabajo estadoTrabajo) {
