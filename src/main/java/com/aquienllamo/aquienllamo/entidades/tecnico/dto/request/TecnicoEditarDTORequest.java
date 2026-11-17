@@ -21,6 +21,10 @@ public class TecnicoEditarDTORequest {
     private String descripcionTrabajo;
     private String proyectos;
 
+    private String alias;
+    private String CVU;
+
+
     private List<String> uuidHabilidades;
     private List<String> uuidEspecialidades;
 }

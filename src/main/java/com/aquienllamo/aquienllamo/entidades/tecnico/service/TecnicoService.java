@@ -364,6 +364,14 @@ public class TecnicoService {
             tecnico.setProyectos(dto.getProyectos());
         }
 
+        if (dto.getAlias() != null) {
+            tecnico.setAlias(dto.getAlias());
+        }
+
+        if (dto.getCVU() != null) {
+            tecnico.setCvu(dto.getCVU());
+        }
+
         // =========================
         // HABILIDADES
         // =========================
