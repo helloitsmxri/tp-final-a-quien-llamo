@@ -10,6 +10,7 @@ import com.aquienllamo.aquienllamo.auth.repositories.RoleRepository;
 import com.aquienllamo.aquienllamo.entidades.especialidad.exceptions.EspecialidadNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoTrabajoDTORequest;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDatosCobroDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
 import com.aquienllamo.aquienllamo.entidades.tecnico.specs.TecnicoSpecifications;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
@@ -473,5 +474,16 @@ public class TecnicoService {
         tecnicoMapper.actualizarDatosCobro(tecnico, dto);
 
         tecnicoRepository.save(tecnico);
+    }
+
+    // Obtener datos de cobro del técnico logueado
+    public TecnicoDatosCobroDTOResponse getDatosCobro(String email) {
+
+        TecnicoEntity tecnico = tecnicoRepository.findByUsuarioEmail(email)
+                .orElseThrow(() -> new TecnicoNotFoundEx(
+                        "El usuario logueado no es un técnico."
+                ));
+
+        return tecnicoMapper.toDatosCobroResponse(tecnico);
     }
 }

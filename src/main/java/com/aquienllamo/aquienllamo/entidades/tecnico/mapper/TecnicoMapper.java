@@ -3,6 +3,7 @@ package com.aquienllamo.aquienllamo.entidades.tecnico.mapper;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoTrabajoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDatosCobroDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
 import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
 import org.springframework.stereotype.Component;
@@ -102,12 +103,16 @@ public class TecnicoMapper {
     // Actualizar datos de cobro del técnico
     public void actualizarDatosCobro(TecnicoEntity tecnico, TecnicoTrabajoDTORequest dto) {
 
-        if (dto.getCvu() != null) {
-            tecnico.setCvu(dto.getCvu());
-        }
+        tecnico.setAlias(dto.getAlias());
+        tecnico.setCvu(dto.getCvu());
+    }
 
-        if (dto.getAlias() != null) {
-            tecnico.setAlias(dto.getAlias());
-        }
+    // Convertir datos de cobro del técnico a DTO
+    public TecnicoDatosCobroDTOResponse toDatosCobroResponse(TecnicoEntity tecnico) {
+
+        return TecnicoDatosCobroDTOResponse.builder()
+                .alias(tecnico.getAlias())
+                .cvu(tecnico.getCvu())
+                .build();
     }
 }

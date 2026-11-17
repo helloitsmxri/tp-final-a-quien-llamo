@@ -5,6 +5,7 @@ import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoEditarDT
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoTrabajoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.request.TecnicoNuevoDTORequest;
+import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoDatosCobroDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.tecnico.dto.response.TecnicoPerfilPublicoDTO;
 import com.aquienllamo.aquienllamo.entidades.tecnico.service.TecnicoService;
 import jakarta.annotation.security.PermitAll;
@@ -150,6 +151,17 @@ public class TecnicoController {
     public ResponseEntity<Void> actualizarDatosCobro(Authentication authentication, @Valid @RequestBody TecnicoTrabajoDTORequest dto) {
         tecnicoService.actualizarDatosCobro(authentication.getName(), dto);
         return ResponseEntity.noContent().build();
+    }
+
+    // Obtener datos de cobro del técnico logueado
+    @PreAuthorize("hasRole('TECNICO')")
+    @GetMapping("/mi-perfil/datos-cobro")
+    public ResponseEntity<TecnicoDatosCobroDTOResponse> obtenerDatosCobro(
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                tecnicoService.getDatosCobro(authentication.getName())
+        );
     }
 }
 
