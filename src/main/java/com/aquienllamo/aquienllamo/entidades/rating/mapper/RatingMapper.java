@@ -21,6 +21,7 @@ public class RatingMapper {
                 : null;
 
         return RatingDTOResponse.builder()
+                .uuidCalificacion(entity.getUuid())
                 .uuidRemitente(remitente.getUuid())
                 .nombreRemitente(remitente.getNombre())
                 .apellidoRemitente(remitente.getApellido())

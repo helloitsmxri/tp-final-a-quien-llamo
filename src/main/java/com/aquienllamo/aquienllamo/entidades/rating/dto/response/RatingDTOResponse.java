@@ -11,6 +11,7 @@ import java.util.List;
 @ToString
 @Builder
 public class RatingDTOResponse {
+    private String uuidCalificacion;
     private String uuidRemitente; //para que el front pueda ir al perfil de quien escribió la reseña
     private String nombreRemitente; //el nombre del comentario
     private String apellidoRemitente;
