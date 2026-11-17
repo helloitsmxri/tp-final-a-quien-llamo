@@ -66,6 +66,7 @@ public class PagoController {
 
     //listar todos los pagos
     @GetMapping
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<List<PagoDTOResponse>> listarPagos (){
         return ResponseEntity.ok().body(pagoService.listarPagos());
     }
