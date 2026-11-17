@@ -142,22 +142,31 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         emailService.enviarRecuperacionClave(req.getEmail(), enlace);
     }
 
+
     @Transactional
-    public void resetPassword(ResetPasswordDTORequest req){
+    public void resetPassword(ResetPasswordDTORequest req) {
         String usuario = jwtService.extractUsername(req.getToken());
 
         CredentialsEntity cred = credentialsRepository.findByUsername(usuario)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         boolean val = jwtService.validatePasswordResetToken(req.getToken(), cred);
-        if (!val){
+
+        if (!val) {
             throw new JwtException("Token inválido o expirado");
+        }
+
+        // Comprobar que la nueva contraseña no sea igual a la actual
+        if (passwordEncoder.matches(req.getNewPassword(), cred.getClave())) {
+            throw new InvalidPasswordEx(
+                    "La nueva contraseña no puede ser igual a la contraseña anterior. Elegí una diferente."
+            );
         }
 
         String nuevaClave = passwordEncoder.encode(req.getNewPassword());
         cred.setClave(nuevaClave);
 
-        if (cred.getUsuario() != null){
+        if (cred.getUsuario() != null) {
             cred.getUsuario().setClave(nuevaClave);
         }
 
@@ -166,4 +175,5 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
 
         credentialsRepository.save(cred);
     }
+
 }
