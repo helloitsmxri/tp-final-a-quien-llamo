@@ -7,6 +7,7 @@ import com.aquienllamo.aquienllamo.entidades.presupuesto.enums.EstadoPresupuesto
 import com.aquienllamo.aquienllamo.entidades.presupuesto.entity.PresupuestoEntity;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.exceptions.PresupuestoNotFoundEx;
 import com.aquienllamo.aquienllamo.entidades.presupuesto.repository.PresupuestoRepository;
+import com.aquienllamo.aquienllamo.entidades.tecnico.entity.TecnicoEntity;
 import com.aquienllamo.aquienllamo.entidades.trabajo.dto.request.TrabajoDTORequest;
 import com.aquienllamo.aquienllamo.entidades.trabajo.dto.response.TrabajoDTOResponse;
 import com.aquienllamo.aquienllamo.entidades.trabajo.entity.TrabajoEntity;
@@ -76,12 +77,16 @@ public class TrabajoService {
                 .orElseThrow(() -> new PresupuestoNotFoundEx(
                         "ERROR: El presupuesto ingresado no existe."));
 
+        TecnicoEntity tecnico = presupuesto.getTecnico();
+
+        if  (tecnico.getAlias() == null || tecnico.getAlias().equals("") && tecnico.getCvu() == null || tecnico.getCvu().equals("")) {
+            throw new AccessDeniedException(
+                    "Antes de crear un trabajo debe rellenar al menos uno de los campos: ALIAS y CVU.");
+        }
+
         // Verificar que el técnico del presupuesto sea el autenticado.
-        if (presupuesto.getTecnico() == null ||
-                presupuesto.getTecnico().getUsuario() == null ||
-                !Objects.equals(
-                        presupuesto.getTecnico().getUsuario().getIdUsuario(),
-                        usuario.getIdUsuario())) {
+        if (presupuesto.getTecnico() == null || presupuesto.getTecnico().getUsuario() == null ||
+                !Objects.equals(presupuesto.getTecnico().getUsuario().getIdUsuario(), usuario.getIdUsuario())) {
 
             throw new AccessDeniedException(
                     "Solo el tecnico de este presupuesto puede crear el trabajo.");
