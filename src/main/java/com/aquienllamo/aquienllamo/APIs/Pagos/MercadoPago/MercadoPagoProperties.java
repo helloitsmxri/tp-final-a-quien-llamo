@@ -1,9 +1,5 @@
-package com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+package com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago;
 
 import lombok.Getter;
 import lombok.Setter;

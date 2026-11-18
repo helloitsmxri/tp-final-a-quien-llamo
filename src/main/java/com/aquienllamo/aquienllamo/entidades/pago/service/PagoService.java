@@ -8,6 +8,7 @@ import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPago;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ProveedorPagoFactory;
 import com.aquienllamo.aquienllamo.APIs.Pagos.ResultadoConsultaPago;
 import com.aquienllamo.aquienllamo.entidades.pago.entity.PagoProveedorEntity;
+import com.aquienllamo.aquienllamo.entidades.pago.enums.EProveedorPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.EstadoPago;
 import com.aquienllamo.aquienllamo.entidades.pago.enums.MetodoDePago;
 import com.aquienllamo.aquienllamo.entidades.pago.dto.request.PagoDTORequest;
@@ -303,18 +304,38 @@ public class PagoService {
                 .orElse(false);
     }
 
+
     public void procesarWebhookMercadoPago(String orderId) {
 
+        if (orderId == null || orderId.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El ID de la Order es obligatorio."
+            );
+        }
+
+        // Buscar el pago local asociado a la Order.
         PagoEntity pago = pagoRepository
                 .findByDatosProveedor_ExternalPaymentId(orderId)
                 .orElseThrow(() ->
                         new PagoNotFoundEx(
-                                "No se encontró un pago asociado a la orden de Mercado Pago."
+                                "No se encontró un pago asociado a la Order de Mercado Pago."
                         )
                 );
 
+        // Verificar que el proveedor sea Mercado Pago.
+        if (pago.getDatosProveedor() == null
+                || pago.getDatosProveedor().getProveedor()
+                != EProveedorPago.MERCADO_PAGO) {
+
+            throw new IllegalStateException(
+                    "El pago no pertenece a Mercado Pago."
+            );
+        }
+
+        // Consultar nuevamente el estado real de la Order.
         sincronizarEstado(pago.getUuid());
     }
+
 
     // Buscar un pago por UUID.
     public PagoDTOResponse buscarPagoPorUuid(String uuid) {

@@ -1,15 +1,11 @@
+
 package com.aquienllamo.aquienllamo.APIs.Pagos.MercadoPago.Webhook;
 
-
 import com.aquienllamo.aquienllamo.entidades.pago.service.PagoService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/webhooks/mercado-pago")
@@ -21,62 +17,75 @@ public class MercadoPagoWebhookController {
 
     @PostMapping
     public ResponseEntity<Void> recibirNotificacion(
-            @RequestParam Map<String, String> params,
-            @RequestHeader(name = "x-signature", required = false) String xSignature,
-            @RequestHeader(name = "x-request-id", required = false) String xRequestId
+            HttpServletRequest request
     ) {
 
-        // Formato actual
-        String dataId = params.get("data.id");
-        String type = params.get("type");
+        System.out.println("========== WEBHOOK MERCADO PAGO ==========");
 
-        System.out.println("Data ID: " + dataId);
-        System.out.println("Type: " + type);
-        System.out.println("Signature presente: " + (xSignature != null));
-        System.out.println("Request ID presente: " + (xRequestId != null));
+        // Obtener los parámetros directamente de la petición HTTP.
+        String dataId = request.getParameter("data.id");
+        String type = request.getParameter("type");
 
-        // Compatibilidad con la URL de prueba
-        if (dataId == null) {
-            dataId = params.get("id");
-        }
+        String xSignature = request.getHeader("x-signature");
+        String xRequestId = request.getHeader("x-request-id");
 
-        if (type == null) {
-            type = params.get("topic");
-        }
+        System.out.println("Data ID recibido: " + dataId);
+        System.out.println("Longitud Data ID: " +
+                (dataId == null ? 0 : dataId.length()));
+
+        System.out.println("Tipo: " + type);
+
+        System.out.println("X-Request-Id presente: " +
+                (xRequestId != null && !xRequestId.isBlank()));
+
+        System.out.println("X-Signature presente: " +
+                (xSignature != null && !xSignature.isBlank()));
 
         if (dataId == null || dataId.isBlank()
                 || type == null || type.isBlank()) {
+
+            System.out.println("ERROR: faltan parámetros obligatorios.");
+
             return ResponseEntity.badRequest().build();
         }
 
-        // Validar firma
-        if (!webhookValidator.validarFirma(
-                xSignature, xRequestId, dataId)) {
+        if (!"order".equalsIgnoreCase(type)) {
+            System.out.println("Notificación ignorada: " + type);
+            return ResponseEntity.ok().build();
+        }
+
+        System.out.println("Validando firma...");
+
+        boolean firmaValida = webhookValidator.validarFirma(
+                xSignature,
+                xRequestId,
+                dataId
+        );
+
+        System.out.println("Resultado validación: " + firmaValida);
+
+        if (!firmaValida) {
+            System.out.println("ERROR: firma inválida.");
             return ResponseEntity.status(401).build();
         }
 
+        System.out.println("Firma válida. Procesando Order...");
+
         try {
 
-            switch (type.toLowerCase()) {
+            pagoService.procesarWebhookMercadoPago(dataId);
 
-                case "payment":
-                    // Procesar notificación de pago
-                    pagoService.procesarWebhookMercadoPago(dataId);
-                    break;
-
-                case "order":
-                    // Procesar notificación de orden
-                    pagoService.procesarWebhookMercadoPago(dataId);
-                    break;
-
-                default:
-                    return ResponseEntity.ok().build();
-            }
+            System.out.println("Webhook procesado correctamente.");
 
             return ResponseEntity.ok().build();
 
         } catch (Exception e) {
+
+            System.err.println("ERROR procesando webhook: " + e.getMessage());
+            e.printStackTrace();
+
             return ResponseEntity.internalServerError().build();
         }
     }
 }
+

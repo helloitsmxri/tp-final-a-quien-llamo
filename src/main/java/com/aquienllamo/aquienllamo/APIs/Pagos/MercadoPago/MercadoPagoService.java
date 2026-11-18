@@ -29,6 +29,7 @@ public class MercadoPagoService implements ProveedorPago {
         return "MERCADO_PAGO";
     }
 
+    // Crear una Order en Mercado Pago.
     public MercadoPagoOrderResponse crearOrdenCheckout(
             PagoDTORequest request,
             PagoEntity pago,
@@ -36,6 +37,7 @@ public class MercadoPagoService implements ProveedorPago {
 
         if (monto == null ||
                 monto.compareTo(BigDecimal.ZERO) <= 0) {
+
             throw new IllegalArgumentException(
                     "El importe debe ser mayor que cero."
             );
@@ -43,6 +45,7 @@ public class MercadoPagoService implements ProveedorPago {
 
         if (pago.getUuid() == null ||
                 pago.getTrabajo() == null) {
+
             throw new IllegalArgumentException(
                     "El pago debe estar guardado y asociado a un trabajo."
             );
@@ -50,21 +53,25 @@ public class MercadoPagoService implements ProveedorPago {
 
         if (request.getBuyerEmail() == null ||
                 request.getBuyerEmail().isBlank()) {
+
             throw new IllegalArgumentException(
                     "El email del comprador es obligatorio."
             );
         }
 
+        // El importe debe tener dos decimales.
         String importe = monto
                 .setScale(2, RoundingMode.UNNECESSARY)
                 .toPlainString();
 
+        // Ítem de la Order.
         Map<String, Object> item = Map.of(
                 "title", "Trabajo " + pago.getTrabajo().getUuid(),
                 "quantity", 1,
                 "unit_price", importe
         );
 
+        // Cuerpo de la solicitud.
         Map<String, Object> body = Map.of(
                 "type", "online",
                 "processing_mode", "manual",
@@ -78,9 +85,9 @@ public class MercadoPagoService implements ProveedorPago {
                 "items", List.of(item)
         );
 
-        RestClient client = crearCliente();
-
-        MercadoPagoOrderResponse respuesta = client.post()
+        // Crear la Order.
+        MercadoPagoOrderResponse respuesta = crearCliente()
+                .post()
                 .uri("/v1/orders")
                 .header("X-Idempotency-Key", pago.getUuid())
                 .body(body)
@@ -89,20 +96,26 @@ public class MercadoPagoService implements ProveedorPago {
 
         if (respuesta == null
                 || respuesta.getId() == null
+                || respuesta.getId().isBlank()
                 || respuesta.getCheckoutUrl() == null
                 || respuesta.getCheckoutUrl().isBlank()) {
+
             throw new IllegalStateException(
-                    "Mercado Pago no devolvió el ID y la URL de checkout."
+                    "Mercado Pago no devolvió el ID y la URL de la Order."
             );
         }
 
         return respuesta;
     }
 
+    // Consultar una Order por su ID.
     public MercadoPagoOrderStatusResponse consultarOrden(String orderId) {
 
         if (orderId == null || orderId.isBlank()) {
-            throw new IllegalArgumentException("El ID de la orden es obligatorio.");
+
+            throw new IllegalArgumentException(
+                    "El ID de la Order es obligatorio."
+            );
         }
 
         MercadoPagoOrderStatusResponse respuesta = crearCliente()
@@ -112,14 +125,16 @@ public class MercadoPagoService implements ProveedorPago {
                 .body(MercadoPagoOrderStatusResponse.class);
 
         if (respuesta == null || respuesta.getId() == null) {
+
             throw new IllegalStateException(
-                    "Mercado Pago no devolvió información de la orden."
+                    "Mercado Pago no devolvió información de la Order."
             );
         }
 
         return respuesta;
     }
 
+    // Consultar el estado de un pago mediante su Order.
     @Override
     public ResultadoConsultaPago consultarEstado(PagoEntity pago) {
 
@@ -129,20 +144,22 @@ public class MercadoPagoService implements ProveedorPago {
                 || pago.getDatosProveedor().getExternalPaymentId().isBlank()) {
 
             throw new IllegalArgumentException(
-                    "El pago no tiene una orden de Mercado Pago asociada."
+                    "El pago no tiene una Order de Mercado Pago asociada."
             );
         }
 
-        String orderId = pago.getDatosProveedor().getExternalPaymentId();
+        String orderId =
+                pago.getDatosProveedor().getExternalPaymentId();
 
-        MercadoPagoOrderStatusResponse orden = consultarOrden(orderId);
+        MercadoPagoOrderStatusResponse orden =
+                consultarOrden(orderId);
 
-        // Verificar que la orden corresponda al pago local.
+        // Verificar que la Order pertenezca al pago local.
         if (orden.getExternalReference() == null
                 || !orden.getExternalReference().equals(pago.getUuid())) {
 
             throw new IllegalStateException(
-                    "La orden de Mercado Pago no corresponde al pago indicado."
+                    "La Order de Mercado Pago no corresponde al pago indicado."
             );
         }
 
@@ -176,7 +193,8 @@ public class MercadoPagoService implements ProveedorPago {
 
         if ("processing".equalsIgnoreCase(estado)
                 || "in_process".equalsIgnoreCase(estado)
-                || "action_required".equalsIgnoreCase(estado)) {
+                || "action_required".equalsIgnoreCase(estado)
+                || "created".equalsIgnoreCase(estado)) {
 
             return new ResultadoConsultaPago(
                     EstadoPago.Pendiente_de_revision,
@@ -184,19 +202,29 @@ public class MercadoPagoService implements ProveedorPago {
             );
         }
 
-        // Estado desconocido: no modificar el estado local.
+        // No modificar estados desconocidos.
         return new ResultadoConsultaPago(
                 null,
                 false
         );
     }
 
+    // Crear cliente HTTP.
     private RestClient crearCliente() {
+
         return RestClient.builder()
                 .baseUrl(properties.getBaseUrl())
                 .defaultHeader(
                         "Authorization",
                         "Bearer " + properties.getAccessToken()
+                )
+                .defaultHeader(
+                        "Content-Type",
+                        "application/json"
+                )
+                .defaultHeader(
+                        "Accept",
+                        "application/json"
                 )
                 .build();
     }
@@ -206,12 +234,13 @@ public class MercadoPagoService implements ProveedorPago {
         return proveedor == EProveedorPago.MERCADO_PAGO;
     }
 
+    // Implementación de la estrategia de checkout.
     @Override
     public ResultadoProcesamientoPago crearCheckout(
             PagoDTORequest request,
             PagoEntity pago,
-            BigDecimal monto
-    ) {
+            BigDecimal monto) {
+
         MercadoPagoOrderResponse respuesta =
                 crearOrdenCheckout(request, pago, monto);
 
