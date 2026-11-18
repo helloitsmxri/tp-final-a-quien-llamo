@@ -132,14 +132,17 @@ public class AuthService{ //servicio para la autentificación inicial del usuari
         return new AuthResponse(accesToken, refreshToken);
     }
 
-    public void forgotPassword(ForgotPasswordDTORequest req){
-        CredentialsEntity cred = credentialsRepository.findByUsername(req.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("No se encontró el usuario en el sistema."));
+    public void forgotPassword(ForgotPasswordDTORequest req) {
 
-        String token = jwtService.generatePasswordResetToken(cred);
-        String enlace = "http://localhost:4200/reset-password?token=" + token;
+        credentialsRepository.findByUsername(req.getEmail())
+                .ifPresent(cred -> {
 
-        emailService.enviarRecuperacionClave(req.getEmail(), enlace);
+                    String token = jwtService.generatePasswordResetToken(cred);
+
+                    String enlace = "http://localhost:4200/reset-password?token=" + token;
+
+                    emailService.enviarRecuperacionClave(req.getEmail(), enlace);
+                });
     }
 
 

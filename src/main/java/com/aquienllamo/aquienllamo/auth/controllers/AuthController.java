@@ -69,13 +69,13 @@ public class AuthController {
     // cambiar la clave si me la olvidé
     @PostMapping("/forgot-password")
     @ResponseStatus(HttpStatus.OK)
-    public void forgotPassword(@RequestBody ForgotPasswordDTORequest req){
+    public void forgotPassword(@Valid @RequestBody ForgotPasswordDTORequest req) {
         authService.forgotPassword(req);
     }
 
     @PostMapping("/reset-password")
     @ResponseStatus(HttpStatus.OK)
-    public void resetPassword(@RequestBody ResetPasswordDTORequest req){
+    public void resetPassword(@Valid @RequestBody ResetPasswordDTORequest req) {
         authService.resetPassword(req);
     }
     
